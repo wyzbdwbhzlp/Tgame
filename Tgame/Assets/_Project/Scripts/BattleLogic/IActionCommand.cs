@@ -1,16 +1,9 @@
-using UnityEngine;
+using System.Collections.Generic;
 
-public class IActionCommand : MonoBehaviour
+// 动作命令接口
+public interface IActionCommand
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
+    bool Validate();
+    void Execute();
+    List<TimelineEvent> GenerateEvents();
 }

@@ -1,16 +1,9 @@
-using UnityEngine;
-
-public class ActionType : MonoBehaviour
+// 动作类型枚举
+public enum ActionType
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
+    Move,
+    Attack,
+    Skill,
+    Defend,
+    Item
 }

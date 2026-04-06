@@ -1,8 +1,4 @@
-using System.Collections.Generic;
 using UnityEngine;
-
-// 动作类型枚举
-public enum ActionType { Move, Attack, Skill, Defend, Item }
 
 // 纯 C# 的时间轴事件数据结构，完全脱离 MonoBehaviour
 [System.Serializable]
@@ -16,12 +12,4 @@ public class TimelineEvent
     public Vector3Int targetGrid;   // 目标地块
     public int configID;            // 配置 ID
     public bool isComposite;        // 是否为复合动作
-}
-
-// 动作命令接口
-public interface IActionCommand
-{
-    bool Validate();
-    void Execute();
-    List<TimelineEvent> GenerateEvents();
 }
