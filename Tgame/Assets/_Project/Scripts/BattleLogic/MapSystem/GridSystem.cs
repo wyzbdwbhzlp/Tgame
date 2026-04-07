@@ -3,18 +3,24 @@ using UnityEngine;
 
 public class GridSystem : IGameSystem
 {
-    // 使用字典管理地图，方便处理不规则形状的战棋地图
+    // ==========================================
+    // 新增：单例访问器，让表现层能方便地读取地图数据
+    // ==========================================
+    public static GridSystem Instance { get; private set; }
+
     private readonly Dictionary<Vector3Int, GridCell> _grid = new Dictionary<Vector3Int, GridCell>();
 
-    // 渲染层面上每个格子的世界尺寸（用于坐标转换）
-    public float CellSize { get; private set; } = 1.0f;
+    // 六边形外接圆的半径（中心点到顶点的距离）
+    public float HexSize { get; private set; } = 1.0f;
 
     public void OnInit()
     {
-        // 此处为了测试，我们在内存中直接生成一个 10x10 的纯逻辑地图
-        // 实际项目中，这里应该读取配置表或解析场景中的 Tilemap 数据
-        GenerateTestMap(10, 10);
-        Debug.Log($"[GridSystem] 地图初始化完成，共生成 {_grid.Count} 个逻辑网格。");
+        // 赋值单例
+        Instance = this;
+
+        // 模拟生成一个半径为 5 的大六边形战场
+        GenerateHexMap(5);
+        Debug.Log($"[GridSystem] 六边形地图初始化完成，共生成 {_grid.Count} 个逻辑网格。");
     }
 
     public void OnUpdate(float deltaTime) { }
@@ -22,27 +28,34 @@ public class GridSystem : IGameSystem
     public void OnDestroy()
     {
         _grid.Clear();
+        if (Instance == this)
+        {
+            Instance = null;
+        }
     }
 
-    private void GenerateTestMap(int width, int height)
+    // 基于立方体坐标生成正六边形形状的地图
+    private void GenerateHexMap(int mapRadius)
     {
-        for (int x = 0; x < width; x++)
+        for (int x = -mapRadius; x <= mapRadius; x++)
         {
-            for (int y = 0; y < height; y++)
+            int y1 = Mathf.Max(-mapRadius, -x - mapRadius);
+            int y2 = Mathf.Min(mapRadius, -x + mapRadius);
+            for (int y = y1; y <= y2; y++)
             {
-                Vector3Int pos = new Vector3Int(x, y, 0);
-                // 模拟中间有个泥沼地形，移动消耗为 3
-                int cost = (x == 5 && y == 5) ? 3 : 1;
-                _grid[pos] = new GridCell(pos, true, cost);
+                int z = -x - y; // 强制满足 x + y + z = 0
+                Vector3Int pos = new Vector3Int(x, y, z);
+                _grid[pos] = new GridCell(pos, true, 1);
             }
         }
-        // 模拟一个障碍物
-        _grid[new Vector3Int(3, 3, 0)].IsWalkable = false;
+
+        // 模拟一个中心障碍物
+        if (_grid.TryGetValue(new Vector3Int(0, 0, 0), out GridCell center))
+        {
+            center.IsWalkable = false;
+        }
     }
 
-    /// <summary>
-    /// 获取指定坐标的地块数据
-    /// </summary>
     public GridCell GetCell(Vector3Int cellPosition)
     {
         if (_grid.TryGetValue(cellPosition, out GridCell cell))
@@ -53,36 +66,26 @@ public class GridSystem : IGameSystem
     }
 
     /// <summary>
-    /// 将逻辑网格坐标转换为世界中心点坐标 (便于表现层角色移动对齐)
+    /// 六边形立方体坐标 转 世界坐标 (采用尖顶朝上 Pointy-top 布局)
     /// </summary>
-    public Vector3 CellToWorld(Vector3Int cellPosition)
+    public Vector3 CellToWorld(Vector3Int hexPos)
     {
-        return new Vector3(
-            cellPosition.x * CellSize + CellSize * 0.5f,
-            cellPosition.y * CellSize + CellSize * 0.5f,
-            0f
-        );
+        float xWorld = HexSize * Mathf.Sqrt(3f) * (hexPos.x + hexPos.z / 2f);
+        float yWorld = HexSize * (3f / 2f) * hexPos.z;
+        return new Vector3(xWorld, yWorld, 0f);
     }
 
     /// <summary>
-    /// 将世界坐标转换为逻辑网格坐标 (例如鼠标点击屏幕后转逻辑点)
-    /// </summary>
-    public Vector3Int WorldToCell(Vector3 worldPosition)
-    {
-        return new Vector3Int(
-            Mathf.FloorToInt(worldPosition.x / CellSize),
-            Mathf.FloorToInt(worldPosition.y / CellSize),
-            0
-        );
-    }
-
-    /// <summary>
-    /// 获取指定地块的相邻地块 (上下左右四向)
+    /// 获取六边形的 6 个相邻地块
     /// </summary>
     public List<GridCell> GetNeighbors(GridCell cell)
     {
         List<GridCell> neighbors = new List<GridCell>();
-        Vector3Int[] directions = { Vector3Int.up, Vector3Int.down, Vector3Int.left, Vector3Int.right };
+
+        Vector3Int[] directions = {
+            new Vector3Int(1, -1, 0), new Vector3Int(1, 0, -1), new Vector3Int(0, 1, -1),
+            new Vector3Int(-1, 1, 0), new Vector3Int(-1, 0, 1), new Vector3Int(0, -1, 1)
+        };
 
         foreach (var dir in directions)
         {
@@ -93,5 +96,37 @@ public class GridSystem : IGameSystem
             }
         }
         return neighbors;
+    }
+
+    /// <summary>
+    /// 世界坐标 转 六边形立方体坐标 (用于鼠标点击检测)
+    /// </summary>
+    public Vector3Int WorldToCell(Vector3 worldPos)
+    {
+        // 尖顶朝上 (Pointy-top) 的逆向转换公式
+        float q = (Mathf.Sqrt(3f) / 3f * worldPos.x - 1f / 3f * worldPos.y) / HexSize;
+        float r = (2f / 3f * worldPos.y) / HexSize;
+        return CubeRound(q, r, -q - r);
+    }
+
+    // 浮点数立方体坐标取整算法 (确保转换后依然满足 x+y+z=0)
+    private Vector3Int CubeRound(float fracQ, float fracR, float fracS)
+    {
+        int q = Mathf.RoundToInt(fracQ);
+        int r = Mathf.RoundToInt(fracR);
+        int s = Mathf.RoundToInt(fracS);
+
+        float qDiff = Mathf.Abs(q - fracQ);
+        float rDiff = Mathf.Abs(r - fracR);
+        float sDiff = Mathf.Abs(s - fracS);
+
+        if (qDiff > rDiff && qDiff > sDiff)
+            q = -r - s;
+        else if (rDiff > sDiff)
+            r = -q - s;
+        else
+            s = -q - r;
+
+        return new Vector3Int(q, r, s);
     }
 }
