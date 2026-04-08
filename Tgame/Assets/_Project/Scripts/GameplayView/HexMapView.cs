@@ -1,97 +1,214 @@
+ï»¿using System.Collections.Generic;
 using UnityEngine;
 
+[RequireComponent(typeof(LineRenderer))]
 public class HexMapView : MonoBehaviour
 {
-    // µ±Ç°Êó±êĞüÍ£µÄÂß¼­¸ñ×Ó×ø±ê
     private Vector3Int _hoveredCellPos;
+    private LineRenderer _pathLineRenderer;
+
+    private Vector3Int _lastHoveredPos = new Vector3Int(999, 999, 999);
+
+    // ==========================================
+    // æ ¸å¿ƒå˜åŠ¨ï¼šåŠ¨æ€é€‰ä¸­çš„å®ä½“å¼•ç”¨
+    // ==========================================
+    private RuntimeUnit _selectedUnit = null;
+
+    private void Start()
+    {
+        _pathLineRenderer = GetComponent<LineRenderer>();
+        _pathLineRenderer.positionCount = 0;
+        _pathLineRenderer.startWidth = 0.15f;
+        _pathLineRenderer.endWidth = 0.15f;
+        _pathLineRenderer.material = new Material(Shader.Find("Sprites/Default"));
+        _pathLineRenderer.startColor = Color.cyan;
+        _pathLineRenderer.endColor = Color.blue;
+        _pathLineRenderer.sortingOrder = 5; // ç¡®ä¿çº¿ç”»åœ¨æ–¹å—ä¸‹é¢
+    }
 
     private void Update()
     {
-        // È·±£Âß¼­²ãµÄµØÍ¼ÒÑ¾­³õÊ¼»¯
-        if (GridSystem.Instance == null) return;
+        if (GridSystem.Instance == null || TurnManager.Instance == null) return;
 
-        // 1. »ñÈ¡Êó±êÔÚ 2D ÊÀ½çÖĞµÄ×ø±ê
+        // 1. è·å–é¼ æ ‡å¹¶è½¬æ¢é€»è¾‘åæ ‡
         Vector3 mouseWorldPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-        mouseWorldPos.z = 0; // Ç¿ÖÆÅÄÆ½µ½ 2D Æ½Ãæ
-
-        // 2. ½«ÊÀ½ç×ø±ê×ª»»ÎªÁù±ßĞÎÂß¼­×ø±ê
+        mouseWorldPos.z = 0;
         _hoveredCellPos = GridSystem.Instance.WorldToCell(mouseWorldPos);
 
-        // 3. ¿ÉÒÔÔÚÕâÀï½ÓÈëÄã ActionManager µÄ Target Ñ¡ÔñÂß¼­
-        if (Input.GetMouseButtonDown(0))
+        // 2. é¼ æ ‡æ‚¬åœé€»è¾‘ (åªæœ‰é€‰ä¸­è§’è‰²æ—¶ï¼Œæ‰ç»˜åˆ¶å¯»è·¯è½¨è¿¹)
+        if (_hoveredCellPos != _lastHoveredPos)
         {
-            GridCell clickedCell = GridSystem.Instance.GetCell(_hoveredCellPos);
-            if (clickedCell != null)
+            _lastHoveredPos = _hoveredCellPos;
+            if (_selectedUnit != null)
             {
-                Debug.Log($"[HexMapView] µã»÷ÁËµØ¿é: ×ø±ê {_hoveredCellPos}, ÒÆ¶¯ÏûºÄ: {clickedCell.MoveCost}, ÊÇ·ñ¿ÉĞĞ×ß: {clickedCell.IsWalkable}");
+                UpdatePathVisualization();
             }
             else
             {
-                Debug.LogWarning($"[HexMapView] µã»÷ÁËµØÍ¼±ß½çÍâ£¡");
+                _pathLineRenderer.positionCount = 0; // æ²¡é€‰ä¸­æ—¶æ¸…ç©ºç”»çº¿
+            }
+        }
+
+        // ==========================================
+        // 3. é¼ æ ‡äº¤äº’æ ¸å¿ƒé€»è¾‘ï¼šå·¦é”®ç‚¹å‡»
+        // ==========================================
+        if (Input.GetMouseButtonDown(0))
+        {
+            GridCell clickedCell = GridSystem.Instance.GetCell(_hoveredCellPos);
+            if (clickedCell == null) return;
+
+            if (_selectedUnit == null)
+            {
+                // ã€çŠ¶æ€ä¸€ï¼šç©ºé—²ã€‘å°è¯•ç‚¹å‡»æ ¼å­ä¸Šçš„è§’è‰²
+                if (clickedCell.OccupantUnitID != -1)
+                {
+                    _selectedUnit = UnitManager.Instance.GetUnit(clickedCell.OccupantUnitID);
+                    if (_selectedUnit != null)
+                    {
+                        Debug.Log($"[äº¤äº’] ğŸ‘† é€‰ä¸­äº†å•ä½: ã€{_selectedUnit.ConfigData.characterName}ã€‘");
+                        // é€‰ä¸­åç«‹åˆ»åˆ·æ–°ä¸€ä¸‹å½“å‰ä½ç½®åˆ°é¼ æ ‡çš„çº¿
+                        UpdatePathVisualization();
+                    }
+                }
+            }
+            else
+            {
+                // ã€çŠ¶æ€äºŒï¼šå·²é€‰ä¸­ã€‘å°è¯•å¯¹ç›®æ ‡æ ¼å­ä¸‹è¾¾ç§»åŠ¨æŒ‡ä»¤
+                ConfirmMoveAction();
+            }
+        }
+
+        // ==========================================
+        // 4. é¼ æ ‡äº¤äº’è¡¥å……ï¼šå³é”®å–æ¶ˆé€‰æ‹©
+        // ==========================================
+        if (Input.GetMouseButtonDown(1))
+        {
+            if (_selectedUnit != null)
+            {
+                Debug.Log($"[äº¤äº’] âŒ å–æ¶ˆé€‰æ‹©: ã€{_selectedUnit.ConfigData.characterName}ã€‘");
+                _selectedUnit = null;
+                _pathLineRenderer.positionCount = 0;
             }
         }
     }
 
-    /// <summary>
-    /// ÀûÓÃ Gizmos ÔÚ Scene ´°¿Ú»æÖÆÁù±ßĞÎÍø¸ñ
-    /// </summary>
-    private void OnDrawGizmos()
+    private void UpdatePathVisualization()
     {
-        if (Application.isPlaying && GridSystem.Instance != null)
+        if (_selectedUnit == null) return;
+
+        // æ³¨æ„è¿™é‡Œï¼šèµ·ç‚¹å˜æˆäº†é€‰ä¸­è§’è‰²çš„çœŸå®åæ ‡
+        List<GridCell> path = PathfindingService.GetPath(GridSystem.Instance, _selectedUnit.GridPosition, _hoveredCellPos);
+
+        if (path == null || path.Count == 0)
         {
-            // ±éÀúÂß¼­µØÍ¼´óĞ¡£¬»­³öËùÓĞ¸ñ×Ó
-            // ×¢Òâ£ºÕâÀïÎªÁË²âÊÔ·½±ãĞ´ËÀÁË±éÀú·¶Î§£¬Êµ¼ÊÓ¦´Ó GridSystem »ñÈ¡ËùÓĞ Valid Cells
-            int mapRadius = 5;
-            for (int x = -mapRadius; x <= mapRadius; x++)
+            _pathLineRenderer.positionCount = 0;
+            return;
+        }
+
+        _pathLineRenderer.positionCount = path.Count;
+        for (int i = 0; i < path.Count; i++)
+        {
+            Vector3 worldPoint = GridSystem.Instance.CellToWorld(path[i].Position);
+            worldPoint.z = 0f;
+            _pathLineRenderer.SetPosition(i, worldPoint);
+        }
+    }
+
+    private void ConfirmMoveAction()
+    {
+        GridCell targetCell = GridSystem.Instance.GetCell(_hoveredCellPos);
+        if (targetCell == null || !targetCell.CanEnter())
+        {
+            Debug.LogWarning("[äº¤äº’] ç›®æ ‡æ ¼å­ä¸å¯è¾¾æˆ–å·²è¢«å ç”¨ï¼");
+            return;
+        }
+
+        MoveCommand moveCmd = new MoveCommand(
+            _selectedUnit.InstanceID,
+            _selectedUnit.GridPosition,
+            _hoveredCellPos,
+            GridSystem.Instance,
+            TurnManager.Instance
+        );
+
+        if (moveCmd.Validate())
+        {
+            // ==========================================
+            // é­”æ³•åœ¨æ­¤ï¼šåœ¨æ”¹å˜é€»è¾‘åæ ‡å‰ï¼Œæ‹¿åˆ°åº•å±‚çš„ A* è·¯å¾„
+            // ç„¶åç«‹åˆ»é€šçŸ¥è¡¨ç°å±‚çš„ 2D æ–¹å—å»æ’­æ”¾åŠ¨ç”»ï¼
+            // ==========================================
+            List<GridCell> path = PathfindingService.GetPath(GridSystem.Instance, _selectedUnit.GridPosition, _hoveredCellPos);
+            if (UnitViewManager.Instance != null && path != null)
             {
-                int y1 = Mathf.Max(-mapRadius, -x - mapRadius);
-                int y2 = Mathf.Min(mapRadius, -x + mapRadius);
-                for (int y = y1; y <= y2; y++)
+                UnitView view = UnitViewManager.Instance.GetView(_selectedUnit.InstanceID);
+                if (view != null)
                 {
-                    int z = -x - y;
-                    Vector3Int cellPos = new Vector3Int(x, y, z);
-
-                    // »ñÈ¡¸ñ×ÓµÄÖĞĞÄÊÀ½ç×ø±ê
-                    Vector3 centerPos = GridSystem.Instance.CellToWorld(cellPos);
-                    GridCell cellData = GridSystem.Instance.GetCell(cellPos);
-
-                    // »æÖÆÁù±ßĞÎÏß¿ò
-                    if (cellData != null && !cellData.IsWalkable)
-                    {
-                        Gizmos.color = Color.black; // ÕÏ°­Îï»­ºÚÉ«
-                    }
-                    else
-                    {
-                        Gizmos.color = Color.white; // Õı³£µØ¿é»­°×É«
-                    }
-
-                    DrawHexagonGizmo(centerPos, GridSystem.Instance.HexSize);
+                    view.MoveAlongPath(path);
                 }
             }
 
-            // ¶îÍâ¸ßÁÁÊó±êµ±Ç°ĞüÍ£µÄ¸ñ×Ó (»­ºìÉ«)
-            Vector3 hoveredCenter = GridSystem.Instance.CellToWorld(_hoveredCellPos);
-            Gizmos.color = Color.red;
-            DrawHexagonGizmo(hoveredCenter, GridSystem.Instance.HexSize);
+            // ------------------------------------------------
+
+            List<TimelineEvent> generatedEvents = moveCmd.GenerateEvents();
+            Debug.Log($"âœ… [åŠ¨ä½œç³»ç»Ÿ] ç§»åŠ¨æŒ‡ä»¤ç”Ÿæ•ˆï¼{_selectedUnit.ConfigData.characterName} å‰å¾€: {_hoveredCellPos}");
+
+            // é€»è¾‘å±‚ï¼šåº•å±‚ç¬é—´å®Œæˆæ•°æ®ç§»äº¤
+            GridCell oldCell = GridSystem.Instance.GetCell(_selectedUnit.GridPosition);
+            oldCell.OccupantUnitID = -1;
+
+            _selectedUnit.GridPosition = _hoveredCellPos;
+            targetCell.OccupantUnitID = _selectedUnit.InstanceID;
+
+            // èµ°å®Œä¹‹åè‡ªåŠ¨å–æ¶ˆé€‰ä¸­çŠ¶æ€
+            _selectedUnit = null;
+            _pathLineRenderer.positionCount = 0;
+        }
+        else
+        {
+            Debug.LogWarning("âŒ [åŠ¨ä½œç³»ç»Ÿ] æ—¶ç´ ä¸è¶³æˆ–è·¯å¾„æ— æ³•åˆ°è¾¾ã€‚");
         }
     }
 
-    // »æÖÆµ¥¸öÕıÁù±ßĞÎµÄÊıÑ§·½·¨
+
+    private void OnDrawGizmos()
+    {
+        if (!Application.isPlaying || GridSystem.Instance == null) return;
+
+        int mapRadius = 5;
+        for (int x = -mapRadius; x <= mapRadius; x++)
+        {
+            int y1 = Mathf.Max(-mapRadius, -x - mapRadius);
+            int y2 = Mathf.Min(mapRadius, -x + mapRadius);
+            for (int y = y1; y <= y2; y++)
+            {
+                Vector3Int cellPos = new Vector3Int(x, y, -x - y);
+                Vector3 centerPos = GridSystem.Instance.CellToWorld(cellPos);
+                GridCell cellData = GridSystem.Instance.GetCell(cellPos);
+
+                Gizmos.color = (cellData != null && !cellData.IsWalkable) ? Color.black : Color.white;
+                DrawHexagonGizmo(centerPos, GridSystem.Instance.HexSize);
+            }
+        }
+
+        // é«˜äº®é€‰ä¸­è§’è‰²çš„åº•æ ¼ä¸ºç»¿è‰²
+        if (_selectedUnit != null)
+        {
+            Gizmos.color = Color.green;
+            DrawHexagonGizmo(GridSystem.Instance.CellToWorld(_selectedUnit.GridPosition), GridSystem.Instance.HexSize);
+        }
+
+        Gizmos.color = Color.red;
+        DrawHexagonGizmo(GridSystem.Instance.CellToWorld(_hoveredCellPos), GridSystem.Instance.HexSize);
+    }
+
     private void DrawHexagonGizmo(Vector3 center, float size)
     {
         Vector3[] corners = new Vector3[6];
-        // ¼â¶¥³¯ÉÏ (Pointy-top) µÄ¶¥µã¼ÆËã
         for (int i = 0; i < 6; i++)
         {
-            float angle_deg = 60 * i - 30; // ¼õÈ¥30¶ÈÈÃ¼â½Ç³¯ÉÏ
-            float angle_rad = Mathf.PI / 180 * angle_deg;
+            float angle_rad = Mathf.PI / 180 * (60 * i - 30);
             corners[i] = new Vector3(center.x + size * Mathf.Cos(angle_rad), center.y + size * Mathf.Sin(angle_rad), 0);
         }
-
-        // ÓÃÏß¶ÎÁ¬½Ó 6 ¸ö¶¥µã
-        for (int i = 0; i < 6; i++)
-        {
-            Gizmos.DrawLine(corners[i], corners[(i + 1) % 6]);
-        }
+        for (int i = 0; i < 6; i++) Gizmos.DrawLine(corners[i], corners[(i + 1) % 6]);
     }
 }

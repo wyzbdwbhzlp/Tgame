@@ -11,6 +11,8 @@ public class BattleManager : IGameSystem
         EventBus.Subscribe<TimelineConfirmedEvent>(OnTimelineConfirmed);
 
         Debug.Log("[BattleManager] 战斗控制器初始化完成。");
+        // 临时测试：游戏一启动，就在坐标 (0,0,0) 召唤夜烬！
+        UnitManager.Instance.SpawnUnit(1001, new Vector3Int(0, 0, 0));
     }
 
     public void OnUpdate(float deltaTime)

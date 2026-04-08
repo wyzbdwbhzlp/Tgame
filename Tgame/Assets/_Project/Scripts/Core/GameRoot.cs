@@ -50,6 +50,7 @@ public class GameRoot : MonoBehaviour
         RegisterSystem(new DataManager());
         RegisterSystem(new GridSystem());  
         RegisterSystem(new TurnManager());
+        RegisterSystem(new UnitManager());   // <--- 新增：注册人事部
         RegisterSystem(new BattleManager());
         // 统一触发 OnInit
         foreach (var system in _systems)

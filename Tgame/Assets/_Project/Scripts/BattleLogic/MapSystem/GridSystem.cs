@@ -49,11 +49,7 @@ public class GridSystem : IGameSystem
             }
         }
 
-        // 模拟一个中心障碍物
-        if (_grid.TryGetValue(new Vector3Int(0, 0, 0), out GridCell center))
-        {
-            center.IsWalkable = false;
-        }
+        
     }
 
     public GridCell GetCell(Vector3Int cellPosition)
@@ -70,11 +66,11 @@ public class GridSystem : IGameSystem
     /// </summary>
     public Vector3 CellToWorld(Vector3Int hexPos)
     {
-        float xWorld = HexSize * Mathf.Sqrt(3f) * (hexPos.x + hexPos.z / 2f);
-        float yWorld = HexSize * (3f / 2f) * hexPos.z;
+        // 修复：垂直方向(yWorld)应该对应立方体坐标的 y 轴，而不是 z 轴
+        float xWorld = HexSize * Mathf.Sqrt(3f) * (hexPos.x + hexPos.y / 2f);
+        float yWorld = HexSize * (3f / 2f) * hexPos.y;
         return new Vector3(xWorld, yWorld, 0f);
     }
-
     /// <summary>
     /// 获取六边形的 6 个相邻地块
     /// </summary>
