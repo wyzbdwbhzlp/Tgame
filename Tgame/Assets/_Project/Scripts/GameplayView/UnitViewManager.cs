@@ -3,49 +3,36 @@ using UnityEngine;
 
 public class UnitViewManager : MonoBehaviour
 {
-    // ==========================================
-    // 新增：单例模式与开放获取方法
-    // ==========================================
     public static UnitViewManager Instance { get; private set; }
-
     private Dictionary<int, UnitView> _viewDict = new Dictionary<int, UnitView>();
 
-    private void Awake()
-    {
-        Instance = this;
-    }
+    private void Awake() { Instance = this; }
 
     private void Start()
     {
         if (UnitManager.Instance == null) return;
 
+        // 重新订阅，防止之前的订阅失效
+        UnitManager.Instance.OnUnitSpawned -= CreateUnitModel;
+        UnitManager.Instance.OnUnitSpawned += CreateUnitModel;
+
+        // 强制同步现有单位
         foreach (var logicUnit in UnitManager.Instance.GetAllUnits())
             CreateUnitModel(logicUnit);
-
-        UnitManager.Instance.OnUnitSpawned += CreateUnitModel;
     }
 
-    private void OnDestroy()
+    public UnitView GetView(int id)
     {
-        if (UnitManager.Instance != null)
-            UnitManager.Instance.OnUnitSpawned -= CreateUnitModel;
-
-        if (Instance == this) Instance = null;
-    }
-
-    // 新增：让外部可以通过逻辑ID拿到对应的表现层组件
-    public UnitView GetView(int instanceID)
-    {
-        _viewDict.TryGetValue(instanceID, out UnitView view);
-        return view;
+        if (_viewDict.TryGetValue(id, out var view)) return view;
+        return null;
     }
 
     private void CreateUnitModel(RuntimeUnit logicUnit)
     {
         if (_viewDict.ContainsKey(logicUnit.InstanceID)) return;
 
-        GameObject modelObj = new GameObject($"[Entity_2D] {logicUnit.ConfigData.characterName}_{logicUnit.InstanceID}");
-        SpriteRenderer sr = modelObj.AddComponent<SpriteRenderer>();
+        GameObject obj = new GameObject($"[View] {logicUnit.ConfigData.characterName}");
+        SpriteRenderer sr = obj.AddComponent<SpriteRenderer>();
 
         Texture2D tex = new Texture2D(64, 64);
         Color[] pixels = new Color[64 * 64];
@@ -55,17 +42,12 @@ public class UnitViewManager : MonoBehaviour
 
         sr.sprite = Sprite.Create(tex, new Rect(0, 0, 64, 64), new Vector2(0.5f, 0.5f), 64f);
         sr.sortingOrder = 10;
+        sr.color = (logicUnit.ConfigData.characterID == 1001) ? Color.cyan : Color.red;
 
-        if (logicUnit.ConfigData.characterID == 1001)
-            sr.color = Color.cyan;
-        else
-            sr.color = Color.red;
+        obj.transform.localScale = new Vector3(0.75f, 0.75f, 1f);
+        UnitView view = obj.AddComponent<UnitView>();
+        view.Init(logicUnit);
 
-        modelObj.transform.localScale = new Vector3(0.8f, 0.8f, 1f);
-
-        UnitView viewScript = modelObj.AddComponent<UnitView>();
-        viewScript.Init(logicUnit);
-
-        _viewDict.Add(logicUnit.InstanceID, viewScript);
+        _viewDict.Add(logicUnit.InstanceID, view);
     }
 }

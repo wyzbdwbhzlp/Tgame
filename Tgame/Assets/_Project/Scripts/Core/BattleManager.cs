@@ -1,110 +1,53 @@
-using Unity.VisualScripting;
-using UnityEngine;
+ï»¿using UnityEngine;
+using TGame.Data;
+using TGame.Battle;
+using System.Collections;
 
-public class BattleManager : IGameSystem
+public class BattleManager : MonoBehaviour, IGameSystem
 {
-    public BattleState CurrentState { get; private set; } = BattleState.None;
+    public static BattleManager Instance { get; private set; }
 
     public void OnInit()
     {
-        // ¶©ÔÄÊ±¼äÖáÈ·ÈÏÊÂ¼ş£ºµ±Íæ¼ÒÅÅºÃÊ±¼äÖáµã»÷È·ÈÏÊ±£¬ÇĞÈëÖ´ĞĞ×´Ì¬
-        EventBus.Subscribe<TimelineConfirmedEvent>(OnTimelineConfirmed);
+        Instance = this;
+        Debug.Log("<color=green>[BattleManager] æˆ˜æ–—åˆå§‹åŒ–ï¼šæ­£åœ¨åŠ è½½å…³å¡ 2001...</color>");
 
-        Debug.Log("[BattleManager] Õ½¶·¿ØÖÆÆ÷³õÊ¼»¯Íê³É¡£");
-        // ÁÙÊ±²âÊÔ£ºÓÎÏ·Ò»Æô¶¯£¬¾ÍÔÚ×ø±ê (0,0,0) ÕÙ»½Ò¹½ı£¡
-        UnitManager.Instance.SpawnUnit(1001, new Vector3Int(0, 0, 0));
+        // æ ¸å¿ƒï¼šå¯åŠ¨å…³å¡åŠ è½½æµç¨‹
+        StartLevel(2001);
     }
 
-    public void OnUpdate(float deltaTime)
+    public void OnUpdate(float deltaTime) { }
+    public void OnDestroy() { if (Instance == this) Instance = null; }
+
+    private void StartLevel(int levelID)
     {
-        // ¸ù¾İµ±Ç°×´Ì¬Ö´ĞĞ²»Í¬µÄÂÖÑ¯Âß¼­ (Èç¹ûÓĞĞèÒª³ÖĞøÃ¿Ö¡¼ì²âµÄÂß¼­)
-        switch (CurrentState)
+        LevelDataSO levelData = DataManager.Instance.GetLevelData(levelID);
+        if (levelData == null)
         {
-            case BattleState.Planning:
-                // µÈ´ıÍæ¼ÒÊäÈë»ò UI ²Ù×÷...
-                break;
-            case BattleState.Execution:
-                // ÂÖÑ¯ TimelinePlayer£¬¼ì²éÊÇ·ñ²¥·ÅÍê±Ï...
-                break;
-            case BattleState.EnemyTurn:
-                // ÂÖÑ¯µĞ·½ AI ¾ö²ß...
-                break;
+            Debug.LogError($"[BattleManager] åŠ è½½å¤±è´¥ï¼šDataManager ä¸­æ‰¾ä¸åˆ° ID ä¸º {levelID} çš„å…³å¡é…ç½®ï¼è¯·æ£€æŸ¥ CSV å¯¼è¡¨æ˜¯å¦æˆåŠŸã€‚");
+            return;
         }
-    }
 
-    public void OnDestroy()
-    {
-        EventBus.Unsubscribe<TimelineConfirmedEvent>(OnTimelineConfirmed);
-    }
+        // 1. é©±åŠ¨åœ°å½¢ç”Ÿæˆ
+        GridSystem.Instance.LoadLevel(levelData);
 
-    /// <summary>
-    /// Æô¶¯Õû³¡Õ½¶·µÄÖ÷Èë¿Ú
-    /// </summary>
-    public void StartBattle()
-    {
-        Debug.Log("=================================");
-        Debug.Log("[BattleManager] Õ½¶·ÕıÊ½¿ªÊ¼£¡");
-        Debug.Log("=================================");
-
-        ChangeState(BattleState.Planning);
-    }
-
-    /// <summary>
-    /// ºËĞÄ×´Ì¬Á÷×ª·½·¨
-    /// </summary>
-    private void ChangeState(BattleState newState)
-    {
-        if (CurrentState == newState) return;
-
-        BattleState prevState = CurrentState;
-        CurrentState = newState;
-
-        Debug.Log($"[BattleManager] Õ½¶·×´Ì¬Á÷×ª: {prevState} -> {CurrentState}");
-        EventBus.Publish(new BattleStateChangeEvent { PreviousState = prevState, CurrentState = CurrentState });
-
-        // Ö´ĞĞ½øÈëĞÂ×´Ì¬µÄ³õÊ¼»¯Âß¼­
-        OnEnterState(CurrentState);
-    }
-
-    private void OnEnterState(BattleState state)
-    {
-        switch (state)
+        // 2. é©±åŠ¨å•ä½ç”Ÿæˆ
+        foreach (var spawn in levelData.playerSpawns)
         {
-            case BattleState.Planning:
-                // Í¨Öª TurnManager Ôö¼Ó»ØºÏÊı£¬ÖØÖÃÊ±ËØ
-                // Í¨Öª TimelineUI ÏÔÊ¾¿É½»»¥½çÃæ
-                break;
-
-            case BattleState.Execution:
-                // Ëø¶¨ UI£¬¿ªÊ¼½âÎö TimelineData ²¢´¥·¢½ÇÉ«±íÏÖ
-                Debug.Log("[BattleManager] Ëø¶¨Ê±¼äÖá£¬¿ªÊ¼Ö´ĞĞÍæ¼ÒÖ¸Áî£¡");
-                // ÁÙÊ±Ä£Äâ£º¼ÙÉèÖ´ĞĞÁË 2 Ãëºó½áÊø
-                // Êµ¼ÊÏîÄ¿ÖĞÓ¦ÓÉ TimelinePlayer ²¥·ÅÍê±Ïºó»Øµ÷ ChangeState(BattleState.EnemyTurn)
-                break;
-
-            case BattleState.EnemyTurn:
-                Debug.Log("[BattleManager] ÂÖµ½µĞ·½ĞĞ¶¯£¡");
-                // ´¥·¢µĞ·½ AI Âß¼­...
-                break;
-
-            case BattleState.Settlement:
-                Debug.Log("[BattleManager] ±¾»ØºÏ½áÊø£¬½øĞĞ×´Ì¬½áËã...");
-                // ½áËã³ÖĞøĞÔÉËº¦¡¢Çû¸ÉÖµ»Ö¸´µÈ...
-                break;
+            UnitManager.Instance.SpawnUnit(spawn.characterID, spawn.spawnPos);
         }
+
+        foreach (var spawn in levelData.enemySpawns)
+        {
+            UnitManager.Instance.SpawnUnit(spawn.characterID, spawn.spawnPos);
+        }
+
+        Debug.Log($"ğŸ‰ [BattleManager] å…³å¡ã€{levelData.levelName}ã€‘åœ°å›¾ä¸è§’è‰²éƒ¨ç½²å®Œæ¯•ï¼");
     }
 
-    // ================= ÊÂ¼ş»Øµ÷ =================
-
-    private void OnTimelineConfirmed(TimelineConfirmedEvent evt)
+    // ä¾› TurnManager è°ƒç”¨çš„ç»“ç®—åç¨‹å…¥å£
+    public void StartSettleRoutine(IEnumerator routine)
     {
-        if (CurrentState == BattleState.Planning)
-        {
-            ChangeState(BattleState.Execution);
-        }
-        else
-        {
-            Debug.LogError("[BattleManager] µ±Ç°·Ç¹æ»®½×¶Î£¬ÎŞ·¨È·ÈÏÊ±¼äÖá£¡");
-        }
+        StartCoroutine(routine);
     }
 }

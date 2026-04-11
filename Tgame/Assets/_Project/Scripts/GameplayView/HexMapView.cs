@@ -1,214 +1,200 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
+using TGame.Battle;
 
 [RequireComponent(typeof(LineRenderer))]
 public class HexMapView : MonoBehaviour
 {
     private Vector3Int _hoveredCellPos;
     private LineRenderer _pathLineRenderer;
-
     private Vector3Int _lastHoveredPos = new Vector3Int(999, 999, 999);
-
-    // ==========================================
-    // 核心变动：动态选中的实体引用
-    // ==========================================
     private RuntimeUnit _selectedUnit = null;
+
+    // 存放生成的网格显示物体，方便后续管理
+    private Dictionary<Vector3Int, GameObject> _cellVisuals = new Dictionary<Vector3Int, GameObject>();
 
     private void Start()
     {
+        // 1. 初始化路径画线 (LineRenderer)
         _pathLineRenderer = GetComponent<LineRenderer>();
         _pathLineRenderer.positionCount = 0;
-        _pathLineRenderer.startWidth = 0.15f;
-        _pathLineRenderer.endWidth = 0.15f;
+        _pathLineRenderer.startWidth = 0.08f;
+        _pathLineRenderer.endWidth = 0.08f;
         _pathLineRenderer.material = new Material(Shader.Find("Sprites/Default"));
-        _pathLineRenderer.startColor = Color.cyan;
-        _pathLineRenderer.endColor = Color.blue;
-        _pathLineRenderer.sortingOrder = 5; // 确保线画在方块下面
+        _pathLineRenderer.startColor = Color.yellow;
+        _pathLineRenderer.endColor = Color.white;
+        _pathLineRenderer.sortingOrder = 5;
+
+        // 2. 核心：生成 Game 视角可见的网格
+        // 我们等一小会儿确保 GridSystem 已经 LoadLevel 完成
+        Invoke("CreateGridVisuals", 0.2f);
+    }
+
+    private void CreateGridVisuals()
+    {
+        if (GridSystem.Instance == null) return;
+
+        // 生成一张六边形边框贴图 (由代码动态生成，省去美术资源)
+        Sprite hexSprite = CreateHexFrameSprite();
+
+        // 遍历逻辑层的所有格子
+        // 注意：如果你之前的 GridSystem 没有提供获取所有格子的公开方法，
+        // 我们暂时通过半径暴力遍历（和你 OnDrawGizmos 逻辑一致）
+        int radius = 5;
+        for (int x = -radius; x <= radius; x++)
+        {
+            int y1 = Mathf.Max(-radius, -x - radius);
+            int y2 = Mathf.Min(radius, -x + radius);
+            for (int y = y1; y <= y2; y++)
+            {
+                Vector3Int pos = new Vector3Int(x, y, -x - y);
+                GridCell cellData = GridSystem.Instance.GetCell(pos);
+                if (cellData == null) continue;
+
+                // 创建显示物体
+                GameObject cellObj = new GameObject($"Cell_{x}_{y}");
+                cellObj.transform.SetParent(this.transform);
+                cellObj.transform.position = GridSystem.Instance.CellToWorld(pos);
+
+                SpriteRenderer sr = cellObj.AddComponent<SpriteRenderer>();
+                sr.sprite = hexSprite;
+
+                // 设置颜色：障碍物黑色，空地半透明白色边框
+                sr.color = cellData.IsWalkable ? new Color(1, 1, 1, 0.3f) : new Color(0, 0, 0, 0.8f);
+                sr.sortingOrder = 1; // 确保在最底层
+
+                _cellVisuals[pos] = cellObj;
+            }
+        }
+        Debug.Log($"[HexMapView] Game视图网格渲染完毕，共生成 {_cellVisuals.Count} 个格视觉体。");
+    }
+
+    // --- 动态生成六边形边框贴图的魔法函数 ---
+    private Sprite CreateHexFrameSprite()
+    {
+        int size = 128;
+        Texture2D tex = new Texture2D(size, size);
+        Color transparent = new Color(0, 0, 0, 0);
+
+        // 先填充透明
+        for (int i = 0; i < size * size; i++) tex.SetPixel(i % size, i / size, transparent);
+
+        // 计算六边形的 6 个点
+        Vector2 center = new Vector2(size / 2f, size / 2f);
+        float r = size * 0.48f;
+        Vector2[] points = new Vector2[6];
+        for (int i = 0; i < 6; i++)
+        {
+            float angle = Mathf.Deg2Rad * (60 * i - 30);
+            points[i] = center + new Vector2(Mathf.Cos(angle) * r, Mathf.Sin(angle) * r);
+        }
+
+        // 画线段（简单的像素画法）
+        for (int i = 0; i < 6; i++) DrawLine(tex, points[i], points[(i + 1) % 6], Color.white);
+
+        tex.Apply();
+        return Sprite.Create(tex, new Rect(0, 0, size, size), new Vector2(0.5f, 0.5f), 128f / (GridSystem.Instance.HexSize * 2f));
+    }
+
+    private void DrawLine(Texture2D tex, Vector2 p1, Vector2 p2, Color col)
+    {
+        float dist = Vector2.Distance(p1, p2);
+        for (float t = 0; t < 1; t += 1f / dist)
+        {
+            Vector2 p = Vector2.Lerp(p1, p2, t);
+            tex.SetPixel((int)p.x, (int)p.y, col);
+            // 加粗一点
+            tex.SetPixel((int)p.x + 1, (int)p.y, col);
+            tex.SetPixel((int)p.x, (int)p.y + 1, col);
+        }
     }
 
     private void Update()
     {
         if (GridSystem.Instance == null || TurnManager.Instance == null) return;
+        if (TurnManager.Instance.CurrentState != TGame.Battle.BattleState.Planning)
+        {
+            _pathLineRenderer.positionCount = 0;
+            return;
+        }
 
-        // 1. 获取鼠标并转换逻辑坐标
         Vector3 mouseWorldPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         mouseWorldPos.z = 0;
         _hoveredCellPos = GridSystem.Instance.WorldToCell(mouseWorldPos);
 
-        // 2. 鼠标悬停逻辑 (只有选中角色时，才绘制寻路轨迹)
         if (_hoveredCellPos != _lastHoveredPos)
         {
             _lastHoveredPos = _hoveredCellPos;
-            if (_selectedUnit != null)
+            if (_selectedUnit != null) UpdatePathVisualization();
+            else _pathLineRenderer.positionCount = 0;
+        }
+
+        if (Input.GetMouseButtonDown(0)) HandleLeftClick();
+        if (Input.GetMouseButtonDown(1)) CancelSelection();
+    }
+
+    private void HandleLeftClick()
+    {
+        GridCell clickedCell = GridSystem.Instance.GetCell(_hoveredCellPos);
+        if (clickedCell == null) return;
+
+        if (_selectedUnit == null)
+        {
+            if (clickedCell.OccupantUnitID != -1)
             {
-                UpdatePathVisualization();
+                _selectedUnit = UnitManager.Instance.GetUnit(clickedCell.OccupantUnitID);
+                if (_selectedUnit != null) Debug.Log($"[交互] 选中: {_selectedUnit.ConfigData.characterName}");
+            }
+        }
+        else
+        {
+            MoveCommand moveCmd = new MoveCommand(_selectedUnit.InstanceID, _selectedUnit.GridPosition, _hoveredCellPos);
+            if (moveCmd.Validate())
+            {
+                TurnManager.Instance.AddCommand(moveCmd);
+                CancelSelection();
             }
             else
             {
-                _pathLineRenderer.positionCount = 0; // 没选中时清空画线
+                Debug.LogWarning("[交互] TU不足！");
             }
         }
+    }
 
-        // ==========================================
-        // 3. 鼠标交互核心逻辑：左键点击
-        // ==========================================
-        if (Input.GetMouseButtonDown(0))
-        {
-            GridCell clickedCell = GridSystem.Instance.GetCell(_hoveredCellPos);
-            if (clickedCell == null) return;
-
-            if (_selectedUnit == null)
-            {
-                // 【状态一：空闲】尝试点击格子上的角色
-                if (clickedCell.OccupantUnitID != -1)
-                {
-                    _selectedUnit = UnitManager.Instance.GetUnit(clickedCell.OccupantUnitID);
-                    if (_selectedUnit != null)
-                    {
-                        Debug.Log($"[交互] 👆 选中了单位: 【{_selectedUnit.ConfigData.characterName}】");
-                        // 选中后立刻刷新一下当前位置到鼠标的线
-                        UpdatePathVisualization();
-                    }
-                }
-            }
-            else
-            {
-                // 【状态二：已选中】尝试对目标格子下达移动指令
-                ConfirmMoveAction();
-            }
-        }
-
-        // ==========================================
-        // 4. 鼠标交互补充：右键取消选择
-        // ==========================================
-        if (Input.GetMouseButtonDown(1))
-        {
-            if (_selectedUnit != null)
-            {
-                Debug.Log($"[交互] ❌ 取消选择: 【{_selectedUnit.ConfigData.characterName}】");
-                _selectedUnit = null;
-                _pathLineRenderer.positionCount = 0;
-            }
-        }
+    private void CancelSelection()
+    {
+        _selectedUnit = null;
+        _pathLineRenderer.positionCount = 0;
     }
 
     private void UpdatePathVisualization()
     {
         if (_selectedUnit == null) return;
-
-        // 注意这里：起点变成了选中角色的真实坐标
         List<GridCell> path = PathfindingService.GetPath(GridSystem.Instance, _selectedUnit.GridPosition, _hoveredCellPos);
-
-        if (path == null || path.Count == 0)
+        if (path == null || path.Count <= 1)
         {
             _pathLineRenderer.positionCount = 0;
             return;
         }
-
         _pathLineRenderer.positionCount = path.Count;
         for (int i = 0; i < path.Count; i++)
         {
-            Vector3 worldPoint = GridSystem.Instance.CellToWorld(path[i].Position);
-            worldPoint.z = 0f;
-            _pathLineRenderer.SetPosition(i, worldPoint);
+            _pathLineRenderer.SetPosition(i, GridSystem.Instance.CellToWorld(path[i].Position));
         }
     }
 
-    private void ConfirmMoveAction()
-    {
-        GridCell targetCell = GridSystem.Instance.GetCell(_hoveredCellPos);
-        if (targetCell == null || !targetCell.CanEnter())
-        {
-            Debug.LogWarning("[交互] 目标格子不可达或已被占用！");
-            return;
-        }
-
-        MoveCommand moveCmd = new MoveCommand(
-            _selectedUnit.InstanceID,
-            _selectedUnit.GridPosition,
-            _hoveredCellPos,
-            GridSystem.Instance,
-            TurnManager.Instance
-        );
-
-        if (moveCmd.Validate())
-        {
-            // ==========================================
-            // 魔法在此：在改变逻辑坐标前，拿到底层的 A* 路径
-            // 然后立刻通知表现层的 2D 方块去播放动画！
-            // ==========================================
-            List<GridCell> path = PathfindingService.GetPath(GridSystem.Instance, _selectedUnit.GridPosition, _hoveredCellPos);
-            if (UnitViewManager.Instance != null && path != null)
-            {
-                UnitView view = UnitViewManager.Instance.GetView(_selectedUnit.InstanceID);
-                if (view != null)
-                {
-                    view.MoveAlongPath(path);
-                }
-            }
-
-            // ------------------------------------------------
-
-            List<TimelineEvent> generatedEvents = moveCmd.GenerateEvents();
-            Debug.Log($"✅ [动作系统] 移动指令生效！{_selectedUnit.ConfigData.characterName} 前往: {_hoveredCellPos}");
-
-            // 逻辑层：底层瞬间完成数据移交
-            GridCell oldCell = GridSystem.Instance.GetCell(_selectedUnit.GridPosition);
-            oldCell.OccupantUnitID = -1;
-
-            _selectedUnit.GridPosition = _hoveredCellPos;
-            targetCell.OccupantUnitID = _selectedUnit.InstanceID;
-
-            // 走完之后自动取消选中状态
-            _selectedUnit = null;
-            _pathLineRenderer.positionCount = 0;
-        }
-        else
-        {
-            Debug.LogWarning("❌ [动作系统] 时素不足或路径无法到达。");
-        }
-    }
-
-
+    // 依然保留 Gizmos，双重保障
     private void OnDrawGizmos()
     {
         if (!Application.isPlaying || GridSystem.Instance == null) return;
-
-        int mapRadius = 5;
-        for (int x = -mapRadius; x <= mapRadius; x++)
+        if (UnitManager.Instance != null)
         {
-            int y1 = Mathf.Max(-mapRadius, -x - mapRadius);
-            int y2 = Mathf.Min(mapRadius, -x + mapRadius);
-            for (int y = y1; y <= y2; y++)
+            foreach (var unit in UnitManager.Instance.GetAllUnits())
             {
-                Vector3Int cellPos = new Vector3Int(x, y, -x - y);
-                Vector3 centerPos = GridSystem.Instance.CellToWorld(cellPos);
-                GridCell cellData = GridSystem.Instance.GetCell(cellPos);
-
-                Gizmos.color = (cellData != null && !cellData.IsWalkable) ? Color.black : Color.white;
-                DrawHexagonGizmo(centerPos, GridSystem.Instance.HexSize);
+                Vector3 pos = GridSystem.Instance.CellToWorld(unit.GridPosition);
+                Gizmos.color = (unit.ConfigData.characterID == 1001) ? Color.cyan : Color.red;
+                Gizmos.DrawSphere(pos, 0.3f);
             }
         }
-
-        // 高亮选中角色的底格为绿色
-        if (_selectedUnit != null)
-        {
-            Gizmos.color = Color.green;
-            DrawHexagonGizmo(GridSystem.Instance.CellToWorld(_selectedUnit.GridPosition), GridSystem.Instance.HexSize);
-        }
-
-        Gizmos.color = Color.red;
-        DrawHexagonGizmo(GridSystem.Instance.CellToWorld(_hoveredCellPos), GridSystem.Instance.HexSize);
-    }
-
-    private void DrawHexagonGizmo(Vector3 center, float size)
-    {
-        Vector3[] corners = new Vector3[6];
-        for (int i = 0; i < 6; i++)
-        {
-            float angle_rad = Mathf.PI / 180 * (60 * i - 30);
-            corners[i] = new Vector3(center.x + size * Mathf.Cos(angle_rad), center.y + size * Mathf.Sin(angle_rad), 0);
-        }
-        for (int i = 0; i < 6; i++) Gizmos.DrawLine(corners[i], corners[(i + 1) % 6]);
     }
 }

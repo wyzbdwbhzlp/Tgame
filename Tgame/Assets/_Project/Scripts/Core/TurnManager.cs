@@ -1,55 +1,83 @@
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
-public class TurnManager : IGameSystem
+namespace TGame.Battle
 {
-    // ==========================================
-    // 核心修复：加上单例访问器，让表现层能拿到时素数据
-    // ==========================================
-    public static TurnManager Instance { get; private set; }
+    public enum BattleState { Planning, Settling, EnemyTurn }
 
-    // 当前回合已经使用的时素
-    public int CurrentTimeUnitsUsed { get; private set; } = 0;
-
-    // 按照设定，每回合最大 13 时素
-    public int MaxTimeUnitsPerTurn { get; private set; } = 13;
-
-    public void OnInit()
+    public class TurnManager : IGameSystem
     {
-        // 初始化时赋值单例
-        Instance = this;
-        Debug.Log("[TurnManager] 初始化完成，准备就绪。");
-    }
+        public static TurnManager Instance { get; private set; }
 
-    public void OnUpdate(float deltaTime) { }
+        public BattleState CurrentState { get; private set; } = BattleState.Planning;
 
-    public void OnDestroy()
-    {
-        if (Instance == this) Instance = null;
-    }
+        public int CurrentTimeUnitsUsed { get; private set; } = 0;   // 实际已扣除（结算用）
+        public int PlannedTimeUnitsUsed { get; private set; } = 0;   // 决策已规划（UI展示用）
 
-    /// <summary>
-    /// 校验本回合剩余时素是否足够执行该动作
-    /// </summary>
-    public bool CanScheduleAction(int requiredTime)
-    {
-        return (CurrentTimeUnitsUsed + requiredTime) <= MaxTimeUnitsPerTurn;
-    }
+        public int MaxTimeUnitsPerTurn { get; private set; } = 13;
+        public int CurrentRound { get; private set; } = 1;
 
-    /// <summary>
-    /// 正式扣除时素（在真正执行动作后调用）
-    /// </summary>
-    public void AdvanceTime(int timeCost)
-    {
-        CurrentTimeUnitsUsed += timeCost;
-        Debug.Log($"[TurnManager] 消耗了 {timeCost} 时素，当前回合已用: {CurrentTimeUnitsUsed}/{MaxTimeUnitsPerTurn}");
-    }
+        private List<ICommand> _commandQueue = new List<ICommand>();
 
-    /// <summary>
-    /// 回合结束，重置时素
-    /// </summary>
-    public void ResetTurn()
-    {
-        CurrentTimeUnitsUsed = 0;
-        Debug.Log("[TurnManager] 回合重置，时素恢复。");
+        public void OnInit()
+        {
+            Instance = this;
+            Debug.Log("[TurnManager] 就绪。");
+        }
+
+        public void OnUpdate(float deltaTime) { }
+        public void OnDestroy() { if (Instance == this) Instance = null; }
+
+        public void AddCommand(ICommand cmd)
+        {
+            if (cmd != null && cmd.Validate())
+            {
+                _commandQueue.Add(cmd);
+                // 规划时先累加预估消耗
+                PlannedTimeUnitsUsed += cmd.GetCost();
+                Debug.Log($"<color=green>[决策] 指令录入。当前总规划消耗: {PlannedTimeUnitsUsed} TU</color>");
+            }
+        }
+
+        public void EndPlayerTurn()
+        {
+            if (CurrentState != BattleState.Planning) return;
+            BattleManager.Instance.StartSettleRoutine(ResolveTurnRoutine());
+        }
+
+        private IEnumerator ResolveTurnRoutine()
+        {
+            CurrentState = BattleState.Settling;
+            Debug.Log("<color=yellow>======= 结算开始 =======</color>");
+
+            List<ICommand> snapshot = new List<ICommand>(_commandQueue);
+            _commandQueue.Clear();
+
+            foreach (var cmd in snapshot)
+            {
+                cmd.Execute();
+                yield return new WaitForSeconds(1.1f);
+            }
+
+            CurrentState = BattleState.EnemyTurn;
+            yield return new WaitForSeconds(1.0f);
+            StartNewRound();
+        }
+
+        private void StartNewRound()
+        {
+            CurrentRound++;
+            CurrentTimeUnitsUsed = 0;
+            PlannedTimeUnitsUsed = 0; // 重置规划
+            CurrentState = BattleState.Planning;
+            Debug.Log($"<color=green>======= 第 {CurrentRound} 轮 =======</color>");
+        }
+
+        // 校验是否还能承载该消耗
+        public bool CanScheduleAction(int requiredTime) => (PlannedTimeUnitsUsed + requiredTime) <= MaxTimeUnitsPerTurn;
+
+        // 正式扣费
+        public void AdvanceTime(int timeCost) => CurrentTimeUnitsUsed += timeCost;
     }
 }
