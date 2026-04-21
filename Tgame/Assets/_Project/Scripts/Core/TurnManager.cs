@@ -9,35 +9,51 @@ namespace TGame.Battle
     public class TurnManager : IGameSystem
     {
         public static TurnManager Instance { get; private set; }
-
         public BattleState CurrentState { get; private set; } = BattleState.Planning;
-
-        public int CurrentTimeUnitsUsed { get; private set; } = 0;   // 实际已扣除（结算用）
-        public int PlannedTimeUnitsUsed { get; private set; } = 0;   // 决策已规划（UI展示用）
-
-        public int MaxTimeUnitsPerTurn { get; private set; } = 13;
         public int CurrentRound { get; private set; } = 1;
+        public int MaxTUPerTurn { get; private set; } = 13;
 
+        // 独立账本
+        private Dictionary<int, int> _unitCurrentTU = new Dictionary<int, int>();
+        private Dictionary<int, int> _unitPlannedTU = new Dictionary<int, int>();
         private List<ICommand> _commandQueue = new List<ICommand>();
 
-        public void OnInit()
-        {
-            Instance = this;
-            Debug.Log("[TurnManager] 就绪。");
-        }
-
+        public void OnInit() { Instance = this; }
         public void OnUpdate(float deltaTime) { }
         public void OnDestroy() { if (Instance == this) Instance = null; }
+
+        public void RegisterUnit(int unitID)
+        {
+            if (!_unitCurrentTU.ContainsKey(unitID))
+            {
+                _unitCurrentTU[unitID] = 0;
+                _unitPlannedTU[unitID] = 0;
+            }
+        }
+
+        public int GetUnitPlannedTU(int unitID) => _unitPlannedTU.ContainsKey(unitID) ? _unitPlannedTU[unitID] : 0;
+
+        public bool CanScheduleAction(int unitID, int cost)
+        {
+            if (!_unitPlannedTU.ContainsKey(unitID)) RegisterUnit(unitID);
+            return _unitPlannedTU[unitID] + cost <= MaxTUPerTurn;
+        }
 
         public void AddCommand(ICommand cmd)
         {
             if (cmd != null && cmd.Validate())
             {
                 _commandQueue.Add(cmd);
-                // 规划时先累加预估消耗
-                PlannedTimeUnitsUsed += cmd.GetCost();
-                Debug.Log($"<color=green>[决策] 指令录入。当前总规划消耗: {PlannedTimeUnitsUsed} TU</color>");
+                int uid = cmd.GetUnitID();
+                _unitPlannedTU[uid] += cmd.GetCost();
+                Debug.Log($"<color=green>[决策] 指令录入。角色 {uid} 已规划 TU: {_unitPlannedTU[uid]}/{MaxTUPerTurn}</color>");
             }
+        }
+
+        public void AdvanceTime(int unitID, int cost)
+        {
+            if (!_unitCurrentTU.ContainsKey(unitID)) RegisterUnit(unitID);
+            _unitCurrentTU[unitID] += cost;
         }
 
         public void EndPlayerTurn()
@@ -49,8 +65,6 @@ namespace TGame.Battle
         private IEnumerator ResolveTurnRoutine()
         {
             CurrentState = BattleState.Settling;
-            Debug.Log("<color=yellow>======= 结算开始 =======</color>");
-
             List<ICommand> snapshot = new List<ICommand>(_commandQueue);
             _commandQueue.Clear();
 
@@ -68,16 +82,14 @@ namespace TGame.Battle
         private void StartNewRound()
         {
             CurrentRound++;
-            CurrentTimeUnitsUsed = 0;
-            PlannedTimeUnitsUsed = 0; // 重置规划
+            List<int> keys = new List<int>(_unitCurrentTU.Keys);
+            foreach (var k in keys)
+            {
+                _unitCurrentTU[k] = 0;
+                _unitPlannedTU[k] = 0;
+            }
             CurrentState = BattleState.Planning;
             Debug.Log($"<color=green>======= 第 {CurrentRound} 轮 =======</color>");
         }
-
-        // 校验是否还能承载该消耗
-        public bool CanScheduleAction(int requiredTime) => (PlannedTimeUnitsUsed + requiredTime) <= MaxTimeUnitsPerTurn;
-
-        // 正式扣费
-        public void AdvanceTime(int timeCost) => CurrentTimeUnitsUsed += timeCost;
     }
 }

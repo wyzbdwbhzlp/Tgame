@@ -7,10 +7,10 @@ namespace TGame.Battle
     {
         bool Validate();
         void Execute();
-        int GetCost(); // 新增：获取该指令的消耗
+        int GetCost();
+        int GetUnitID(); // 必须绑定执行者ID
     }
 
-    // --- 移动指令 ---
     public class MoveCommand : ICommand
     {
         private int _unitID;
@@ -27,8 +27,9 @@ namespace TGame.Battle
         }
 
         public int GetCost() => _stepCost;
+        public int GetUnitID() => _unitID;
 
-        public bool Validate() => TurnManager.Instance != null && TurnManager.Instance.CanScheduleAction(_stepCost);
+        public bool Validate() => TurnManager.Instance != null && TurnManager.Instance.CanScheduleAction(_unitID, _stepCost);
 
         public void Execute()
         {
@@ -37,44 +38,45 @@ namespace TGame.Battle
 
             if (unit != null)
             {
-                Debug.Log($"<color=white>[指令执行] 角色 {unit.ConfigData.characterName} 开始从 {_start} 往 {_target} 结算</color>");
                 List<GridCell> path = PathfindingService.GetPath(GridSystem.Instance, _start, _target);
 
                 GridSystem.Instance.GetCell(_start).OccupantUnitID = -1;
                 unit.GridPosition = _target;
                 GridSystem.Instance.GetCell(_target).OccupantUnitID = _unitID;
 
-                TurnManager.Instance.AdvanceTime(_stepCost);
+                TurnManager.Instance.AdvanceTime(_unitID, _stepCost);
 
-                if (view != null && path != null && path.Count > 0)
-                {
-                    view.MoveAlongPath(path);
-                }
+                if (view != null && path != null && path.Count > 0) view.MoveAlongPath(path);
+
+                Debug.Log($"<color=cyan>[结算] {_unitID} 移动消耗 {_stepCost} TU。</color>");
             }
         }
     }
 
-    // --- 新增：模拟动作指令 (技能、道具) ---
     public class MockActionCommand : ICommand
     {
+        private int _unitID;
         private string _actionName;
         private int _cost;
 
-        public MockActionCommand(string name, int cost)
+        public MockActionCommand(int unitID, string name, int cost)
         {
+            _unitID = unitID;
             _actionName = name;
             _cost = cost;
         }
 
         public int GetCost() => _cost;
+        public int GetUnitID() => _unitID;
 
-        public bool Validate() => TurnManager.Instance != null && TurnManager.Instance.CanScheduleAction(_cost);
+        public bool Validate() => TurnManager.Instance != null && TurnManager.Instance.CanScheduleAction(_unitID, _cost);
 
         public void Execute()
         {
-            // 结算时正式扣费并播报
-            TurnManager.Instance.AdvanceTime(_cost);
-            Debug.Log($"<color=orange>[结算] 执行动作：【{_actionName}】，结算消耗了 {_cost} TU。</color>");
+            TurnManager.Instance.AdvanceTime(_unitID, _cost);
+            var unit = UnitManager.Instance.GetUnit(_unitID);
+            string uName = unit != null ? unit.ConfigData.characterName : _unitID.ToString();
+            Debug.Log($"<color=orange>[结算] 角色 {uName} 执行【{_actionName}】，消耗 {_cost} TU。</color>");
         }
     }
 }
