@@ -3,6 +3,7 @@ using System.Collections;
 using TGame.Data;
 using TGame.Battle;
 using Game.UI;
+using TGame.Core; // 【🔥修复】引入 DataManager 所在的命名空间
 
 public class BattleManager : MonoBehaviour
 {

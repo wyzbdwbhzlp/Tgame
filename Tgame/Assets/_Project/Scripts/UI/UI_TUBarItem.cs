@@ -1,61 +1,49 @@
-using UnityEngine;
+ï»¿using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 
 public class UI_TUBarItem : MonoBehaviour
 {
-    [Header("ÃÀÊõ×é¼şÒıÓÃ")]
+    [Header("ç¾æœ¯ç»„ä»¶å¼•ç”¨")]
     public TextMeshProUGUI txtName;
-
-    [Tooltip("Ê¹ÓÃ Slider Ìæ´ú Scrollbar")]
     public Slider tuSlider;
-
-    [Tooltip("Slider ÏÂ·½µÄ Fill ÎïÌåÉÏ¹ÒÔØµÄ Image (ÓÃÓÚ¸Ä±äÑÕÉ«)")]
     public Image fillImage;
+    public Image imgPortrait;
 
-    // »º´æ°ó¶¨µÄ½ÇÉ« ID
     private int _boundUnitID;
 
-    /// <summary>
-    /// ³õÊ¼»¯£º°ó¶¨½ÇÉ«²¢ÉèÖÃ³õÊ¼±íÏÖ
-    /// </summary>
-    public void Init(int unitID, string characterName, bool isPlayer)
+    // ã€ğŸ”¥æ ¸å¿ƒä¿®æ”¹ã€‘ç›´æ¥æ¥æ”¶ Sprite å¯¹è±¡
+    public void Init(int unitID, string characterName, bool isPlayer, Sprite portrait)
     {
         _boundUnitID = unitID;
 
-        if (txtName)
-        {
-            txtName.text = characterName;
-        }
+        if (txtName) txtName.text = characterName;
+        if (fillImage != null) fillImage.color = isPlayer ? Color.cyan : new Color(1f, 0.3f, 0.3f);
 
-        // ĞŞ¸Ä Slider Ìî³äÇøÓòµÄÑÕÉ«£ºÍæ¼ÒÇàÉ«£¬µĞÈËºìÉ«
-        if (fillImage != null)
+        // ã€ğŸ”¥æ ¸å¿ƒä¿®æ”¹ã€‘ç›´æ¥èµ‹å€¼ï¼Œä¸ç”¨å†å» Resources é‡Œé¢æ‰¾äº†
+        if (imgPortrait != null)
         {
-            fillImage.color = isPlayer ? Color.cyan : new Color(1f, 0.3f, 0.3f);
+            if (portrait != null)
+            {
+                imgPortrait.sprite = portrait;
+                imgPortrait.gameObject.SetActive(true);
+            }
+            else
+            {
+                imgPortrait.gameObject.SetActive(false);
+            }
         }
     }
 
-    /// <summary>
-    /// Ë¢ĞÂ£º¸ù¾İµ±Ç°Ê±ËØºÍÑ¡ÖĞ×´Ì¬¸üĞÂ±íÏÖ
-    /// </summary>
     public void UpdateState(int plannedTU, int maxTU, bool isSelected)
     {
         if (tuSlider)
         {
-            // ¼ÆËãÊ£Óà±ÈÀı¡£×¢Òâ£ºÇëÈ·±£ÔÚ Prefab ÖĞ°Ñ Slider µÄ Min Value ÉèÎª 0£¬Max Value ÉèÎª 1
             float remainRatio = 1f - Mathf.Clamp01((float)plannedTU / maxTU);
             tuSlider.value = remainRatio;
         }
-
-        if (txtName)
-        {
-            // Ñ¡ÖĞÊ±Ãû×Ö¸ßÁÁ
-            txtName.color = isSelected ? Color.yellow : Color.white;
-        }
+        if (txtName) txtName.color = isSelected ? Color.yellow : Color.white;
     }
 
-    public int GetBoundUnitID()
-    {
-        return _boundUnitID;
-    }
+    public int GetBoundUnitID() => _boundUnitID;
 }

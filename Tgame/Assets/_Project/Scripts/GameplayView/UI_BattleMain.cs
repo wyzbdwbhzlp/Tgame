@@ -1,4 +1,4 @@
-using UnityEngine;
+ï»¿using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using TGame.Battle;
@@ -7,14 +7,14 @@ using System.Collections.Generic;
 
 public class UI_BattleMain : UIBase
 {
-    [Header("ÎÄ×ÖÓë°´Å¥ÒıÓÃ")]
+    [Header("æ–‡å­—ä¸æŒ‰é’®å¼•ç”¨")]
     public TextMeshProUGUI txtRound;
     public TextMeshProUGUI txtState;
     public Button btnEndTurn;
     public Button btnSkill;
     public Button btnItem;
 
-    [Header("Ê±ËØÁĞ±í×Ê²ú»¯ÒıÓÃ")]
+    [Header("æ—¶ç´ åˆ—è¡¨èµ„äº§åŒ–å¼•ç”¨")]
     public RectTransform tuListContainer;
     public GameObject tuBarPrefab;
 
@@ -30,7 +30,6 @@ public class UI_BattleMain : UIBase
         if (btnItem) btnItem.onClick.AddListener(() => RequestMockAction("Item", 2));
     }
 
-    // ºËĞÄĞŞ¸Ä£ºÈ·±£Ã¿´Î´ò¿ªÊ±±Ø¶¨Ë¢ĞÂÁĞ±í£¬²»ÓÃ Invoke ÑÓ³Ù
     protected override void OnShow()
     {
         base.OnShow();
@@ -52,7 +51,15 @@ public class UI_BattleMain : UIBase
             if (itemScript != null)
             {
                 bool isPlayer = unit.ConfigData.characterID == 1001;
-                itemScript.Init(unit.InstanceID, unit.ConfigData.characterName, isPlayer);
+
+                // ã€ğŸ”¥æ ¸å¿ƒä¿®æ”¹ã€‘ä¼ å…¥å¼ºå¼•ç”¨çš„ portraitSprite
+                itemScript.Init(
+                    unit.InstanceID,
+                    unit.ConfigData.characterName,
+                    isPlayer,
+                    unit.ConfigData.portraitSprite
+                );
+
                 _tuBarItems.Add(itemScript);
             }
         }
@@ -62,8 +69,8 @@ public class UI_BattleMain : UIBase
     {
         if (TurnManager.Instance == null) return;
 
-        if (txtRound) txtRound.text = $"»ØºÏ: {TurnManager.Instance.CurrentRound}";
-        if (txtState) txtState.text = $"½×¶Î: {TurnManager.Instance.CurrentState}";
+        if (txtRound) txtRound.text = $"å›åˆ: {TurnManager.Instance.CurrentRound}";
+        if (txtState) txtState.text = $"é˜¶æ®µ: {TurnManager.Instance.CurrentState}";
 
         int selectedUnitID = (HexMapView.Instance != null && HexMapView.Instance.SelectedUnit != null)
                            ? HexMapView.Instance.SelectedUnit.InstanceID : -1;

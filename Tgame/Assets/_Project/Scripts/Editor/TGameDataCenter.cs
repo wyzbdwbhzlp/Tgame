@@ -35,7 +35,7 @@ namespace TGame.EditorTools
             }
         }
 
-        #region --- 1. 角色数据导入 ---
+        #region --- 1. 角色数据导入 (单表架构版) ---
         private void ImportCharacterCSV()
         {
             string filePath = EditorUtility.OpenFilePanel("选择角色配置CSV", "Assets/", "csv");
@@ -44,49 +44,73 @@ namespace TGame.EditorTools
             List<string> lines = ReadFileLines(filePath);
             if (lines.Count <= 1) return;
 
-            string savePath = "Assets/Resources/DataConfigs/Characters";
+            string savePath = "Assets/Resources/DataConfigs";
             EnsureFolderExists(savePath);
 
-            int successCount = 0;
+            // 1. 尝试获取或创建唯一的角色总表
+            string dbPath = $"{savePath}/CharacterTable.asset";
+            CharacterTableSO table = AssetDatabase.LoadAssetAtPath<CharacterTableSO>(dbPath);
+            if (table == null)
+            {
+                table = ScriptableObject.CreateInstance<CharacterTableSO>();
+                AssetDatabase.CreateAsset(table, dbPath);
+            }
+
+            // 2. 准备一个 List 来装解析出的角色
+            List<CharacterData> charList = new List<CharacterData>();
+
             for (int i = 1; i < lines.Count; i++)
             {
                 if (string.IsNullOrWhiteSpace(lines[i])) continue;
                 string[] row = csvParser.Split(lines[i]);
-                if (row.Length < 10) continue;
 
-                CharacterDataSO tempData = ScriptableObject.CreateInstance<CharacterDataSO>();
+                // 需要12列数据（包含了立绘和预制体路径）
+                if (row.Length < 12) continue;
+
+                // 实例化普通的 C# 类
+                CharacterData tempData = new CharacterData();
 
                 int.TryParse(CleanCSVString(row[0]), out tempData.characterID);
                 tempData.characterName = CleanCSVString(row[1]);
-                int.TryParse(CleanCSVString(row[2]), out tempData.maxHP);
-                int.TryParse(CleanCSVString(row[3]), out tempData.maxMP);
-                int.TryParse(CleanCSVString(row[4]), out tempData.attack);
-                int.TryParse(CleanCSVString(row[5]), out tempData.defense);
-                int.TryParse(CleanCSVString(row[6]), out tempData.speed);
-                int.TryParse(CleanCSVString(row[7]), out tempData.postureValue);
-                float.TryParse(CleanCSVString(row[8]), out tempData.dodgeRate);
-                float.TryParse(CleanCSVString(row[9]), out tempData.critRate);
 
-                tempData.name = $"{tempData.characterID}_{tempData.characterName}";
-                string assetPath = $"{savePath}/{tempData.name}.asset";
+                // 自动转化路径为 GameObject / Sprite 强引用
+                string portraitStr = CleanCSVString(row[2]);
+                string prefabStr = CleanCSVString(row[3]);
 
-                CharacterDataSO existingAsset = AssetDatabase.LoadAssetAtPath<CharacterDataSO>(assetPath);
-                if (existingAsset != null)
+                if (!string.IsNullOrEmpty(portraitStr))
                 {
-                    EditorUtility.CopySerialized(tempData, existingAsset);
-                    EditorUtility.SetDirty(existingAsset);
-                    DestroyImmediate(tempData, true);
+                    Sprite sp = AssetDatabase.LoadAssetAtPath<Sprite>($"Assets/Resources/{portraitStr}.png");
+                    if (sp == null) sp = AssetDatabase.LoadAssetAtPath<Sprite>($"Assets/Resources/{portraitStr}.jpg");
+                    tempData.portraitSprite = sp;
                 }
-                else
+
+                if (!string.IsNullOrEmpty(prefabStr))
                 {
-                    AssetDatabase.CreateAsset(tempData, assetPath);
+                    tempData.characterPrefab = AssetDatabase.LoadAssetAtPath<GameObject>($"Assets/Resources/{prefabStr}.prefab");
                 }
-                successCount++;
+
+                // 战斗属性顺延解析
+                int.TryParse(CleanCSVString(row[4]), out tempData.maxHP);
+                int.TryParse(CleanCSVString(row[5]), out tempData.maxMP);
+                int.TryParse(CleanCSVString(row[6]), out tempData.attack);
+                int.TryParse(CleanCSVString(row[7]), out tempData.defense);
+                int.TryParse(CleanCSVString(row[8]), out tempData.speed);
+                int.TryParse(CleanCSVString(row[9]), out tempData.postureValue);
+                float.TryParse(CleanCSVString(row[10]), out tempData.dodgeRate);
+                float.TryParse(CleanCSVString(row[11]), out tempData.critRate);
+
+                charList.Add(tempData);
             }
 
+            // 3. 将 List 赋值给总表的数组
+            table.characters = charList.ToArray();
+
+            // 4. 标记脏数据并保存
+            EditorUtility.SetDirty(table);
             AssetDatabase.SaveAssets();
             AssetDatabase.Refresh();
-            Debug.Log($"✅ [角色导表] 生成/更新了 {successCount} 个角色数据！");
+
+            Debug.Log($"✅ [角色导表] 成功将 {charList.Count} 个角色导入到单表架构 (CharacterTable) 中！");
         }
         #endregion
 

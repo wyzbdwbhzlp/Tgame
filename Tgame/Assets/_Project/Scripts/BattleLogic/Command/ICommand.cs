@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+ï»¿using System.Collections.Generic;
 using UnityEngine;
 
 namespace TGame.Battle
@@ -8,7 +8,7 @@ namespace TGame.Battle
         bool Validate();
         void Execute();
         int GetCost();
-        int GetUnitID(); // ±ØĞë°ó¶¨Ö´ĞĞÕßID
+        int GetUnitID(); // å¿…é¡»ç»‘å®šæ‰§è¡Œè€…ID
     }
 
     public class MoveCommand : ICommand
@@ -41,14 +41,17 @@ namespace TGame.Battle
                 List<GridCell> path = PathfindingService.GetPath(GridSystem.Instance, _start, _target);
 
                 GridSystem.Instance.GetCell(_start).OccupantUnitID = -1;
-                unit.GridPosition = _target;
+
+                // ã€ğŸ”¥ä¿®å¤ã€‘è°ƒç”¨å®‰å…¨çš„ SetGridPosition æ–¹æ³•ï¼Œè€Œä¸æ˜¯ç›´æ¥èµ‹å€¼
+                unit.SetGridPosition(_target);
+
                 GridSystem.Instance.GetCell(_target).OccupantUnitID = _unitID;
 
                 TurnManager.Instance.AdvanceTime(_unitID, _stepCost);
 
                 if (view != null && path != null && path.Count > 0) view.MoveAlongPath(path);
 
-                Debug.Log($"<color=cyan>[½áËã] {_unitID} ÒÆ¶¯ÏûºÄ {_stepCost} TU¡£</color>");
+                Debug.Log($"<color=cyan>[ç»“ç®—] {_unitID} ç§»åŠ¨æ¶ˆè€— {_stepCost} TUã€‚</color>");
             }
         }
     }
@@ -76,7 +79,7 @@ namespace TGame.Battle
             TurnManager.Instance.AdvanceTime(_unitID, _cost);
             var unit = UnitManager.Instance.GetUnit(_unitID);
             string uName = unit != null ? unit.ConfigData.characterName : _unitID.ToString();
-            Debug.Log($"<color=orange>[½áËã] ½ÇÉ« {uName} Ö´ĞĞ¡¾{_actionName}¡¿£¬ÏûºÄ {_cost} TU¡£</color>");
+            Debug.Log($"<color=orange>[ç»“ç®—] è§’è‰² {uName} æ‰§è¡Œã€{_actionName}ã€‘ï¼Œæ¶ˆè€— {_cost} TUã€‚</color>");
         }
     }
 }

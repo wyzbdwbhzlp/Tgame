@@ -2,58 +2,71 @@ using System.Collections.Generic;
 using UnityEngine;
 using TGame.Data;
 
-public class DataManager : IGameSystem
+namespace TGame.Core
 {
-    public static DataManager Instance { get; private set; }
-
-    private readonly Dictionary<int, CharacterDataSO> _characterCache = new Dictionary<int, CharacterDataSO>();
-    private readonly Dictionary<int, LevelDataSO> _levelCache = new Dictionary<int, LevelDataSO>();
-
-    public void OnInit()
+    public class DataManager : IGameSystem
     {
-        Instance = this;
-        LoadAllCharacterData();
-        LoadAllLevelData();
-    }
+        public static DataManager Instance { get; private set; }
 
-    public void OnUpdate(float deltaTime) { }
+        // 字典的值类型改为了普通的 CharacterData
+        private Dictionary<int, CharacterData> _characterDict = new Dictionary<int, CharacterData>();
+        private Dictionary<int, LevelDataSO> _levelDict = new Dictionary<int, LevelDataSO>();
 
-    public void OnDestroy()
-    {
-        _characterCache.Clear();
-        _levelCache.Clear();
-        if (Instance == this) Instance = null;
-    }
-
-    private void LoadAllCharacterData()
-    {
-        CharacterDataSO[] loadedCharacters = Resources.LoadAll<CharacterDataSO>("DataConfigs/Characters");
-        if (loadedCharacters != null)
+        public void OnInit()
         {
-            foreach (var charSO in loadedCharacters) _characterCache[charSO.characterID] = charSO;
+            Instance = this;
+            LoadCharacterDatabase();
+            LoadAllLevelData();
         }
-        Debug.Log($"[DataManager] 缓存 {_characterCache.Count} 名角色配置。");
-    }
 
-    private void LoadAllLevelData()
-    {
-        LevelDataSO[] loadedLevels = Resources.LoadAll<LevelDataSO>("DataConfigs/Levels");
-        if (loadedLevels != null)
+        private void LoadCharacterDatabase()
         {
-            foreach (var lv in loadedLevels) _levelCache[lv.levelID] = lv;
+            // 直接读取那唯一的一张大表
+            CharacterTableSO table = Resources.Load<CharacterTableSO>("DataConfigs/CharacterTable");
+            if (table != null && table.characters != null)
+            {
+                foreach (var charData in table.characters)
+                {
+                    if (!_characterDict.ContainsKey(charData.characterID))
+                    {
+                        _characterDict.Add(charData.characterID, charData);
+                    }
+                }
+                Debug.Log($"[DataManager] 成功从单表架构加载 {_characterDict.Count} 名角色。");
+            }
+            else
+            {
+                Debug.LogError("[DataManager] 加载失败！请确认是否已生成 Assets/Resources/DataConfigs/CharacterTable.asset");
+            }
         }
-        Debug.Log($"[DataManager] 缓存 {_levelCache.Count} 个关卡配置。");
-    }
 
-    public CharacterDataSO GetCharacterData(int characterID)
-    {
-        _characterCache.TryGetValue(characterID, out CharacterDataSO data);
-        return data;
-    }
+        private void LoadAllLevelData()
+        {
+            LevelDataSO[] levels = Resources.LoadAll<LevelDataSO>("DataConfigs/Levels");
+            foreach (var lvl in levels)
+            {
+                if (lvl != null && !_levelDict.ContainsKey(lvl.levelID))
+                {
+                    _levelDict.Add(lvl.levelID, lvl);
+                }
+            }
+        }
 
-    public LevelDataSO GetLevelData(int levelID)
-    {
-        _levelCache.TryGetValue(levelID, out LevelDataSO data);
-        return data;
+        // 返回值变为 CharacterData
+        public CharacterData GetCharacterData(int id)
+        {
+            if (_characterDict.TryGetValue(id, out var data)) return data;
+            Debug.LogWarning($"[DataManager] 找不到 ID 为 {id} 的角色数据！");
+            return null;
+        }
+
+        public LevelDataSO GetLevelData(int id)
+        {
+            if (_levelDict.TryGetValue(id, out var data)) return data;
+            return null;
+        }
+
+        public void OnUpdate(float deltaTime) { }
+        public void OnDestroy() { if (Instance == this) Instance = null; }
     }
 }

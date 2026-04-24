@@ -1,5 +1,6 @@
-using System.Collections.Generic;
+ï»¿using System.Collections.Generic;
 using UnityEngine;
+using TGame.Battle;
 
 public class UnitViewManager : MonoBehaviour
 {
@@ -22,23 +23,41 @@ public class UnitViewManager : MonoBehaviour
     {
         if (_viewDict.ContainsKey(logicUnit.InstanceID)) return;
 
-        // 1. ½ö´´½¨½ÇÉ«ÉíÌå·½¿é£¨Î´À´ÕâÀï»áÌæ»»³É¼ÓÔØÄã×öºÃµÄ½ÇÉ« Spine ¶¯»­»ò 3D Ä£ĞÍ Prefab£©
-        GameObject obj = new GameObject($"[View] {logicUnit.ConfigData.characterName}");
+        GameObject obj = null;
+
+        // ==========================================
+        // ã€ğŸ”¥æ ¸å¿ƒä¿®æ”¹ã€‘ç›´æ¥å®ä¾‹åŒ–å¼ºå¼•ç”¨çš„é¢„åˆ¶ä½“
+        // ==========================================
+        if (logicUnit.ConfigData.characterPrefab != null)
+        {
+            obj = Instantiate(logicUnit.ConfigData.characterPrefab);
+            obj.name = $"[View] {logicUnit.ConfigData.characterName}";
+        }
+        else
+        {
+            Debug.LogWarning($"[UnitViewManager] è§’è‰² {logicUnit.ConfigData.characterName} æ²¡æœ‰é…ç½®é¢„åˆ¶ä½“ï¼ä½¿ç”¨ä¿åº•æ–¹å—ã€‚");
+            obj = CreateFallbackObject(logicUnit);
+        }
+
+        // è·å–æˆ–è‡ªåŠ¨æŒ‚è½½ UnitView æ§åˆ¶å™¨
+        UnitView view = obj.GetComponent<UnitView>();
+        if (view == null) view = obj.AddComponent<UnitView>();
+
+        view.Init(logicUnit);
+        _viewDict.Add(logicUnit.InstanceID, view);
+    }
+
+    private GameObject CreateFallbackObject(RuntimeUnit logicUnit)
+    {
+        GameObject obj = new GameObject($"[View] {logicUnit.ConfigData.characterName}_Fallback");
         SpriteRenderer sr = obj.AddComponent<SpriteRenderer>();
         Texture2D tex = new Texture2D(64, 64);
         for (int i = 0; i < 4096; i++) tex.SetPixel(i % 64, i / 64, Color.white);
         tex.Apply();
         sr.sprite = Sprite.Create(tex, new Rect(0, 0, 64, 64), new Vector2(0.5f, 0.5f), 64f);
         sr.sortingOrder = 10;
-
-        // ÎÒ·½ÇàÉ«£¬µĞ·½ºìÉ«
         sr.color = (logicUnit.ConfigData.characterID == 1001) ? Color.cyan : Color.red;
         obj.transform.localScale = new Vector3(0.75f, 0.75f, 1f);
-
-        // 2. ¹ÒÔØ¿ØÖÆÆ÷ (Í·¶¥²»ÔÙÈûÂÒÆß°ËÔãµÄ UI ½ÚµãÁË)
-        UnitView view = obj.AddComponent<UnitView>();
-        view.Init(logicUnit);
-
-        _viewDict.Add(logicUnit.InstanceID, view);
+        return obj;
     }
 }

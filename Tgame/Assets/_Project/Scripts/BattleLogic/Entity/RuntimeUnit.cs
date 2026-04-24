@@ -1,44 +1,41 @@
-using UnityEngine;
-using TGame.Data; // ÒıÈëµ¼±íÊı¾İÃüÃû¿Õ¼ä
+ï»¿using UnityEngine;
+using TGame.Data;
+using TGame.Battle;
 
-public class RuntimeUnit
+namespace TGame.Battle
 {
-    // ================= ºËĞÄ±êÊ¶ =================
-    public int InstanceID { get; private set; } // ³¡ÉÏÎ¨Ò»±êÊ¶·û (·ÀÖ¹Í¬Ãû¹ÖÎï³åÍ»)
-    public CharacterDataSO ConfigData { get; private set; } // Ö¸Ïò¾²Ì¬ÅäÖÃ±íµÄÒıÓÃ
-    public Vector3Int GridPosition { get; set; } // µ±Ç°ËùÔÚµÄÁù±ßĞÎÂß¼­×ø±ê
-
-    // ================= ÔËĞĞÊ±¶¯Ì¬ÊıÖµ =================
-    public int CurrentHP { get; private set; }
-    public int CurrentMP { get; private set; }
-    public int CurrentPosture { get; private set; } // µ±Ç°Çû¸ÉÖµ
-
-    public RuntimeUnit(int instanceID, CharacterDataSO config, Vector3Int startPos)
+    public class RuntimeUnit
     {
-        InstanceID = instanceID;
-        ConfigData = config;
-        GridPosition = startPos;
+        public int InstanceID { get; private set; }
+        public int Side { get; private set; } // 1001 æ˜¯ç©å®¶ï¼Œå…¶ä»–æ˜¯æ•Œäºº
 
-        // ½ÇÉ«Éú³ÉÊ±£¬ÒÔÅäÖÃ±íÖĞµÄ×î´óÖµÎª×¼£¬³õÊ¼»¯×´Ì¬
-        CurrentHP = config.maxHP;
-        CurrentMP = config.maxMP;
-        CurrentPosture = config.postureValue;
-    }
+        // ã€ğŸ”¥æ ¸å¿ƒä¿®æ”¹ã€‘è¿™é‡ŒæŠŠ CharacterDataSO æ”¹æˆäº† CharacterData
+        public CharacterData ConfigData { get; private set; }
 
-    /// <summary>
-    /// ÊÜµ½ÉËº¦µÄ·½·¨Ê¾Àı
-    /// </summary>
-    public void TakeDamage(int damageAmount)
-    {
-        CurrentHP -= damageAmount;
-        if (CurrentHP < 0) CurrentHP = 0;
+        public Vector3Int GridPosition { get; private set; }
 
-        Debug.Log($"[ÊµÌå×´Ì¬] {ConfigData.characterName} ÊÜµ½ÁË {damageAmount} µãÉËº¦£¡Ê£Óà HP: {CurrentHP}");
+        public int CurrentHP { get; private set; }
+        public int CurrentMP { get; private set; }
 
-        if (CurrentHP == 0)
+        // ã€ğŸ”¥æ ¸å¿ƒä¿®æ”¹ã€‘æ„é€ å‡½æ•°é‡Œçš„ä¼ å‚ä¹Ÿæ”¹æˆäº† CharacterData
+        public RuntimeUnit(int instanceID, int side, CharacterData configData, Vector3Int spawnPos)
         {
-            Debug.Log($"[ÊµÌå×´Ì¬] {ConfigData.characterName} ÕóÍö£¡");
-            // ÕâÀïÎ´À´¿ÉÒÔ´¥·¢ OnUnitDead ÊÂ¼ş
+            this.InstanceID = instanceID;
+            this.Side = side;
+            this.ConfigData = configData;
+            this.GridPosition = spawnPos;
+
+            // åˆå§‹åŒ–å±æ€§
+            this.CurrentHP = configData.maxHP;
+            this.CurrentMP = configData.maxMP;
         }
+
+        public void SetGridPosition(Vector3Int newPos)
+        {
+            GridPosition = newPos;
+        }
+
+        // ... å¦‚æœä½ çš„æ–‡ä»¶ä¸‹é¢è¿˜æœ‰å—å‡»ã€æ‰£è¡€ç­‰å…¶ä»–æ–¹æ³•ï¼Œè¯·ä¿ç•™å®ƒä»¬ï¼Œ
+        // åªè¦ç¡®ä¿ä¸Šé¢è¿™ä¸¤å¤„æŠŠ SO åç¼€å»æ‰å°±è¡Œäº†ï¼
     }
 }
