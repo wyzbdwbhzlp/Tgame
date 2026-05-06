@@ -15,24 +15,18 @@ namespace TGame.Battle
             _targetID = targetID;
         }
 
-        // --- 接口实现：获取消耗 ---
-        public int GetCost()
-        {
-            return _timeCost;
-        }
-
-        // --- 核心修复：实现接口要求的 GetUnitID 方法 ---
-        public int GetUnitID()
-        {
-            return _attackerID; // 攻击者就是这个指令的发起人
-        }
+        // --- 接口实现：获取消耗与执行者 ---
+        public int GetCost() => _timeCost;
+        public int GetUnitID() => _attackerID;
 
         public bool Validate()
         {
-            // 核心修复：传入 _attackerID，检查攻击者自己的剩余时素
             return TurnManager.Instance != null && TurnManager.Instance.CanScheduleAction(_attackerID, _timeCost);
         }
 
+        // ==========================================
+        // 1. 规划阶段 (生成虚影时触发)
+        // ==========================================
         public void Execute()
         {
             var attacker = UnitManager.Instance.GetUnit(_attackerID);
@@ -40,13 +34,42 @@ namespace TGame.Battle
 
             if (attacker != null && target != null)
             {
-                // 核心修复：正式扣除时素时，指定扣除攻击者的时素
+                // 规划阶段不扣除真实属性，只做表现或日志
+                Debug.Log($"<color=orange>[规划] {attacker.ConfigData.characterName} 锁定了 {target.ConfigData.characterName} 准备攻击。</color>");
+
+                // 以后这里可以加上：在目标头上显示一个红色的“准星”UI
+            }
+        }
+
+        // ==========================================
+        // 2. 撤销阶段 (玩家点击撤回按钮时触发)
+        // ==========================================
+        public void Undo()
+        {
+            var attacker = UnitManager.Instance.GetUnit(_attackerID);
+            if (attacker != null)
+            {
+                Debug.Log($"<color=yellow>[撤销] {attacker.ConfigData.characterName} 取消了攻击锁定。</color>");
+
+                // 以后这里可以加上：清除目标头上的“准星”UI
+            }
+        }
+
+        // ==========================================
+        // 3. 真实结算阶段 (回合结束，正式播放动画时触发)
+        // ==========================================
+        public void Settle()
+        {
+            var attacker = UnitManager.Instance.GetUnit(_attackerID);
+            var target = UnitManager.Instance.GetUnit(_targetID);
+
+            if (attacker != null && target != null)
+            {
+                // 正式结算时，扣除真实的物理时素
                 TurnManager.Instance.AdvanceTime(_attackerID, _timeCost);
 
-                // 播报结算信息
-                Debug.Log($"<color=orange>⚔️ [结算] {attacker.ConfigData.characterName} 攻击了 {target.ConfigData.characterName}！消耗了 {_timeCost} TU。</color>");
-
-                // 这里以后可以加入战斗动画触发逻辑
+                // 播报真实结算信息 (未来这里替换为播放攻击动画、扣血和飘字)
+                Debug.Log($"<color=red>⚔️ [结算] {attacker.ConfigData.characterName} 真实攻击了 {target.ConfigData.characterName}！消耗了 {_timeCost} TU。</color>");
             }
         }
     }

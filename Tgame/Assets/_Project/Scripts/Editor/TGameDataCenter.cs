@@ -9,7 +9,6 @@ namespace TGame.EditorTools
 {
     public class TGameDataCenter : EditorWindow
     {
-        // 核心正则：同时兼容逗号和Tab(\t)，防引号截断
         private static readonly Regex csvParser = new Regex("[,\\t](?=(?:[^\"]*\"[^\"]*\")*(?![^\"]*\"))");
 
         [MenuItem("Tools/TGame 数据中台")]
@@ -35,7 +34,7 @@ namespace TGame.EditorTools
             }
         }
 
-        #region --- 1. 角色数据导入 (单表架构版) ---
+        #region --- 1. 角色数据导入 ---
         private void ImportCharacterCSV()
         {
             string filePath = EditorUtility.OpenFilePanel("选择角色配置CSV", "Assets/", "csv");
@@ -47,7 +46,6 @@ namespace TGame.EditorTools
             string savePath = "Assets/Resources/DataConfigs";
             EnsureFolderExists(savePath);
 
-            // 1. 尝试获取或创建唯一的角色总表
             string dbPath = $"{savePath}/CharacterTable.asset";
             CharacterTableSO table = AssetDatabase.LoadAssetAtPath<CharacterTableSO>(dbPath);
             if (table == null)
@@ -56,7 +54,6 @@ namespace TGame.EditorTools
                 AssetDatabase.CreateAsset(table, dbPath);
             }
 
-            // 2. 准备一个 List 来装解析出的角色
             List<CharacterData> charList = new List<CharacterData>();
 
             for (int i = 1; i < lines.Count; i++)
@@ -64,18 +61,21 @@ namespace TGame.EditorTools
                 if (string.IsNullOrWhiteSpace(lines[i])) continue;
                 string[] row = csvParser.Split(lines[i]);
 
-                // 需要12列数据（包含了立绘和预制体路径）
-                if (row.Length < 12) continue;
+                // 【🔥核心修改】现在一共需要 14 列数据了
+                if (row.Length < 14) continue;
 
-                // 实例化普通的 C# 类
                 CharacterData tempData = new CharacterData();
 
                 int.TryParse(CleanCSVString(row[0]), out tempData.characterID);
                 tempData.characterName = CleanCSVString(row[1]);
 
-                // 自动转化路径为 GameObject / Sprite 强引用
-                string portraitStr = CleanCSVString(row[2]);
-                string prefabStr = CleanCSVString(row[3]);
+                // 【🔥核心修改】解析职业和攻击距离 (索引2和3)
+                tempData.job = ParseJob(CleanCSVString(row[2]));
+                int.TryParse(CleanCSVString(row[3]), out tempData.attackRange);
+
+                // 美术资源顺延到 4 和 5
+                string portraitStr = CleanCSVString(row[4]);
+                string prefabStr = CleanCSVString(row[5]);
 
                 if (!string.IsNullOrEmpty(portraitStr))
                 {
@@ -89,28 +89,26 @@ namespace TGame.EditorTools
                     tempData.characterPrefab = AssetDatabase.LoadAssetAtPath<GameObject>($"Assets/Resources/{prefabStr}.prefab");
                 }
 
-                // 战斗属性顺延解析
-                int.TryParse(CleanCSVString(row[4]), out tempData.maxHP);
-                int.TryParse(CleanCSVString(row[5]), out tempData.maxMP);
-                int.TryParse(CleanCSVString(row[6]), out tempData.attack);
-                int.TryParse(CleanCSVString(row[7]), out tempData.defense);
-                int.TryParse(CleanCSVString(row[8]), out tempData.speed);
-                int.TryParse(CleanCSVString(row[9]), out tempData.postureValue);
-                float.TryParse(CleanCSVString(row[10]), out tempData.dodgeRate);
-                float.TryParse(CleanCSVString(row[11]), out tempData.critRate);
+                // 数值属性顺延 (从 6 开始)
+                int.TryParse(CleanCSVString(row[6]), out tempData.maxHP);
+                int.TryParse(CleanCSVString(row[7]), out tempData.maxMP);
+                int.TryParse(CleanCSVString(row[8]), out tempData.attack);
+                int.TryParse(CleanCSVString(row[9]), out tempData.defense);
+                int.TryParse(CleanCSVString(row[10]), out tempData.speed);
+                int.TryParse(CleanCSVString(row[11]), out tempData.postureValue);
+                float.TryParse(CleanCSVString(row[12]), out tempData.dodgeRate);
+                float.TryParse(CleanCSVString(row[13]), out tempData.critRate);
 
                 charList.Add(tempData);
             }
 
-            // 3. 将 List 赋值给总表的数组
             table.characters = charList.ToArray();
 
-            // 4. 标记脏数据并保存
             EditorUtility.SetDirty(table);
             AssetDatabase.SaveAssets();
             AssetDatabase.Refresh();
 
-            Debug.Log($"✅ [角色导表] 成功将 {charList.Count} 个角色导入到单表架构 (CharacterTable) 中！");
+            Debug.Log($"✅ [角色导表] 成功将 {charList.Count} 个角色导入到 CharacterTable (已包含职业与攻击距离)！");
         }
         #endregion
 
@@ -175,9 +173,7 @@ namespace TGame.EditorTools
             {
                 string[] coords = p.Split('|');
                 if (coords.Length >= 2 && int.TryParse(coords[0], out int x) && int.TryParse(coords[1], out int y))
-                {
                     list.Add(new Vector3Int(x, y, -x - y));
-                }
             }
             return list;
         }
@@ -195,9 +191,7 @@ namespace TGame.EditorTools
                 {
                     string[] coords = idAndPos[1].Split('|');
                     if (coords.Length >= 2 && int.TryParse(coords[0], out int x) && int.TryParse(coords[1], out int y))
-                    {
                         list.Add(new UnitSpawnInfo { characterID = id, spawnPos = new Vector3Int(x, y, -x - y) });
-                    }
                 }
             }
             return list;
@@ -205,6 +199,19 @@ namespace TGame.EditorTools
         #endregion
 
         #region --- 辅助方法 ---
+        // 【🔥新增】将表中的中文文字转化为枚举
+        private CharacterJob ParseJob(string input)
+        {
+            switch (input.Trim())
+            {
+                case "法师": return CharacterJob.Mage;
+                case "牧师": return CharacterJob.Priest;
+                case "弓箭手": return CharacterJob.Archer;
+                case "战士":
+                default: return CharacterJob.Warrior; // 默认战士
+            }
+        }
+
         private List<string> ReadFileLines(string path)
         {
             List<string> lines = new List<string>();
@@ -226,9 +233,7 @@ namespace TGame.EditorTools
                 for (int i = 1; i < folders.Length; i++)
                 {
                     if (!AssetDatabase.IsValidFolder(currentPath + "/" + folders[i]))
-                    {
                         AssetDatabase.CreateFolder(currentPath, folders[i]);
-                    }
                     currentPath += "/" + folders[i];
                 }
             }
@@ -239,9 +244,7 @@ namespace TGame.EditorTools
             if (string.IsNullOrEmpty(input)) return "";
             input = input.Trim();
             if (input.StartsWith("\"") && input.EndsWith("\""))
-            {
                 input = input.Substring(1, input.Length - 2).Replace("\"\"", "\"");
-            }
             return input;
         }
         #endregion

@@ -5,7 +5,7 @@ using TGame.Battle;
 [RequireComponent(typeof(LineRenderer))]
 public class HexMapView : MonoBehaviour
 {
-    public static HexMapView Instance { get; private set; } // 供 UI 访问
+    public static HexMapView Instance { get; private set; }
 
     private Vector3Int _hoveredCellPos;
     private LineRenderer _pathLineRenderer;
@@ -15,6 +15,8 @@ public class HexMapView : MonoBehaviour
     public RuntimeUnit SelectedUnit => _selectedUnit;
 
     private Dictionary<Vector3Int, GameObject> _cellVisuals = new Dictionary<Vector3Int, GameObject>();
+
+    private GameObject _phantomObj;
 
     private void Awake() { Instance = this; }
 
@@ -99,7 +101,7 @@ public class HexMapView : MonoBehaviour
         if (GridSystem.Instance == null || TurnManager.Instance == null) return;
         if (TurnManager.Instance.CurrentState != TGame.Battle.BattleState.Planning)
         {
-            _pathLineRenderer.positionCount = 0;
+            if (_pathLineRenderer != null) _pathLineRenderer.positionCount = 0;
             return;
         }
 
@@ -110,8 +112,15 @@ public class HexMapView : MonoBehaviour
         if (_hoveredCellPos != _lastHoveredPos)
         {
             _lastHoveredPos = _hoveredCellPos;
-            if (_selectedUnit != null) UpdatePathVisualization();
-            else _pathLineRenderer.positionCount = 0;
+
+            if (_selectedUnit != null && _phantomObj == null)
+            {
+                UpdatePathVisualization();
+            }
+            else if (_phantomObj == null)
+            {
+                _pathLineRenderer.positionCount = 0;
+            }
         }
 
         if (Input.GetMouseButtonDown(0)) HandleLeftClick();
@@ -133,15 +142,21 @@ public class HexMapView : MonoBehaviour
         }
         else
         {
+            // 【🔥核心修复】防止玩家点击自己站立的格子，产生 0 消耗的无限虚影
+            if (_hoveredCellPos == _selectedUnit.GridPosition)
+            {
+                Debug.LogWarning("[交互] 无法在原地进行移动规划！");
+                return;
+            }
+
             MoveCommand moveCmd = new MoveCommand(_selectedUnit.InstanceID, _selectedUnit.GridPosition, _hoveredCellPos);
             if (moveCmd.Validate())
             {
                 TurnManager.Instance.AddCommand(moveCmd);
-                CancelSelection();
             }
             else
             {
-                Debug.LogWarning("[交互] 该角色剩余时素不足！");
+                Debug.LogWarning("[交互] 该角色剩余时素不足或路径不可达！");
             }
         }
     }
@@ -149,7 +164,7 @@ public class HexMapView : MonoBehaviour
     private void CancelSelection()
     {
         _selectedUnit = null;
-        _pathLineRenderer.positionCount = 0;
+        if (_phantomObj == null) _pathLineRenderer.positionCount = 0;
     }
 
     private void UpdatePathVisualization()
@@ -163,6 +178,45 @@ public class HexMapView : MonoBehaviour
         }
         _pathLineRenderer.positionCount = path.Count;
         for (int i = 0; i < path.Count; i++) _pathLineRenderer.SetPosition(i, GridSystem.Instance.CellToWorld(path[i].Position));
+    }
+
+    public void ShowPhantom(int unitID, Vector3Int targetPos, List<GridCell> path)
+    {
+        ClearPhantom();
+
+        var unit = UnitManager.Instance.GetUnit(unitID);
+        if (unit == null || unit.ConfigData.characterPrefab == null) return;
+
+        _phantomObj = Instantiate(unit.ConfigData.characterPrefab);
+        _phantomObj.name = $"[Phantom] {unit.ConfigData.characterName}";
+        _phantomObj.transform.position = GridSystem.Instance.CellToWorld(targetPos);
+
+        var unitView = _phantomObj.GetComponent<UnitView>();
+        if (unitView != null) Destroy(unitView);
+
+        SpriteRenderer[] renderers = _phantomObj.GetComponentsInChildren<SpriteRenderer>();
+        foreach (var sr in renderers)
+        {
+            Color c = sr.color;
+            c.a = 0.5f;
+            sr.color = c;
+            sr.sortingOrder = 15;
+        }
+
+        if (path != null && path.Count > 0)
+        {
+            _pathLineRenderer.positionCount = path.Count;
+            for (int i = 0; i < path.Count; i++)
+            {
+                _pathLineRenderer.SetPosition(i, GridSystem.Instance.CellToWorld(path[i].Position));
+            }
+        }
+    }
+
+    public void ClearPhantom()
+    {
+        if (_phantomObj != null) Destroy(_phantomObj);
+        if (_pathLineRenderer != null) _pathLineRenderer.positionCount = 0;
     }
 
     private void OnDrawGizmos()

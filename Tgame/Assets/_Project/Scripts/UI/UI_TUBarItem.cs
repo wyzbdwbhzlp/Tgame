@@ -12,7 +12,6 @@ public class UI_TUBarItem : MonoBehaviour
 
     private int _boundUnitID;
 
-    // 【🔥核心修改】直接接收 Sprite 对象
     public void Init(int unitID, string characterName, bool isPlayer, Sprite portrait)
     {
         _boundUnitID = unitID;
@@ -20,7 +19,6 @@ public class UI_TUBarItem : MonoBehaviour
         if (txtName) txtName.text = characterName;
         if (fillImage != null) fillImage.color = isPlayer ? Color.cyan : new Color(1f, 0.3f, 0.3f);
 
-        // 【🔥核心修改】直接赋值，不用再去 Resources 里面找了
         if (imgPortrait != null)
         {
             if (portrait != null)
@@ -40,8 +38,11 @@ public class UI_TUBarItem : MonoBehaviour
         if (tuSlider)
         {
             float remainRatio = 1f - Mathf.Clamp01((float)plannedTU / maxTU);
-            tuSlider.value = remainRatio;
+
+            // 【🔥核心修复】防止 Slider 值完全归零导致 Fill 宽度为 0，从而引发 Unity 底层射线检测的 NaN 报错
+            tuSlider.value = Mathf.Max(0.001f, remainRatio);
         }
+
         if (txtName) txtName.color = isSelected ? Color.yellow : Color.white;
     }
 
