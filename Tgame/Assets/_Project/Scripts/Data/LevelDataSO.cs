@@ -1,29 +1,67 @@
-using System;
+ï»¿using System;
 using System.Collections.Generic;
 using UnityEngine;
 
 namespace TGame.Data
 {
-    // ÓÃÓÚ¼ÇÂ¼½ÇÉ«²¿ÊğĞÅÏ¢µÄÊı¾İ½á¹¹
+    // ==========================================
+    // ç©å®¶ç”Ÿæˆç‚¹
+    // ==========================================
     [Serializable]
     public class UnitSpawnInfo
     {
+        [Tooltip("å¯¹åº” CharacterTable é‡Œçš„è‹±é›„ ID")]
         public int characterID;
         public Vector3Int spawnPos;
     }
 
-    [CreateAssetMenu(fileName = "NewLevelData", menuName = "TGame/Level Data")]
+    // ==========================================
+    // æ•Œäººç”Ÿæˆç‚¹
+    // ==========================================
+    [Serializable]
+    public class EnemySpawnInfo
+    {
+        [Tooltip("å¯¹åº” EnemyTable é‡Œçš„æ•Œäºº ID")]
+        public int enemyID;
+        public Vector3Int spawnPos;
+    }
+
+    // ==========================================
+    // åœ°å›¾å¯è§†åŒ–ä¸ç»“æ„
+    // ==========================================
+    [Serializable]
+    public class HexEditorCell
+    {
+        public Vector3Int position;
+        public int groundVariantID = 0;
+        public int obstacleVariantID = -1;
+    }
+
+    // ==========================================
+    // å…³å¡æ€»æ§æ•°æ®
+    // ==========================================
+    [CreateAssetMenu(fileName = "NewLevelData", menuName = "TGame/å…³å¡æ•°æ® (Level Data)")]
     public class LevelDataSO : ScriptableObject
     {
+        [Header("åŸºç¡€é…ç½®")]
         public int levelID;
-        public string levelName;
-        public int mapRadius = 5; // ¹Ø¿¨µØÍ¼°ë¾¶
+        public string levelName = "æœªå‘½åå…³å¡";
 
-        [Header("µØÍ¼ÅäÖÃ")]
-        public List<Vector3Int> obstacles = new List<Vector3Int>(); // ÕÏ°­Îï×ø±ê
+        [Header("åœ°å›¾å¯è§†åŒ–ç»“æ„ (ç”±ç”»ç¬”å·¥å…·è‡ªåŠ¨ç”Ÿæˆ)")]
+        public List<HexEditorCell> cells = new List<HexEditorCell>();
 
-        [Header("µ¥Î»²¿Êğ")]
-        public List<UnitSpawnInfo> playerSpawns = new List<UnitSpawnInfo>(); // Íæ¼Ò²¿Êğ
-        public List<UnitSpawnInfo> enemySpawns = new List<UnitSpawnInfo>();  // µĞÈË²¿Êğ (ºóĞøÊ¹ÓÃ)
+        [Header("å•ä½éƒ¨ç½²")]
+        public List<UnitSpawnInfo> playerSpawns = new List<UnitSpawnInfo>();
+        public List<EnemySpawnInfo> enemySpawns = new List<EnemySpawnInfo>();
+    }
+
+    // ==========================================
+    // å…³å¡æ’æœŸè¡¨
+    // ==========================================
+    [CreateAssetMenu(fileName = "LevelTable", menuName = "TGame/å…³å¡æ’æœŸè¡¨ (Level Table)")]
+    public class LevelTable : ScriptableObject
+    {
+        [Header("å°†å…³å¡èµ„äº§æ‹–æ‹½åˆ°è¿™é‡Œæ’åˆ—é¡ºåº")]
+        public List<LevelDataSO> levels = new List<LevelDataSO>();
     }
 }

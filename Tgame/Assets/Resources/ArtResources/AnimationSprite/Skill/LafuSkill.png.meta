@@ -1,0 +1,1203 @@
+fileFormatVersion: 2
+guid: 4e86c82aa8617d64f88f0980975e9955
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: -8240016647918037569
+    second: LafuSkill_0
+  - first:
+      213: 6598475105496327971
+    second: LafuSkill_1
+  - first:
+      213: 2905210686888853171
+    second: LafuSkill_2
+  - first:
+      213: 1179242480279409084
+    second: LafuSkill_3
+  - first:
+      213: -1016855942929186542
+    second: LafuSkill_4
+  - first:
+      213: 6004512353818707058
+    second: LafuSkill_5
+  - first:
+      213: 8953656461911051614
+    second: LafuSkill_6
+  - first:
+      213: -1553857521772689963
+    second: LafuSkill_7
+  - first:
+      213: -1444514763789823806
+    second: LafuSkill_8
+  - first:
+      213: -2809209245708606595
+    second: LafuSkill_9
+  - first:
+      213: 1512652247213057305
+    second: LafuSkill_10
+  - first:
+      213: -4400728148268461573
+    second: LafuSkill_11
+  - first:
+      213: 4529458560926046922
+    second: LafuSkill_12
+  - first:
+      213: -1573700335232620783
+    second: LafuSkill_13
+  - first:
+      213: 6831642606458676439
+    second: LafuSkill_14
+  - first:
+      213: 1830351898121404287
+    second: LafuSkill_15
+  - first:
+      213: -883416544528584032
+    second: LafuSkill_16
+  - first:
+      213: -4911851489839774543
+    second: LafuSkill_17
+  - first:
+      213: 3785431393368502966
+    second: LafuSkill_18
+  - first:
+      213: 7044455120326983660
+    second: LafuSkill_19
+  - first:
+      213: 4866580825561100665
+    second: LafuSkill_20
+  - first:
+      213: -4762038078445992725
+    second: LafuSkill_21
+  - first:
+      213: -563522935369680621
+    second: LafuSkill_22
+  - first:
+      213: 5727028911938473179
+    second: LafuSkill_23
+  - first:
+      213: 7025579589489079084
+    second: LafuSkill_24
+  - first:
+      213: 6748373226890475433
+    second: LafuSkill_25
+  - first:
+      213: 1102485716706135580
+    second: LafuSkill_26
+  - first:
+      213: -2756634270194608414
+    second: LafuSkill_27
+  - first:
+      213: 8568145724886656949
+    second: LafuSkill_28
+  - first:
+      213: 7250586017248012623
+    second: LafuSkill_29
+  - first:
+      213: 5984222187283452545
+    second: LafuSkill_30
+  - first:
+      213: -4666025446040645581
+    second: LafuSkill_31
+  - first:
+      213: -2623881416623284040
+    second: LafuSkill_32
+  - first:
+      213: 213926357380977287
+    second: LafuSkill_33
+  - first:
+      213: 8172525745407105512
+    second: LafuSkill_34
+  - first:
+      213: -5531042484922528550
+    second: LafuSkill_35
+  - first:
+      213: 6025263543589542511
+    second: LafuSkill_36
+  - first:
+      213: 1928836934337337566
+    second: LafuSkill_37
+  - first:
+      213: -6922990523456649380
+    second: LafuSkill_38
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 700
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Android
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: WindowsStoreApps
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: LafuSkill_0
+      rect:
+        serializedVersion: 2
+        x: 1305
+        y: 7819
+        width: 749
+        height: 671
+      alignment: 9
+      pivot: {x: 0.28, y: 0.065}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: fb55a85248495ad80800000000000000
+      internalID: -8240016647918037569
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: LafuSkill_1
+      rect:
+        serializedVersion: 2
+        x: 2867
+        y: 8479
+        width: 33
+        height: 4
+      alignment: 9
+      pivot: {x: 0.28, y: 0.065}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 327ed52f52e729b50800000000000000
+      internalID: 6598475105496327971
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: LafuSkill_2
+      rect:
+        serializedVersion: 2
+        x: 323
+        y: 7786
+        width: 748
+        height: 674
+      alignment: 9
+      pivot: {x: 0.28, y: 0.065}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3bebdad2ab1615820800000000000000
+      internalID: 2905210686888853171
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: LafuSkill_3
+      rect:
+        serializedVersion: 2
+        x: 2241
+        y: 7782
+        width: 786
+        height: 683
+      alignment: 9
+      pivot: {x: 0.28, y: 0.065}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: cb1da15b9c28d5010800000000000000
+      internalID: 1179242480279409084
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: LafuSkill_4
+      rect:
+        serializedVersion: 2
+        x: 3240
+        y: 7786
+        width: 782
+        height: 679
+      alignment: 9
+      pivot: {x: 0.28, y: 0.065}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 21106fd48e663e1f0800000000000000
+      internalID: -1016855942929186542
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: LafuSkill_5
+      rect:
+        serializedVersion: 2
+        x: 239
+        y: 6829
+        width: 820
+        height: 687
+      alignment: 9
+      pivot: {x: 0.28, y: 0.065}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2740fca2c20545350800000000000000
+      internalID: 6004512353818707058
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: LafuSkill_6
+      rect:
+        serializedVersion: 2
+        x: 1176
+        y: 6858
+        width: 865
+        height: 687
+      alignment: 9
+      pivot: {x: 0.28, y: 0.065}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e5dc6151d17c14c70800000000000000
+      internalID: 8953656461911051614
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: LafuSkill_7
+      rect:
+        serializedVersion: 2
+        x: 2158
+        y: 6822
+        width: 865
+        height: 689
+      alignment: 9
+      pivot: {x: 0.28, y: 0.065}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5d58b2f01d69f6ae0800000000000000
+      internalID: -1553857521772689963
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: LafuSkill_8
+      rect:
+        serializedVersion: 2
+        x: 3156
+        y: 6825
+        width: 865
+        height: 690
+      alignment: 9
+      pivot: {x: 0.28, y: 0.065}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2c01087c97d04fbe0800000000000000
+      internalID: -1444514763789823806
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: LafuSkill_9
+      rect:
+        serializedVersion: 2
+        x: 181
+        y: 5871
+        width: 873
+        height: 691
+      alignment: 9
+      pivot: {x: 0.28, y: 0.065}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d73abc9231fa309d0800000000000000
+      internalID: -2809209245708606595
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: LafuSkill_10
+      rect:
+        serializedVersion: 2
+        x: 1163
+        y: 5901
+        width: 874
+        height: 690
+      alignment: 9
+      pivot: {x: 0.28, y: 0.065}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 915a4d754350ef410800000000000000
+      internalID: 1512652247213057305
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: LafuSkill_11
+      rect:
+        serializedVersion: 2
+        x: 2141
+        y: 5867
+        width: 878
+        height: 687
+      alignment: 9
+      pivot: {x: 0.28, y: 0.065}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: bf15561b0197de2c0800000000000000
+      internalID: -4400728148268461573
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: LafuSkill_12
+      rect:
+        serializedVersion: 2
+        x: 3156
+        y: 5867
+        width: 849
+        height: 704
+      alignment: 9
+      pivot: {x: 0.28, y: 0.065}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: aca59d4209edbde30800000000000000
+      internalID: 4529458560926046922
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: LafuSkill_13
+      rect:
+        serializedVersion: 2
+        x: 194
+        y: 4910
+        width: 828
+        height: 737
+      alignment: 9
+      pivot: {x: 0.28, y: 0.065}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 117eb8702e7192ae0800000000000000
+      internalID: -1573700335232620783
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: LafuSkill_14
+      rect:
+        serializedVersion: 2
+        x: 1176
+        y: 4940
+        width: 828
+        height: 736
+      alignment: 9
+      pivot: {x: 0.28, y: 0.065}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7d4a46641cedece50800000000000000
+      internalID: 6831642606458676439
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: LafuSkill_15
+      rect:
+        serializedVersion: 2
+        x: 2203
+        y: 4906
+        width: 758
+        height: 761
+      alignment: 9
+      pivot: {x: 0.28, y: 0.065}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f7ffc7d8a57b66910800000000000000
+      internalID: 1830351898121404287
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: LafuSkill_16
+      rect:
+        serializedVersion: 2
+        x: 3242
+        y: 4906
+        width: 688
+        height: 778
+      alignment: 9
+      pivot: {x: 0.28, y: 0.065}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0a2bba255597db3f0800000000000000
+      internalID: -883416544528584032
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: LafuSkill_17
+      rect:
+        serializedVersion: 2
+        x: 281
+        y: 3948
+        width: 690
+        height: 779
+      alignment: 9
+      pivot: {x: 0.28, y: 0.065}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1b480a6181995dbb0800000000000000
+      internalID: -4911851489839774543
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: LafuSkill_18
+      rect:
+        serializedVersion: 2
+        x: 1238
+        y: 3977
+        width: 728
+        height: 758
+      alignment: 9
+      pivot: {x: 0.28, y: 0.065}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6b27753dbcd888430800000000000000
+      internalID: 3785431393368502966
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: LafuSkill_19
+      rect:
+        serializedVersion: 2
+        x: 2187
+        y: 3944
+        width: 799
+        height: 724
+      alignment: 9
+      pivot: {x: 0.28, y: 0.065}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: cef754bdb9ee2c160800000000000000
+      internalID: 7044455120326983660
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: LafuSkill_20
+      rect:
+        serializedVersion: 2
+        x: 3186
+        y: 3944
+        width: 798
+        height: 724
+      alignment: 9
+      pivot: {x: 0.28, y: 0.065}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 971fb420a71998340800000000000000
+      internalID: 4866580825561100665
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: LafuSkill_21
+      rect:
+        serializedVersion: 2
+        x: 198
+        y: 2953
+        width: 836
+        height: 712
+      alignment: 9
+      pivot: {x: 0.28, y: 0.065}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: be4c7571997d9edb0800000000000000
+      internalID: -4762038078445992725
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: LafuSkill_22
+      rect:
+        serializedVersion: 2
+        x: 1159
+        y: 3020
+        width: 906
+        height: 604
+      alignment: 9
+      pivot: {x: 0.28, y: 0.065}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 319318e30e6fd28f0800000000000000
+      internalID: -563522935369680621
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: LafuSkill_23
+      rect:
+        serializedVersion: 2
+        x: 2143
+        y: 2987
+        width: 901
+        height: 603
+      alignment: 9
+      pivot: {x: 0.28, y: 0.065}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: bdc0c7ac37e7a7f40800000000000000
+      internalID: 5727028911938473179
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: LafuSkill_24
+      rect:
+        serializedVersion: 2
+        x: 3161
+        y: 2987
+        width: 882
+        height: 603
+      alignment: 9
+      pivot: {x: 0.28, y: 0.065}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c233bbcd96fdf7160800000000000000
+      internalID: 7025579589489079084
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: LafuSkill_25
+      rect:
+        serializedVersion: 2
+        x: 185
+        y: 2033
+        width: 928
+        height: 631
+      alignment: 9
+      pivot: {x: 0.28, y: 0.065}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9a7309802b907ad50800000000000000
+      internalID: 6748373226890475433
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: LafuSkill_26
+      rect:
+        serializedVersion: 2
+        x: 1122
+        y: 2421
+        width: 16
+        height: 72
+      alignment: 9
+      pivot: {x: 0.28, y: 0.065}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c1e063a0be0dc4f00800000000000000
+      internalID: 1102485716706135580
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: LafuSkill_27
+      rect:
+        serializedVersion: 2
+        x: 1176
+        y: 2063
+        width: 919
+        height: 711
+      alignment: 9
+      pivot: {x: 0.28, y: 0.065}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2e6d16d8cb77eb9d0800000000000000
+      internalID: -2756634270194608414
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: LafuSkill_28
+      rect:
+        serializedVersion: 2
+        x: 2158
+        y: 2026
+        width: 915
+        height: 715
+      alignment: 9
+      pivot: {x: 0.28, y: 0.065}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5b7a6ab042b28e670800000000000000
+      internalID: 8568145724886656949
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: LafuSkill_29
+      rect:
+        serializedVersion: 2
+        x: 3173
+        y: 2029
+        width: 903
+        height: 712
+      alignment: 9
+      pivot: {x: 0.28, y: 0.065}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f496b7341914f9460800000000000000
+      internalID: 7250586017248012623
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: LafuSkill_30
+      rect:
+        serializedVersion: 2
+        x: 210
+        y: 1072
+        width: 903
+        height: 715
+      alignment: 9
+      pivot: {x: 0.28, y: 0.065}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1829a02af5a3c0350800000000000000
+      internalID: 5984222187283452545
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: LafuSkill_31
+      rect:
+        serializedVersion: 2
+        x: 1128
+        y: 1532
+        width: 4
+        height: 4
+      alignment: 9
+      pivot: {x: 0.28, y: 0.065}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 33050d71492fe3fb0800000000000000
+      internalID: -4666025446040645581
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: LafuSkill_32
+      rect:
+        serializedVersion: 2
+        x: 1192
+        y: 1105
+        width: 903
+        height: 711
+      alignment: 9
+      pivot: {x: 0.28, y: 0.065}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8b0ab65e0c9169bd0800000000000000
+      internalID: -2623881416623284040
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: LafuSkill_33
+      rect:
+        serializedVersion: 2
+        x: 2199
+        y: 1068
+        width: 874
+        height: 711
+      alignment: 9
+      pivot: {x: 0.28, y: 0.065}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 78259cb73e408f200800000000000000
+      internalID: 213926357380977287
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: LafuSkill_34
+      rect:
+        serializedVersion: 2
+        x: 3198
+        y: 1072
+        width: 878
+        height: 712
+      alignment: 9
+      pivot: {x: 0.28, y: 0.065}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8e999b49dd4aa6170800000000000000
+      internalID: 8172525745407105512
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: LafuSkill_35
+      rect:
+        serializedVersion: 2
+        x: 1122
+        y: 1457
+        width: 16
+        height: 72
+      alignment: 9
+      pivot: {x: 0.28, y: 0.065}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: adc49982a2acd33b0800000000000000
+      internalID: -5531042484922528550
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: LafuSkill_36
+      rect:
+        serializedVersion: 2
+        x: 235
+        y: 111
+        width: 878
+        height: 715
+      alignment: 9
+      pivot: {x: 0.28, y: 0.065}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f6a14c905490e9350800000000000000
+      internalID: 6025263543589542511
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: LafuSkill_37
+      rect:
+        serializedVersion: 2
+        x: 1122
+        y: 496
+        width: 16
+        height: 74
+      alignment: 9
+      pivot: {x: 0.28, y: 0.065}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ed894dce8fa94ca10800000000000000
+      internalID: 1928836934337337566
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: LafuSkill_38
+      rect:
+        serializedVersion: 2
+        x: 1271
+        y: 144
+        width: 824
+        height: 711
+      alignment: 9
+      pivot: {x: 0.28, y: 0.065}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c5788f96cc89cef90800000000000000
+      internalID: -6922990523456649380
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: LafuSkill_39
+      rect:
+        serializedVersion: 2
+        x: 2249
+        y: 110
+        width: 824
+        height: 712
+      alignment: 9
+      pivot: {x: 0.28, y: 0.065}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 3ab32118098cfdb4d9d74789aee60900
+      internalID: -102172652
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: LafuSkill_40
+      rect:
+        serializedVersion: 2
+        x: 3248
+        y: 110
+        width: 828
+        height: 712
+      alignment: 9
+      pivot: {x: 0.28, y: 0.065}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e2a3e62ef90ced543ba5aefea8d0c43f
+      internalID: 309091012
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 22f9513f0fde766458182eba62b86cbb
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      LafuSkill_0: -8240016647918037569
+      LafuSkill_1: 6598475105496327971
+      LafuSkill_10: 1512652247213057305
+      LafuSkill_11: -4400728148268461573
+      LafuSkill_12: 4529458560926046922
+      LafuSkill_13: -1573700335232620783
+      LafuSkill_14: 6831642606458676439
+      LafuSkill_15: 1830351898121404287
+      LafuSkill_16: -883416544528584032
+      LafuSkill_17: -4911851489839774543
+      LafuSkill_18: 3785431393368502966
+      LafuSkill_19: 7044455120326983660
+      LafuSkill_2: 2905210686888853171
+      LafuSkill_20: 4866580825561100665
+      LafuSkill_21: -4762038078445992725
+      LafuSkill_22: -563522935369680621
+      LafuSkill_23: 5727028911938473179
+      LafuSkill_24: 7025579589489079084
+      LafuSkill_25: 6748373226890475433
+      LafuSkill_26: 1102485716706135580
+      LafuSkill_27: -2756634270194608414
+      LafuSkill_28: 8568145724886656949
+      LafuSkill_29: 7250586017248012623
+      LafuSkill_3: 1179242480279409084
+      LafuSkill_30: 5984222187283452545
+      LafuSkill_31: -4666025446040645581
+      LafuSkill_32: -2623881416623284040
+      LafuSkill_33: 213926357380977287
+      LafuSkill_34: 8172525745407105512
+      LafuSkill_35: -5531042484922528550
+      LafuSkill_36: 6025263543589542511
+      LafuSkill_37: 1928836934337337566
+      LafuSkill_38: -6922990523456649380
+      LafuSkill_39: -102172652
+      LafuSkill_4: -1016855942929186542
+      LafuSkill_40: 309091012
+      LafuSkill_5: 6004512353818707058
+      LafuSkill_6: 8953656461911051614
+      LafuSkill_7: -1553857521772689963
+      LafuSkill_8: -1444514763789823806
+      LafuSkill_9: -2809209245708606595
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

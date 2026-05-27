@@ -1,131 +1,138 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
+using TGame.Data; // 【🔥修复1：引入底层格子数据】
 
-public class PathNode
+namespace TGame.Battle // 【🔥修复2：统一战斗逻辑命名空间】
 {
-    public GridCell Cell;
-    public int GCost;
-    public int HCost;
-    public int FCost => GCost + HCost;
-    public PathNode ParentNode;
-
-    public PathNode(GridCell cell)
+    public class PathNode
     {
-        Cell = cell;
+        public GridCell Cell;
+        public int GCost;
+        public int HCost;
+        public int FCost => GCost + HCost;
+        public PathNode ParentNode;
+
+        public PathNode(GridCell cell)
+        {
+            Cell = cell;
+        }
     }
-}
 
-public static class PathfindingService
-{
-    public static List<GridCell> GetPath(GridSystem gridSystem, Vector3Int startPos, Vector3Int targetPos)
+    public static class PathfindingService
     {
-        GridCell startCell = gridSystem.GetCell(startPos);
-        GridCell targetCell = gridSystem.GetCell(targetPos);
-
-        if (startCell == null || targetCell == null) return null;
-        if (!targetCell.CanEnter()) return null;
-
-        List<PathNode> openList = new List<PathNode>();
-        HashSet<GridCell> closedList = new HashSet<GridCell>();
-
-        PathNode startNode = new PathNode(startCell)
+        public static List<GridCell> GetPath(GridSystem gridSystem, Vector3Int startPos, Vector3Int targetPos)
         {
-            GCost = 0,
-            HCost = CalculateDistance(startCell, targetCell)
-        };
-        openList.Add(startNode);
+            GridCell startCell = gridSystem.GetCell(startPos);
+            GridCell targetCell = gridSystem.GetCell(targetPos);
 
-        Dictionary<Vector3Int, PathNode> nodeMap = new Dictionary<Vector3Int, PathNode>
-        {
-            { startPos, startNode }
-        };
+            if (startCell == null || targetCell == null) return null;
 
-        while (openList.Count > 0)
-        {
-            PathNode currentNode = GetLowestFCostNode(openList);
+            // 【🔥修复3：使用 IsWalkable 替代 CanEnter，且目标点不能有其他人站着】
+            if (!targetCell.IsWalkable || (targetCell.OccupantUnitID != -1 && targetCell.OccupantUnitID != startCell.OccupantUnitID)) return null;
 
-            if (currentNode.Cell == targetCell)
+            List<PathNode> openList = new List<PathNode>();
+            HashSet<GridCell> closedList = new HashSet<GridCell>();
+
+            PathNode startNode = new PathNode(startCell)
             {
-                return CalculatePath(currentNode);
-            }
+                GCost = 0,
+                HCost = CalculateDistance(startCell, targetCell)
+            };
+            openList.Add(startNode);
 
-            openList.Remove(currentNode);
-            closedList.Add(currentNode.Cell);
-
-            foreach (GridCell neighbor in gridSystem.GetNeighbors(currentNode.Cell))
+            Dictionary<Vector3Int, PathNode> nodeMap = new Dictionary<Vector3Int, PathNode>
             {
-                if (closedList.Contains(neighbor) || !neighbor.CanEnter()) continue;
+                { startPos, startNode }
+            };
 
-                int tentativeGCost = currentNode.GCost + neighbor.MoveCost;
+            while (openList.Count > 0)
+            {
+                PathNode currentNode = GetLowestFCostNode(openList);
 
-                if (!nodeMap.TryGetValue(neighbor.Position, out PathNode neighborNode))
+                if (currentNode.Cell == targetCell)
                 {
-                    neighborNode = new PathNode(neighbor);
-                    nodeMap[neighbor.Position] = neighborNode;
+                    return CalculatePath(currentNode);
                 }
 
-                if (!openList.Contains(neighborNode))
+                openList.Remove(currentNode);
+                closedList.Add(currentNode.Cell);
+
+                foreach (GridCell neighbor in gridSystem.GetNeighbors(currentNode.Cell))
                 {
-                    neighborNode.GCost = tentativeGCost;
-                    neighborNode.HCost = CalculateDistance(neighbor, targetCell);
-                    neighborNode.ParentNode = currentNode;
-                    openList.Add(neighborNode);
-                }
-                else if (tentativeGCost < neighborNode.GCost)
-                {
-                    neighborNode.GCost = tentativeGCost;
-                    neighborNode.ParentNode = currentNode;
+                    // 【🔥修复4：判断是否可走，并且避开被其他角色占据的格子】
+                    if (closedList.Contains(neighbor) || !neighbor.IsWalkable) continue;
+                    if (neighbor.OccupantUnitID != -1 && neighbor != targetCell && neighbor.OccupantUnitID != startCell.OccupantUnitID) continue;
+
+                    // 【🔥修复5：默认六边形每走一步的 Cost 为 1】
+                    int moveCost = 1;
+                    int tentativeGCost = currentNode.GCost + moveCost;
+
+                    if (!nodeMap.TryGetValue(neighbor.Position, out PathNode neighborNode))
+                    {
+                        neighborNode = new PathNode(neighbor);
+                        nodeMap[neighbor.Position] = neighborNode;
+                    }
+
+                    if (!openList.Contains(neighborNode))
+                    {
+                        neighborNode.GCost = tentativeGCost;
+                        neighborNode.HCost = CalculateDistance(neighbor, targetCell);
+                        neighborNode.ParentNode = currentNode;
+                        openList.Add(neighborNode);
+                    }
+                    else if (tentativeGCost < neighborNode.GCost)
+                    {
+                        neighborNode.GCost = tentativeGCost;
+                        neighborNode.ParentNode = currentNode;
+                    }
                 }
             }
+            return null;
         }
-        return null;
-    }
 
-    public static int CalculateTotalMoveCost(List<GridCell> path)
-    {
-        if (path == null || path.Count == 0) return 0;
-        int totalCost = 0;
-        for (int i = 1; i < path.Count; i++)
+        public static int CalculateTotalMoveCost(List<GridCell> path)
         {
-            totalCost += path[i].MoveCost;
+            if (path == null || path.Count == 0) return 0;
+
+            // 【🔥修复6：因为每步 Cost 都是 1，总消耗直接返回路径节点数量即可】
+            return path.Count;
         }
-        return totalCost;
-    }
 
-    // ==========================================
-    // �޸ĵ㣺����������ľ�������㷨
-    // ==========================================
-    private static int CalculateDistance(GridCell a, GridCell b)
-    {
-        int xDistance = Mathf.Abs(a.Position.x - b.Position.x);
-        int yDistance = Mathf.Abs(a.Position.y - b.Position.y);
-        int zDistance = Mathf.Abs(a.Position.z - b.Position.z);
-        return (xDistance + yDistance + zDistance) / 2;
-    }
-
-    private static PathNode GetLowestFCostNode(List<PathNode> pathNodeList)
-    {
-        PathNode lowestFCostNode = pathNodeList[0];
-        for (int i = 1; i < pathNodeList.Count; i++)
+        // ==========================================
+        // 六边形网格的距离计算算法 (保持完美)
+        // ==========================================
+        private static int CalculateDistance(GridCell a, GridCell b)
         {
-            if (pathNodeList[i].FCost < lowestFCostNode.FCost)
+            int xDistance = Mathf.Abs(a.Position.x - b.Position.x);
+            int yDistance = Mathf.Abs(a.Position.y - b.Position.y);
+            int zDistance = Mathf.Abs(a.Position.z - b.Position.z);
+            return (xDistance + yDistance + zDistance) / 2;
+        }
+
+        private static PathNode GetLowestFCostNode(List<PathNode> pathNodeList)
+        {
+            PathNode lowestFCostNode = pathNodeList[0];
+            for (int i = 1; i < pathNodeList.Count; i++)
             {
-                lowestFCostNode = pathNodeList[i];
+                if (pathNodeList[i].FCost < lowestFCostNode.FCost)
+                {
+                    lowestFCostNode = pathNodeList[i];
+                }
             }
+            return lowestFCostNode;
         }
-        return lowestFCostNode;
-    }
 
-    private static List<GridCell> CalculatePath(PathNode endNode)
-    {
-        List<GridCell> path = new List<GridCell>();
-        PathNode currentNode = endNode;
-        while (currentNode.ParentNode != null)
+        private static List<GridCell> CalculatePath(PathNode endNode)
         {
-            path.Add(currentNode.Cell);
-            currentNode = currentNode.ParentNode;
+            List<GridCell> path = new List<GridCell>();
+            PathNode currentNode = endNode;
+            while (currentNode.ParentNode != null)
+            {
+                path.Add(currentNode.Cell);
+                currentNode = currentNode.ParentNode;
+            }
+            path.Reverse();
+            return path;
         }
-        path.Reverse();
-        return path;
     }
 }

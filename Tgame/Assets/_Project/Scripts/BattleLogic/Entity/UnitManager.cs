@@ -4,7 +4,6 @@ using UnityEngine;
 using TGame.Core;
 using TGame.Data;
 
-// 【🔥核心修改1】统一归入战斗命名空间，这样就能认识 RuntimeUnit 了
 namespace TGame.Battle
 {
     public class UnitManager : IGameSystem
@@ -23,19 +22,54 @@ namespace TGame.Battle
             Debug.Log("[UnitManager] 就绪。");
         }
 
-        public RuntimeUnit SpawnUnit(int characterID, Vector3Int spawnPos)
+        // ==========================================
+        // 【🔥核心修改】玩家专属生成通道
+        // ==========================================
+        public RuntimeUnit SpawnPlayer(int characterID, Vector3Int spawnPos)
         {
-            // 【🔥核心修改2】这里从 CharacterDataSO 改成了 CharacterData
             CharacterData config = DataManager.Instance.GetCharacterData(characterID);
-            if (config == null)
+            if (config == null) return null;
+
+            RuntimeUnit newUnit = new RuntimeUnit(++_idCounter, 1001, config, null, spawnPos);
+            RegisterAndInstantiate(newUnit, spawnPos);
+            return newUnit;
+        }
+
+        // ==========================================
+        // 【🔥核心修改】敌人专属生成通道 (含数据适配器黑科技)
+        // ==========================================
+        public RuntimeUnit SpawnEnemy(int enemyID, Vector3Int spawnPos)
+        {
+            EnemyData enemyConfig = DataManager.Instance.GetEnemyData(enemyID);
+            if (enemyConfig == null) return null;
+
+            // 💡 数据桥接：临时捏一个 CharacterData 喂给战斗公式，完美兼容旧代码！
+            CharacterData adapterData = new CharacterData
             {
-                Debug.LogError($"[UnitManager] 生成失败！找不到 ID {characterID} 的角色配置表数据。");
-                return null;
-            }
+                characterID = enemyConfig.enemyID,
+                characterName = enemyConfig.enemyName,
+                characterPrefab = enemyConfig.prefab,
+                maxHP = enemyConfig.maxHP,
+                attack = enemyConfig.attack,
+                defense = enemyConfig.defense,
+                speed = enemyConfig.speed,
+                attackRange = enemyConfig.attackRange,
+                critRate = enemyConfig.critRate,
+                postureValue = enemyConfig.postureValue,
+                attackVFXID = enemyConfig.attackVFXID,
+                attackHitDelay = enemyConfig.attackHitDelay,
+                damagePopupDelay = enemyConfig.damagePopupDelay
+            };
 
-            int side = (characterID == 1001) ? 1001 : 1002; // 临时判断阵营
-            RuntimeUnit newUnit = new RuntimeUnit(++_idCounter, side, config, spawnPos);
+            // 生成时，把转换好的通用数据和专属的 EnemyData 一并塞进去
+            RuntimeUnit newUnit = new RuntimeUnit(++_idCounter, 2001, adapterData, enemyConfig, spawnPos);
+            RegisterAndInstantiate(newUnit, spawnPos);
+            return newUnit;
+        }
 
+        // 提取出的公共注册逻辑
+        private void RegisterAndInstantiate(RuntimeUnit newUnit, Vector3Int spawnPos)
+        {
             _unitDict.Add(newUnit.InstanceID, newUnit);
 
             if (GridSystem.Instance != null && GridSystem.Instance.GetCell(spawnPos) != null)
@@ -43,8 +77,12 @@ namespace TGame.Battle
                 GridSystem.Instance.GetCell(spawnPos).OccupantUnitID = newUnit.InstanceID;
             }
 
+            if (UnitViewManager.Instance != null)
+            {
+                UnitViewManager.Instance.CreateUnitView(newUnit);
+            }
+
             OnUnitSpawned?.Invoke(newUnit);
-            return newUnit;
         }
 
         public RuntimeUnit GetUnit(int instanceID)

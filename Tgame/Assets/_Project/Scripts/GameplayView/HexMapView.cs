@@ -1,69 +1,116 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using TGame.Battle;
+using TGame.Data;
+using TGame.Core;
 
 [RequireComponent(typeof(LineRenderer))]
 public class HexMapView : MonoBehaviour
 {
     public static HexMapView Instance { get; private set; }
 
+    [Header("真实美术资产配置")]
+    public Sprite[] groundSprites;
+    public Sprite[] obstacleSprites;
+
+    public enum InteractionMode
+    {
+        SelectUnit,
+        SelectMoveTarget,
+        SelectAttackTarget,
+        SelectSkillTarget // 【🔥新增】技能瞄准模式
+    }
+
+    public InteractionMode CurrentMode { get; private set; } = InteractionMode.SelectUnit;
+
+    public event Action<RuntimeUnit> OnUnitSelected;
+    public event Action OnUnitDeselected;
+
     private Vector3Int _hoveredCellPos;
-    private LineRenderer _pathLineRenderer;
     private Vector3Int _lastHoveredPos = new Vector3Int(999, 999, 999);
 
     private RuntimeUnit _selectedUnit = null;
     public RuntimeUnit SelectedUnit => _selectedUnit;
 
-    private Dictionary<Vector3Int, GameObject> _cellVisuals = new Dictionary<Vector3Int, GameObject>();
+    // 【🔥新增】记录当前正在准备释放的技能 ID
+    private int _currentSkillID = -1;
 
-    private GameObject _phantomObj;
+    private Dictionary<Vector3Int, GameObject> _cellVisuals = new Dictionary<Vector3Int, GameObject>();
+    private Dictionary<Vector3Int, SpriteRenderer> _cellHighlights = new Dictionary<Vector3Int, SpriteRenderer>();
+
+    private LineRenderer _previewLineRenderer;
+    private Dictionary<int, GameObject> _phantomDict = new Dictionary<int, GameObject>();
 
     private void Awake() { Instance = this; }
 
     private void Start()
     {
-        _pathLineRenderer = GetComponent<LineRenderer>();
-        _pathLineRenderer.positionCount = 0;
-        _pathLineRenderer.startWidth = 0.08f;
-        _pathLineRenderer.endWidth = 0.08f;
-        _pathLineRenderer.material = new Material(Shader.Find("Sprites/Default"));
-        _pathLineRenderer.startColor = Color.yellow;
-        _pathLineRenderer.endColor = Color.white;
-        _pathLineRenderer.sortingOrder = 5;
-
-        Invoke("CreateGridVisuals", 0.2f);
+        _previewLineRenderer = GetComponent<LineRenderer>();
+        _previewLineRenderer.positionCount = 0;
+        _previewLineRenderer.startWidth = 0.08f;
+        _previewLineRenderer.endWidth = 0.08f;
+        _previewLineRenderer.material = new Material(Shader.Find("Sprites/Default"));
+        _previewLineRenderer.startColor = Color.yellow;
+        _previewLineRenderer.endColor = Color.white;
+        _previewLineRenderer.sortingOrder = 3000;
     }
 
-    private void CreateGridVisuals()
+    public void CreateGridVisuals()
     {
         if (GridSystem.Instance == null) return;
-        Sprite hexSprite = CreateHexFrameSprite();
-        int radius = 5;
-        for (int x = -radius; x <= radius; x++)
+        Sprite solidHexSprite = CreateSolidHexSprite();
+
+        foreach (var kvp in GridSystem.Instance.GetAllCells())
         {
-            int y1 = Mathf.Max(-radius, -x - radius);
-            int y2 = Mathf.Min(radius, -x + radius);
-            for (int y = y1; y <= y2; y++)
+            Vector3Int pos = kvp.Key;
+            GridCell cellData = kvp.Value;
+
+            GameObject cellObj = new GameObject($"Cell_{pos.x}_{pos.y}");
+            cellObj.transform.SetParent(this.transform);
+            cellObj.transform.position = GridSystem.Instance.CellToWorld(pos);
+
+            int baseOrder = -pos.y * 10;
+
+            SpriteRenderer groundSr = cellObj.AddComponent<SpriteRenderer>();
+            if (groundSprites != null && cellData.GroundVariantID >= 0 && cellData.GroundVariantID < groundSprites.Length && groundSprites[cellData.GroundVariantID] != null)
             {
-                Vector3Int pos = new Vector3Int(x, y, -x - y);
-                GridCell cellData = GridSystem.Instance.GetCell(pos);
-                if (cellData == null) continue;
-
-                GameObject cellObj = new GameObject($"Cell_{x}_{y}");
-                cellObj.transform.SetParent(this.transform);
-                cellObj.transform.position = GridSystem.Instance.CellToWorld(pos);
-
-                SpriteRenderer sr = cellObj.AddComponent<SpriteRenderer>();
-                sr.sprite = hexSprite;
-                sr.color = cellData.IsWalkable ? new Color(1, 1, 1, 0.3f) : new Color(0, 0, 0, 0.8f);
-                sr.sortingOrder = 1;
-
-                _cellVisuals[pos] = cellObj;
+                groundSr.sprite = groundSprites[cellData.GroundVariantID];
+                groundSr.color = Color.white;
             }
+            else groundSr.color = Color.clear;
+
+            groundSr.sortingOrder = baseOrder;
+            _cellVisuals[pos] = cellObj;
+
+            if (cellData.ObstacleVariantID != -1 && obstacleSprites != null && cellData.ObstacleVariantID >= 0 && cellData.ObstacleVariantID < obstacleSprites.Length && obstacleSprites[cellData.ObstacleVariantID] != null)
+            {
+                GameObject obsObj = new GameObject("Obstacle");
+                obsObj.transform.SetParent(cellObj.transform);
+                obsObj.transform.localPosition = Vector3.zero;
+
+                SpriteRenderer obsSr = obsObj.AddComponent<SpriteRenderer>();
+                obsSr.sprite = obstacleSprites[cellData.ObstacleVariantID];
+                obsSr.color = Color.white;
+                obsSr.sortingOrder = baseOrder + 2;
+            }
+
+            GameObject highlightObj = new GameObject("HighlightFilter");
+            highlightObj.transform.SetParent(cellObj.transform);
+            highlightObj.transform.localPosition = Vector3.zero;
+            highlightObj.transform.localRotation = Quaternion.Euler(0, 0, 90);
+
+            SpriteRenderer highlightSr = highlightObj.AddComponent<SpriteRenderer>();
+            highlightSr.sprite = solidHexSprite;
+            highlightSr.color = Color.clear;
+            highlightSr.sortingOrder = cellData.IsWalkable ? baseOrder + 1 : baseOrder + 3;
+
+            _cellHighlights[pos] = highlightSr;
         }
     }
 
-    private Sprite CreateHexFrameSprite()
+    private Sprite CreateSolidHexSprite()
     {
         int size = 128;
         Texture2D tex = new Texture2D(size, size);
@@ -72,28 +119,21 @@ public class HexMapView : MonoBehaviour
 
         Vector2 center = new Vector2(size / 2f, size / 2f);
         float r = size * 0.48f;
-        Vector2[] points = new Vector2[6];
-        for (int i = 0; i < 6; i++)
-        {
-            float angle = Mathf.Deg2Rad * (60 * i - 30);
-            points[i] = center + new Vector2(Mathf.Cos(angle) * r, Mathf.Sin(angle) * r);
-        }
-        for (int i = 0; i < 6; i++) DrawLine(tex, points[i], points[(i + 1) % 6], Color.white);
 
+        for (int x = 0; x < size; x++)
+        {
+            for (int y = 0; y < size; y++)
+            {
+                Vector2 pos = new Vector2(x, y) - center;
+                float absX = Mathf.Abs(pos.x);
+                float absY = Mathf.Abs(pos.y);
+                float hexDist = Mathf.Max(absX * 0.866025f + absY * 0.5f, absY);
+
+                if (hexDist <= r) tex.SetPixel(x, y, Color.white);
+            }
+        }
         tex.Apply();
         return Sprite.Create(tex, new Rect(0, 0, size, size), new Vector2(0.5f, 0.5f), 128f / (GridSystem.Instance.HexSize * 2f));
-    }
-
-    private void DrawLine(Texture2D tex, Vector2 p1, Vector2 p2, Color col)
-    {
-        float dist = Vector2.Distance(p1, p2);
-        for (float t = 0; t < 1; t += 1f / dist)
-        {
-            Vector2 p = Vector2.Lerp(p1, p2, t);
-            tex.SetPixel((int)p.x, (int)p.y, col);
-            tex.SetPixel((int)p.x + 1, (int)p.y, col);
-            tex.SetPixel((int)p.x, (int)p.y + 1, col);
-        }
     }
 
     private void Update()
@@ -101,9 +141,11 @@ public class HexMapView : MonoBehaviour
         if (GridSystem.Instance == null || TurnManager.Instance == null) return;
         if (TurnManager.Instance.CurrentState != TGame.Battle.BattleState.Planning)
         {
-            if (_pathLineRenderer != null) _pathLineRenderer.positionCount = 0;
+            if (_previewLineRenderer != null) _previewLineRenderer.positionCount = 0;
             return;
         }
+
+        if (EventSystem.current != null && EventSystem.current.IsPointerOverGameObject()) return;
 
         Vector3 mouseWorldPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         mouseWorldPos.z = 0;
@@ -113,18 +155,31 @@ public class HexMapView : MonoBehaviour
         {
             _lastHoveredPos = _hoveredCellPos;
 
-            if (_selectedUnit != null && _phantomObj == null)
+            if (CurrentMode == InteractionMode.SelectMoveTarget && _selectedUnit != null)
             {
-                UpdatePathVisualization();
+                UpdatePreviewPath();
             }
-            else if (_phantomObj == null)
+            // ==========================================
+            // 【🔥新增】鼠标移动时，动态渲染技能AOE范围
+            // ==========================================
+            else if (CurrentMode == InteractionMode.SelectSkillTarget && _selectedUnit != null)
             {
-                _pathLineRenderer.positionCount = 0;
+                RefreshSkillHighlights(_hoveredCellPos);
+                _previewLineRenderer.positionCount = 0;
+            }
+            else
+            {
+                _previewLineRenderer.positionCount = 0;
             }
         }
 
         if (Input.GetMouseButtonDown(0)) HandleLeftClick();
-        if (Input.GetMouseButtonDown(1)) CancelSelection();
+
+        if (Input.GetMouseButtonUp(1))
+        {
+            if (CameraController.Instance != null && CameraController.Instance.IsDragging) return;
+            HandleRightClick();
+        }
     }
 
     private void HandleLeftClick()
@@ -132,104 +187,304 @@ public class HexMapView : MonoBehaviour
         GridCell clickedCell = GridSystem.Instance.GetCell(_hoveredCellPos);
         if (clickedCell == null) return;
 
-        if (_selectedUnit == null)
+        switch (CurrentMode)
         {
-            if (clickedCell.OccupantUnitID != -1)
-            {
-                _selectedUnit = UnitManager.Instance.GetUnit(clickedCell.OccupantUnitID);
-                if (_selectedUnit != null) Debug.Log($"[交互] 选中: {_selectedUnit.ConfigData.characterName}");
-            }
-        }
-        else
-        {
-            // 【🔥核心修复】防止玩家点击自己站立的格子，产生 0 消耗的无限虚影
-            if (_hoveredCellPos == _selectedUnit.GridPosition)
-            {
-                Debug.LogWarning("[交互] 无法在原地进行移动规划！");
-                return;
-            }
+            case InteractionMode.SelectUnit:
+                if (clickedCell.OccupantUnitID != -1)
+                {
+                    _selectedUnit = UnitManager.Instance.GetUnit(clickedCell.OccupantUnitID);
+                    if (_selectedUnit != null) OnUnitSelected?.Invoke(_selectedUnit);
+                }
+                break;
 
-            MoveCommand moveCmd = new MoveCommand(_selectedUnit.InstanceID, _selectedUnit.GridPosition, _hoveredCellPos);
-            if (moveCmd.Validate())
+            case InteractionMode.SelectMoveTarget:
+                if (_hoveredCellPos == _selectedUnit.GridPosition) return;
+                MoveCommand moveCmd = new MoveCommand(_selectedUnit.InstanceID, _selectedUnit.GridPosition, _hoveredCellPos);
+                if (moveCmd.Validate()) { TurnManager.Instance.AddCommand(moveCmd); CancelSelection(); }
+                break;
+
+            case InteractionMode.SelectAttackTarget:
+                if (clickedCell.OccupantUnitID != -1 && clickedCell.OccupantUnitID != _selectedUnit.InstanceID)
+                {
+                    AttackCommand atkCmd = new AttackCommand(_selectedUnit.InstanceID, clickedCell.OccupantUnitID);
+                    if (atkCmd.Validate()) { TurnManager.Instance.AddCommand(atkCmd); CancelSelection(); }
+                }
+                break;
+
+            // ==========================================
+            // 【🔥新增】处理技能释放的目标选取逻辑
+            // ==========================================
+            case InteractionMode.SelectSkillTarget:
+                SkillData skillData = DataManager.Instance.GetSkillData(_currentSkillID);
+                if (skillData == null) return;
+
+                // 1. 距离校验 (不能超越施法距离，也不能点自己脚下)
+                int dist = GetHexDistance(_selectedUnit.GridPosition, _hoveredCellPos);
+                if (dist <= 0 || dist > skillData.castRange)
+                {
+                    Debug.LogWarning("[交互] 目标格子超出了施法距离！");
+                    return;
+                }
+
+                // 2. 目标合法性校验 (根据 targetMask)
+                RuntimeUnit targetUnit = clickedCell.OccupantUnitID != -1 ? UnitManager.Instance.GetUnit(clickedCell.OccupantUnitID) : null;
+                bool isValidTarget = false;
+
+                if (targetUnit == null)
+                {
+                    if (skillData.targetMask.HasFlag(SkillTargetMask.Empty)) isValidTarget = true;
+                }
+                else if (targetUnit.Side == _selectedUnit.Side)
+                {
+                    if (skillData.targetMask.HasFlag(SkillTargetMask.Ally)) isValidTarget = true;
+                }
+                else
+                {
+                    if (skillData.targetMask.HasFlag(SkillTargetMask.Enemy)) isValidTarget = true;
+                }
+
+                if (!isValidTarget)
+                {
+                    Debug.LogWarning($"[交互] 目标不合法！当前技能仅允许瞄准: {skillData.targetMask}");
+                    return;
+                }
+
+                // 3. 生成并下达指令
+                SkillCommand skillCmd = new SkillCommand(_selectedUnit.InstanceID, _hoveredCellPos, _currentSkillID);
+                if (skillCmd.Validate())
+                {
+                    TurnManager.Instance.AddCommand(skillCmd);
+                    CancelSelection();
+                }
+                else
+                {
+                    Debug.LogWarning("[交互] 时素(TU)或魔法值(MP)不足，无法释放该技能！");
+                }
+                break;
+        }
+    }
+
+    private void HandleRightClick()
+    {
+        if (_selectedUnit == null) return;
+
+        if (CurrentMode != InteractionMode.SelectUnit)
+        {
+            CurrentMode = InteractionMode.SelectUnit;
+            _previewLineRenderer.positionCount = 0;
+            ResetGridVisuals();
+            OnUnitSelected?.Invoke(_selectedUnit);
+        }
+        else CancelSelection();
+    }
+
+    public void EnterMoveMode() { CurrentMode = InteractionMode.SelectMoveTarget; }
+
+    public void EnterAttackMode()
+    {
+        CurrentMode = InteractionMode.SelectAttackTarget;
+        if (_selectedUnit != null) ShowHighlightRange(_selectedUnit.GridPosition, _selectedUnit.ConfigData.attackRange, new Color(1f, 0.2f, 0.2f, 0.5f));
+    }
+
+    // ==========================================
+    // 【🔥新增】进入技能模式并高亮最大施法范围
+    // ==========================================
+    public void EnterSkillMode(int skillID)
+    {
+        CurrentMode = InteractionMode.SelectSkillTarget;
+        _currentSkillID = skillID;
+        RefreshSkillHighlights(_lastHoveredPos);
+    }
+
+    // ==========================================
+    // 【🔥新增】双层高亮系统：底色施法范围(蓝) + 随鼠标移动的AOE范围(红)
+    // ==========================================
+    private void RefreshSkillHighlights(Vector3Int hoverPos)
+    {
+        if (_selectedUnit == null) return;
+        SkillData skillData = DataManager.Instance.GetSkillData(_currentSkillID);
+        if (skillData == null) return;
+
+        ResetGridVisuals();
+
+        bool isHoverValid = GetHexDistance(_selectedUnit.GridPosition, hoverPos) <= skillData.castRange && GetHexDistance(_selectedUnit.GridPosition, hoverPos) > 0;
+
+        foreach (var kvp in _cellHighlights)
+        {
+            Vector3Int pos = kvp.Key;
+            int distToCaster = GetHexDistance(_selectedUnit.GridPosition, pos);
+            int distToHover = GetHexDistance(hoverPos, pos);
+
+            bool inCastRange = distToCaster > 0 && distToCaster <= skillData.castRange;
+            bool inAoe = distToHover <= skillData.aoeRadius;
+
+            // 优先显示 AOE 爆炸区 (橙红色)
+            if (isHoverValid && inAoe)
             {
-                TurnManager.Instance.AddCommand(moveCmd);
+                if (kvp.Value != null) kvp.Value.color = new Color(1f, 0.4f, 0f, 0.65f);
             }
-            else
+            // 其次显示可施法范围 (淡蓝色)
+            else if (inCastRange)
             {
-                Debug.LogWarning("[交互] 该角色剩余时素不足或路径不可达！");
+                if (kvp.Value != null) kvp.Value.color = new Color(0.2f, 0.6f, 1f, 0.35f);
             }
         }
     }
 
-    private void CancelSelection()
+    public void ShowHighlightRange(Vector3Int centerPos, int range, Color highlightColor)
+    {
+        ResetGridVisuals();
+        foreach (var kvp in _cellHighlights)
+        {
+            Vector3Int pos = kvp.Key;
+            int dist = GetHexDistance(centerPos, pos);
+            if (dist > 0 && dist <= range)
+            {
+                if (kvp.Value != null) kvp.Value.color = highlightColor;
+            }
+        }
+    }
+
+    public void ResetGridVisuals()
+    {
+        foreach (var highlightSr in _cellHighlights.Values)
+        {
+            if (highlightSr != null) highlightSr.color = Color.clear;
+        }
+    }
+
+    public void CancelSelection()
     {
         _selectedUnit = null;
-        if (_phantomObj == null) _pathLineRenderer.positionCount = 0;
+        _currentSkillID = -1;
+        CurrentMode = InteractionMode.SelectUnit;
+        _previewLineRenderer.positionCount = 0;
+        ResetGridVisuals();
+        OnUnitDeselected?.Invoke();
     }
 
-    private void UpdatePathVisualization()
+    private void UpdatePreviewPath()
     {
         if (_selectedUnit == null) return;
         List<GridCell> path = PathfindingService.GetPath(GridSystem.Instance, _selectedUnit.GridPosition, _hoveredCellPos);
-        if (path == null || path.Count <= 1)
+
+        if (path == null || path.Count == 0)
         {
-            _pathLineRenderer.positionCount = 0;
+            _previewLineRenderer.positionCount = 0;
             return;
         }
-        _pathLineRenderer.positionCount = path.Count;
-        for (int i = 0; i < path.Count; i++) _pathLineRenderer.SetPosition(i, GridSystem.Instance.CellToWorld(path[i].Position));
+
+        _previewLineRenderer.positionCount = path.Count + 1;
+        _previewLineRenderer.SetPosition(0, GridSystem.Instance.CellToWorld(_selectedUnit.GridPosition));
+
+        for (int i = 0; i < path.Count; i++)
+        {
+            _previewLineRenderer.SetPosition(i + 1, GridSystem.Instance.CellToWorld(path[i].Position));
+        }
     }
 
-    public void ShowPhantom(int unitID, Vector3Int targetPos, List<GridCell> path)
+    public void UpdatePhantom(int unitID, Vector3Int targetPos)
     {
-        ClearPhantom();
+        if (_phantomDict.TryGetValue(unitID, out GameObject phantom))
+        {
+            phantom.transform.position = GridSystem.Instance.CellToWorld(targetPos);
+            int newOrder = -targetPos.y * 10 + 5;
+            foreach (var sr in phantom.GetComponentsInChildren<SpriteRenderer>()) sr.sortingOrder = newOrder;
+            return;
+        }
 
         var unit = UnitManager.Instance.GetUnit(unitID);
         if (unit == null || unit.ConfigData.characterPrefab == null) return;
 
-        _phantomObj = Instantiate(unit.ConfigData.characterPrefab);
-        _phantomObj.name = $"[Phantom] {unit.ConfigData.characterName}";
-        _phantomObj.transform.position = GridSystem.Instance.CellToWorld(targetPos);
+        phantom = Instantiate(unit.ConfigData.characterPrefab);
+        phantom.name = $"[Phantom] {unit.ConfigData.characterName}";
+        phantom.transform.position = GridSystem.Instance.CellToWorld(targetPos);
 
-        var unitView = _phantomObj.GetComponent<UnitView>();
+        var unitView = phantom.GetComponent<UnitView>();
         if (unitView != null) Destroy(unitView);
 
-        SpriteRenderer[] renderers = _phantomObj.GetComponentsInChildren<SpriteRenderer>();
+        var animator = phantom.GetComponentInChildren<Animator>();
+        if (animator != null) animator.speed = 0;
+
+        int phantomOrder = -targetPos.y * 10 + 5;
+        SpriteRenderer[] renderers = phantom.GetComponentsInChildren<SpriteRenderer>();
         foreach (var sr in renderers)
         {
             Color c = sr.color;
             c.a = 0.5f;
             sr.color = c;
-            sr.sortingOrder = 15;
+            sr.sortingOrder = phantomOrder;
         }
 
-        if (path != null && path.Count > 0)
+        _phantomDict[unitID] = phantom;
+    }
+
+    public LineRenderer CreatePathLineSegment(int unitID, Vector3Int startPos, List<GridCell> path)
+    {
+        if (path == null || path.Count == 0) return null;
+
+        var unit = UnitManager.Instance.GetUnit(unitID);
+        string uName = unit != null ? unit.ConfigData.characterName : unitID.ToString();
+
+        GameObject lineObj = new GameObject($"[PathLineSegment] {uName}");
+        lineObj.transform.SetParent(this.transform);
+
+        LineRenderer lr = lineObj.AddComponent<LineRenderer>();
+        lr.startWidth = 0.08f;
+        lr.endWidth = 0.08f;
+        lr.material = _previewLineRenderer.material;
+        lr.startColor = new Color(0f, 1f, 1f, 0.6f);
+        lr.endColor = new Color(1f, 1f, 1f, 0.6f);
+        lr.sortingOrder = 2999;
+
+        lr.positionCount = path.Count + 1;
+        lr.SetPosition(0, GridSystem.Instance.CellToWorld(startPos));
+        for (int i = 0; i < path.Count; i++)
         {
-            _pathLineRenderer.positionCount = path.Count;
-            for (int i = 0; i < path.Count; i++)
-            {
-                _pathLineRenderer.SetPosition(i, GridSystem.Instance.CellToWorld(path[i].Position));
-            }
+            lr.SetPosition(i + 1, GridSystem.Instance.CellToWorld(path[i].Position));
+        }
+
+        return lr;
+    }
+    // ==========================================
+    // 【🔥新增】允许从 UI 面板直接强行选中地图上的角色
+    // ==========================================
+    public void ForceSelectUnit(RuntimeUnit unit)
+    {
+        if (unit == null) return;
+
+        CancelSelection(); // 先清理之前的瞄准或高亮状态
+
+        _selectedUnit = unit;
+        CurrentMode = InteractionMode.SelectUnit;
+
+        // 触发选中事件
+        // 这将自动唤醒摄像机的 FocusOnUnit 平滑移过去，同时唤醒 UI 的 ActionPopup！
+        OnUnitSelected?.Invoke(_selectedUnit);
+    }
+    public void ClearPhantom(int unitID)
+    {
+        if (_phantomDict.TryGetValue(unitID, out GameObject phantom))
+        {
+            Destroy(phantom);
+            _phantomDict.Remove(unitID);
         }
     }
 
     public void ClearPhantom()
     {
-        if (_phantomObj != null) Destroy(_phantomObj);
-        if (_pathLineRenderer != null) _pathLineRenderer.positionCount = 0;
+        foreach (var phantom in _phantomDict.Values) Destroy(phantom);
+        _phantomDict.Clear();
     }
 
-    private void OnDrawGizmos()
+    public Transform GetPhantomTransform(int unitID)
     {
-        if (!Application.isPlaying || GridSystem.Instance == null) return;
-        if (UnitManager.Instance != null)
-        {
-            foreach (var unit in UnitManager.Instance.GetAllUnits())
-            {
-                Vector3 pos = GridSystem.Instance.CellToWorld(unit.GridPosition);
-                Gizmos.color = (unit.ConfigData.characterID == 1001) ? Color.cyan : Color.red;
-                Gizmos.DrawSphere(pos, 0.3f);
-            }
-        }
+        if (_phantomDict.TryGetValue(unitID, out GameObject phantom)) return phantom.transform;
+        return null;
+    }
+
+    private int GetHexDistance(Vector3Int a, Vector3Int b)
+    {
+        return (Mathf.Abs(a.x - b.x) + Mathf.Abs(a.y - b.y) + Mathf.Abs(a.z - b.z)) / 2;
     }
 }

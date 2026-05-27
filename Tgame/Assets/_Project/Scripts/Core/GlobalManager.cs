@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+ï»¿using System.Collections.Generic;
 using UnityEngine;
 using TGame.Battle;
 using Game.UI;
@@ -26,20 +26,21 @@ namespace TGame.Core
             }
         }
 
-        [Header("===== ±íÏÖ²ã¹ÜÀíÆ÷ (MonoBehaviour) =====")]
+        [Header("===== è¡¨ç°å±‚ç®¡ç†å™¨ (MonoBehaviour) =====")]
         public UIManager uiManager;
         public BattleManager battleManager;
         public UnitViewManager unitViewManager;
         public HexMapView hexMapView;
 
-        [Header("===== Âß¼­²ãÏµÍ³ (´¿ C#) =====")]
-        // ±©Â¶³öÈ¥¹©Íâ²¿Ö±½Ó·ÃÎÊ£¨¿ÉÑ¡£¬Èç¹û²»ÏëĞ´µ¥ÀıµÄ»°£©
+        // ã€ğŸ”¥æ–°å¢ã€‘å°† LevelManager ä¹Ÿçº³å…¥ Global çš„ç»Ÿä¸€ç®¡ç†
+        public LevelManager levelManager;
+
+        [Header("===== é€»è¾‘å±‚ç³»ç»Ÿ (çº¯ C#) =====")]
         public DataManager dataManager { get; private set; }
         public GridSystem gridSystem { get; private set; }
         public TurnManager turnManager { get; private set; }
         public UnitManager unitManager { get; private set; }
 
-        // Í³Ò»¹ÜÀíÂß¼­²ãµÄÉúÃüÖÜÆÚ
         private List<IGameSystem> _logicSystems = new List<IGameSystem>();
 
         private void Awake()
@@ -57,13 +58,13 @@ namespace TGame.Core
         }
 
         /// <summary>
-        /// ºËĞÄ£ºÍ³Ò»³õÊ¼»¯ËùÓĞ×ÓÏµÍ³
+        /// æ ¸å¿ƒï¼šç»Ÿä¸€åˆå§‹åŒ–æ‰€æœ‰å­ç³»ç»Ÿ
         /// </summary>
         private void InitializeAllSystems()
         {
-            Debug.Log("<color=cyan>[GlobalManager] ¿ªÊ¼¹ÒÔØÓë³õÊ¼»¯ºËĞÄ¿ò¼Ü...</color>");
+            Debug.Log("<color=cyan>[GlobalManager] å¼€å§‹æŒ‚è½½ä¸åˆå§‹åŒ–æ ¸å¿ƒæ¡†æ¶...</color>");
 
-            // 1. ³õÊ¼»¯´¿ C# Âß¼­ÏµÍ³ (°´ÑÏ¸ñË³Ğò)
+            // 1. åˆå§‹åŒ–çº¯ C# é€»è¾‘ç³»ç»Ÿ (æŒ‰ä¸¥æ ¼é¡ºåº)
             dataManager = new DataManager();
             gridSystem = new GridSystem();
             turnManager = new TurnManager();
@@ -75,15 +76,16 @@ namespace TGame.Core
             RegisterLogicSystem(unitManager);
 
             foreach (var sys in _logicSystems) sys.OnInit();
-
-            // 2. ¹ÒÔØÓë³õÊ¼»¯ MonoBehaviour ±íÏÖ²ãÏµÍ³
+            if (gameObject.GetComponent<VFXManager>() == null) gameObject.AddComponent<VFXManager>();
+            // 2. æŒ‚è½½ä¸åˆå§‹åŒ– MonoBehaviour è¡¨ç°å±‚ç³»ç»Ÿ
             if (uiManager == null) uiManager = gameObject.AddComponent<UIManager>();
-
-            // Õ½ÆåÌØÓĞ¹ÜÀíÆ÷
             if (battleManager == null) battleManager = gameObject.AddComponent<BattleManager>();
             if (unitViewManager == null) unitViewManager = gameObject.AddComponent<UnitViewManager>();
 
-            // HexMapView ÒòÎªĞèÒª LineRenderer£¬ÎÒÃÇÓÃÒ»ÖÖ°²È«µÄ·½Ê½¹ÒÔØ
+            // å®‰å…¨æŒ‚è½½ LevelManager
+            if (levelManager == null) levelManager = GetComponent<LevelManager>();
+            if (levelManager == null) levelManager = gameObject.AddComponent<LevelManager>();
+            if (gameObject.GetComponent<DamagePopupManager>() == null) gameObject.AddComponent<DamagePopupManager>();
             if (hexMapView == null)
             {
                 GameObject mapGo = new GameObject("HexMapView");
@@ -91,10 +93,18 @@ namespace TGame.Core
                 hexMapView = mapGo.AddComponent<HexMapView>();
             }
 
-            // ÊÖ¶¯´¥·¢ BattleManager µÄÕ½¶·³õÊ¼»¯£¨ÒÔÇ°ÊÇÔÚ Start Àï£©
+            // ==========================================
+            // ã€ğŸ”¥æ ¸å¿ƒä¿®å¤ã€‘ä¸¥æ ¼æ§åˆ¶ç”Ÿå‘½å‘¨æœŸé¡ºåºï¼
+            // ==========================================
+
+            // ç¬¬ä¸€æ­¥ï¼šå…ˆè®© LevelManager æŠŠåº•å±‚åœ°å›¾å»ºå¥½ï¼Œå¹¶ç”»å‡ºè¡¨ç°å±‚çš„åœ°å—
+            levelManager.LoadCurrentLevel();
+
+            // ç¬¬äºŒæ­¥ï¼šå†è®© BattleManager åˆå§‹åŒ–å¹¶ç”Ÿæˆè§’è‰²
+            // æ­¤æ—¶ç”±äºåœ°å›¾å·²å°±ç»ªï¼Œè§’è‰²ç”Ÿæˆæ—¶ï¼Œåº•å±‚çš„ OccupantUnitID æ‰èƒ½è¢«æ­£ç¡®è®°å½•ï¼
             battleManager.OnInit();
 
-            Debug.Log("<color=cyan>[GlobalManager] ¿ò¼Ü´î½¨Íê±Ï£¬ÏµÍ³ÔË×ªÕı³££¡</color>");
+            Debug.Log("<color=cyan>[GlobalManager] æ¡†æ¶æ­å»ºå®Œæ¯•ï¼Œç³»ç»Ÿè¿è½¬æ­£å¸¸ï¼</color>");
         }
 
         private void RegisterLogicSystem(IGameSystem system)
@@ -104,7 +114,6 @@ namespace TGame.Core
 
         private void Update()
         {
-            // Í³Ò»Çı¶¯Âß¼­²ãµÄ Update
             float dt = Time.deltaTime;
             foreach (var sys in _logicSystems)
             {

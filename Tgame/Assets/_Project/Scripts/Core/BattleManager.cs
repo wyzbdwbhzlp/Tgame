@@ -1,48 +1,48 @@
-﻿using UnityEngine;
-using System.Collections;
+﻿using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
 using TGame.Data;
 using TGame.Battle;
 using Game.UI;
-using TGame.Core; // 【🔥修复】引入 DataManager 所在的命名空间
 
-public class BattleManager : MonoBehaviour
+namespace TGame.Core
 {
-    public static BattleManager Instance { get; private set; }
-
-    public void OnInit()
+    public class BattleManager : MonoBehaviour
     {
-        Instance = this;
-        Debug.Log("<color=green>[BattleManager] 战斗初始化启动...</color>");
-        StartLevel(2001); // 加载关卡
-    }
+        public static BattleManager Instance { get; private set; }
 
-    private void StartLevel(int levelID)
-    {
-        LevelDataSO levelData = DataManager.Instance.GetLevelData(levelID);
-        if (levelData == null)
+        public void OnInit()
         {
-            Debug.LogError($"[BattleManager] 找不到关卡配置 {levelID}！");
-            return;
+            Instance = this;
+            StartBattleSetup();
         }
 
-        GridSystem.Instance.LoadLevel(levelData);
-
-        foreach (var spawn in levelData.playerSpawns)
-            UnitManager.Instance.SpawnUnit(spawn.characterID, spawn.spawnPos);
-
-        foreach (var spawn in levelData.enemySpawns)
-            UnitManager.Instance.SpawnUnit(spawn.characterID, spawn.spawnPos);
-
-        Debug.Log($"🎉 [BattleManager] 关卡【{levelData.levelName}】部署完毕！");
-
-        if (UIManager.Instance != null)
+        private void StartBattleSetup()
         {
-            UIManager.Instance.Show<UI_BattleMain>("UI_BattleMain");
-        }
-    }
+            if (GlobalManager.Instance == null || GlobalManager.Instance.levelManager == null) return;
 
-    public void StartSettleRoutine(IEnumerator routine)
-    {
-        StartCoroutine(routine);
+            LevelDataSO levelData = GlobalManager.Instance.levelManager.GetCurrentLevelData();
+            if (levelData == null) return;
+
+            if (HexMapView.Instance != null) HexMapView.Instance.CreateGridVisuals();
+
+            foreach (var spawn in levelData.playerSpawns)
+            {
+                UnitManager.Instance.SpawnPlayer(spawn.characterID, spawn.spawnPos);
+            }
+
+            foreach (var spawn in levelData.enemySpawns)
+            {
+                UnitManager.Instance.SpawnEnemy(spawn.enemyID, spawn.spawnPos);
+            }
+
+            if (UIManager.Instance != null) UIManager.Instance.Show<UI_BattleMain>("UI_BattleMain");
+        }
+
+        // 【🔥核心修复】返回值从 void 变成 Coroutine，使得外部可以使用 yield return 等待它
+        public Coroutine StartSettleRoutine(IEnumerator routine)
+        {
+            return StartCoroutine(routine);
+        }
     }
 }

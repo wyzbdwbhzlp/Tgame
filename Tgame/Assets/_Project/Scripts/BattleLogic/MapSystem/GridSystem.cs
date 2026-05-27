@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+ï»¿using System.Collections.Generic;
 using UnityEngine;
 using TGame.Data;
 
@@ -11,34 +11,39 @@ public class GridSystem : IGameSystem
     public void OnInit()
     {
         Instance = this;
-        Debug.Log("[GridSystem] ¾ÍĞ÷¡£");
+        Debug.Log("[GridSystem] å°±ç»ªã€‚");
     }
 
-    public void OnUpdate(float deltaTime) { }
-    public void OnDestroy()
+    public Dictionary<Vector3Int, GridCell> GetAllCells()
     {
-        _grid.Clear();
-        if (Instance == this) Instance = null;
+        return _grid;
     }
 
     public void LoadLevel(LevelDataSO levelData)
     {
         _grid.Clear();
-        for (int x = -levelData.mapRadius; x <= levelData.mapRadius; x++)
+
+        foreach (var cellData in levelData.cells)
         {
-            int y1 = Mathf.Max(-levelData.mapRadius, -x - levelData.mapRadius);
-            int y2 = Mathf.Min(levelData.mapRadius, -x + levelData.mapRadius);
-            for (int y = y1; y <= y2; y++)
-            {
-                Vector3Int pos = new Vector3Int(x, y, -x - y);
-                _grid[pos] = new GridCell(pos, true, 1);
-            }
+            GridCell cell = new GridCell(cellData.position);
+
+            // ã€ğŸ”¥ä¿®æ”¹ã€‘å¦‚æœéšœç¢ç‰©IDä¸º -1ï¼Œä»£è¡¨è¿™é‡Œåªæœ‰åœ°æ¿æ²¡æœ‰éšœç¢ï¼Œå³å¯é€šè¡Œ
+            cell.IsWalkable = (cellData.obstacleVariantID == -1);
+            cell.GroundVariantID = cellData.groundVariantID;
+            cell.ObstacleVariantID = cellData.obstacleVariantID;
+
+            _grid[cellData.position] = cell;
         }
 
-        foreach (var obsPos in levelData.obstacles)
-        {
-            if (_grid.TryGetValue(obsPos, out GridCell cell)) cell.IsWalkable = false;
-        }
+        Debug.Log($"<color=cyan>[åº•å±‚] å…³å¡ {levelData.levelName} åŠ è½½å®Œæ¯•ï¼Œç½‘æ ¼æ•°ï¼š{_grid.Count}ã€‚</color>");
+    }
+
+    public void OnUpdate(float deltaTime) { }
+
+    public void OnDestroy()
+    {
+        _grid.Clear();
+        if (Instance == this) Instance = null;
     }
 
     public GridCell GetCell(Vector3Int cellPosition)
@@ -47,10 +52,6 @@ public class GridSystem : IGameSystem
         return cell;
     }
 
-    // ==========================================
-    // ºËĞÄĞŞ¸´£º°Ñ±»ÎÒ²»Ğ¡ĞÄÂ©µôµÄ GetNeighbors ²¹»ØÀ´£¡
-    // ÕâÊÇ PathfindingService (A*Ñ°Â·) ±ØĞëÒÀÀµµÄ·½·¨
-    // ==========================================
     public List<GridCell> GetNeighbors(GridCell cell)
     {
         List<GridCell> neighbors = new List<GridCell>();

@@ -1,0 +1,1084 @@
+fileFormatVersion: 2
+guid: 9e7eeea22c44fed47a832e4cc374d520
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: 5030231327983325968
+    second: LafuAttack_0
+  - first:
+      213: 3935152530819102616
+    second: LafuAttack_1
+  - first:
+      213: 4095938141709583462
+    second: LafuAttack_2
+  - first:
+      213: 1862941156192325723
+    second: LafuAttack_3
+  - first:
+      213: -3157948530973698128
+    second: LafuAttack_4
+  - first:
+      213: 7713411003655468495
+    second: LafuAttack_5
+  - first:
+      213: -7781115447421494776
+    second: LafuAttack_6
+  - first:
+      213: 3969734225930362869
+    second: LafuAttack_7
+  - first:
+      213: -2521890250077292348
+    second: LafuAttack_8
+  - first:
+      213: -4604524573233601727
+    second: LafuAttack_9
+  - first:
+      213: 4488798614830654968
+    second: LafuAttack_10
+  - first:
+      213: -7728392594854692991
+    second: LafuAttack_11
+  - first:
+      213: 489170166493697595
+    second: LafuAttack_12
+  - first:
+      213: 7319933036163511339
+    second: LafuAttack_13
+  - first:
+      213: 963699155345836806
+    second: LafuAttack_14
+  - first:
+      213: 1969427471003649732
+    second: LafuAttack_15
+  - first:
+      213: 186408491249162345
+    second: LafuAttack_16
+  - first:
+      213: 8699528639668674761
+    second: LafuAttack_17
+  - first:
+      213: 8662386529941326125
+    second: LafuAttack_18
+  - first:
+      213: 6832403781335715201
+    second: LafuAttack_19
+  - first:
+      213: -3708401691391145184
+    second: LafuAttack_20
+  - first:
+      213: -4567016961652805971
+    second: LafuAttack_21
+  - first:
+      213: 3644421969652213962
+    second: LafuAttack_22
+  - first:
+      213: 4231666182785574741
+    second: LafuAttack_23
+  - first:
+      213: 4881076244269694837
+    second: LafuAttack_24
+  - first:
+      213: -5935257588675027722
+    second: LafuAttack_25
+  - first:
+      213: -608965831723048538
+    second: LafuAttack_26
+  - first:
+      213: 2005198775777255048
+    second: LafuAttack_27
+  - first:
+      213: -5032451382693475057
+    second: LafuAttack_28
+  - first:
+      213: 7824056824802686920
+    second: LafuAttack_29
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 700
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Android
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: WindowsStoreApps
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: LafuAttack_0
+      rect:
+        serializedVersion: 2
+        x: 220
+        y: 4925
+        width: 756
+        height: 676
+      alignment: 9
+      pivot: {x: 0.27, y: 0.065}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 013dc72ddb8fec540800000000000000
+      internalID: 5030231327983325968
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: LafuAttack_1
+      rect:
+        serializedVersion: 2
+        x: 1181
+        y: 4925
+        width: 756
+        height: 676
+      alignment: 9
+      pivot: {x: 0.27, y: 0.065}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 897b370a0687c9630800000000000000
+      internalID: 3935152530819102616
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: LafuAttack_2
+      rect:
+        serializedVersion: 2
+        x: 2095
+        y: 4926
+        width: 756
+        height: 675
+      alignment: 9
+      pivot: {x: 0.27, y: 0.065}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 664c296e902b7d830800000000000000
+      internalID: 4095938141709583462
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: LafuAttack_3
+      rect:
+        serializedVersion: 2
+        x: 3062
+        y: 4925
+        width: 753
+        height: 677
+      alignment: 9
+      pivot: {x: 0.27, y: 0.065}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b509c4c7c1f7ad910800000000000000
+      internalID: 1862941156192325723
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: LafuAttack_4
+      rect:
+        serializedVersion: 2
+        x: 194
+        y: 3975
+        width: 770
+        height: 640
+      alignment: 9
+      pivot: {x: 0.27, y: 0.065}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0b79858ea86bc24d0800000000000000
+      internalID: -3157948530973698128
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: LafuAttack_5
+      rect:
+        serializedVersion: 2
+        x: 357
+        y: 4606
+        width: 5
+        height: 4
+      alignment: 9
+      pivot: {x: 0.27, y: 0.065}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: fc5397fb07a8b0b60800000000000000
+      internalID: 7713411003655468495
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: LafuAttack_6
+      rect:
+        serializedVersion: 2
+        x: 626
+        y: 4606
+        width: 20
+        height: 4
+      alignment: 9
+      pivot: {x: 0.27, y: 0.065}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 80a13280abce30490800000000000000
+      internalID: -7781115447421494776
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: LafuAttack_7
+      rect:
+        serializedVersion: 2
+        x: 1156
+        y: 3975
+        width: 770
+        height: 640
+      alignment: 9
+      pivot: {x: 0.27, y: 0.065}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5ff1a45fe34571730800000000000000
+      internalID: 3969734225930362869
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: LafuAttack_8
+      rect:
+        serializedVersion: 2
+        x: 2070
+        y: 3975
+        width: 770
+        height: 640
+      alignment: 9
+      pivot: {x: 0.27, y: 0.065}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4c83f99dd22700dd0800000000000000
+      internalID: -2521890250077292348
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: LafuAttack_9
+      rect:
+        serializedVersion: 2
+        x: 964
+        y: 4431
+        width: 4
+        height: 7
+      alignment: 9
+      pivot: {x: 0.27, y: 0.065}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 143aad4eb417910c0800000000000000
+      internalID: -4604524573233601727
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: LafuAttack_10
+      rect:
+        serializedVersion: 2
+        x: 2986
+        y: 3978
+        width: 798
+        height: 626
+      alignment: 9
+      pivot: {x: 0.27, y: 0.065}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8f52f39be8a6b4e30800000000000000
+      internalID: 4488798614830654968
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: LafuAttack_11
+      rect:
+        serializedVersion: 2
+        x: 3192
+        y: 3975
+        width: 37
+        height: 6
+      alignment: 9
+      pivot: {x: 0.27, y: 0.065}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1873deab1eb3fb490800000000000000
+      internalID: -7728392594854692991
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: LafuAttack_12
+      rect:
+        serializedVersion: 2
+        x: 151
+        y: 3017
+        width: 791
+        height: 623
+      alignment: 9
+      pivot: {x: 0.27, y: 0.065}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b365398bca1e9c600800000000000000
+      internalID: 489170166493697595
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: LafuAttack_13
+      rect:
+        serializedVersion: 2
+        x: 1111
+        y: 3013
+        width: 791
+        height: 625
+      alignment: 9
+      pivot: {x: 0.27, y: 0.065}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b243c205050a59560800000000000000
+      internalID: 7319933036163511339
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: LafuAttack_14
+      rect:
+        serializedVersion: 2
+        x: 1972
+        y: 3013
+        width: 822
+        height: 621
+      alignment: 9
+      pivot: {x: 0.27, y: 0.065}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 60b8bb0a64fbf5d00800000000000000
+      internalID: 963699155345836806
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: LafuAttack_15
+      rect:
+        serializedVersion: 2
+        x: 2171
+        y: 3625
+        width: 18
+        height: 4
+      alignment: 9
+      pivot: {x: 0.27, y: 0.065}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4c68114b9dfc45b10800000000000000
+      internalID: 1969427471003649732
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: LafuAttack_16
+      rect:
+        serializedVersion: 2
+        x: 2937
+        y: 3017
+        width: 822
+        height: 617
+      alignment: 9
+      pivot: {x: 0.27, y: 0.065}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 968d5000981469200800000000000000
+      internalID: 186408491249162345
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: LafuAttack_17
+      rect:
+        serializedVersion: 2
+        x: 2791
+        y: 3304
+        width: 4
+        height: 9
+      alignment: 9
+      pivot: {x: 0.27, y: 0.065}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9c0e9c8a43feab870800000000000000
+      internalID: 8699528639668674761
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: LafuAttack_18
+      rect:
+        serializedVersion: 2
+        x: 97
+        y: 2058
+        width: 822
+        height: 615
+      alignment: 9
+      pivot: {x: 0.27, y: 0.065}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d29084857aaf63870800000000000000
+      internalID: 8662386529941326125
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: LafuAttack_19
+      rect:
+        serializedVersion: 2
+        x: 1059
+        y: 2057
+        width: 875
+        height: 611
+      alignment: 9
+      pivot: {x: 0.27, y: 0.065}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 18d0d8c1a0391de50800000000000000
+      internalID: 6832403781335715201
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: LafuAttack_20
+      rect:
+        serializedVersion: 2
+        x: 1972
+        y: 2057
+        width: 876
+        height: 611
+      alignment: 9
+      pivot: {x: 0.27, y: 0.065}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 02b4c244f4c198cc0800000000000000
+      internalID: -3708401691391145184
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: LafuAttack_21
+      rect:
+        serializedVersion: 2
+        x: 2937
+        y: 2060
+        width: 871
+        height: 608
+      alignment: 9
+      pivot: {x: 0.27, y: 0.065}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: dae208d3542be90c0800000000000000
+      internalID: -4567016961652805971
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: LafuAttack_22
+      rect:
+        serializedVersion: 2
+        x: 2995
+        y: 1043
+        width: 778
+        height: 860
+      alignment: 9
+      pivot: {x: 0.27, y: 0.065}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ac8efb0f876939230800000000000000
+      internalID: 3644421969652213962
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: LafuAttack_23
+      rect:
+        serializedVersion: 2
+        x: 3420
+        y: 1900
+        width: 10
+        height: 4
+      alignment: 9
+      pivot: {x: 0.27, y: 0.065}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 557a7f019f5e9ba30800000000000000
+      internalID: 4231666182785574741
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: LafuAttack_24
+      rect:
+        serializedVersion: 2
+        x: 143
+        y: 1080
+        width: 800
+        height: 766
+      alignment: 9
+      pivot: {x: 0.27, y: 0.065}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 57ffa4dabf01db340800000000000000
+      internalID: 4881076244269694837
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: LafuAttack_25
+      rect:
+        serializedVersion: 2
+        x: 1100
+        y: 1080
+        width: 806
+        height: 762
+      alignment: 9
+      pivot: {x: 0.27, y: 0.065}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6fc55906baab1ada0800000000000000
+      internalID: -5935257588675027722
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: LafuAttack_26
+      rect:
+        serializedVersion: 2
+        x: 2013
+        y: 1080
+        width: 807
+        height: 762
+      alignment: 9
+      pivot: {x: 0.27, y: 0.065}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6a12ccf6dc48c87f0800000000000000
+      internalID: -608965831723048538
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: LafuAttack_27
+      rect:
+        serializedVersion: 2
+        x: 3762
+        y: 1568
+        width: 12
+        height: 43
+      alignment: 9
+      pivot: {x: 0.27, y: 0.065}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 88e504e99a5e3db10800000000000000
+      internalID: 2005198775777255048
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: LafuAttack_28
+      rect:
+        serializedVersion: 2
+        x: 3753
+        y: 1509
+        width: 17
+        height: 23
+      alignment: 9
+      pivot: {x: 0.27, y: 0.065}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f0dc1296124292ab0800000000000000
+      internalID: -5032451382693475057
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: LafuAttack_29
+      rect:
+        serializedVersion: 2
+        x: 137
+        y: 1206
+        width: 5
+        height: 21
+      alignment: 9
+      pivot: {x: 0.27, y: 0.065}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8c7b5d08a32a49c60800000000000000
+      internalID: 7824056824802686920
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: LafuAttack_30
+      rect:
+        serializedVersion: 2
+        x: 155
+        y: 85
+        width: 774
+        height: 857
+      alignment: 9
+      pivot: {x: 0.27, y: 0.065}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 29e19b5a94eac8a468aa8f4b915aee5a
+      internalID: -720903084
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: LafuAttack_31
+      rect:
+        serializedVersion: 2
+        x: 924
+        y: 604
+        width: 13
+        height: 48
+      alignment: 9
+      pivot: {x: 0.27, y: 0.065}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 004e653a91f91904196f161e6824ff13
+      internalID: -696013886
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: LafuAttack_32
+      rect:
+        serializedVersion: 2
+        x: 1114
+        y: 86
+        width: 784
+        height: 856
+      alignment: 9
+      pivot: {x: 0.27, y: 0.065}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f37e9a1c3a89c6848bd62519930993c0
+      internalID: -368877967
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: LafuAttack_33
+      rect:
+        serializedVersion: 2
+        x: 1882
+        y: 603
+        width: 17
+        height: 50
+      alignment: 9
+      pivot: {x: 0.27, y: 0.065}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 3686ed4ea9b251e4283bafc0d2da9451
+      internalID: 2008406674
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: LafuAttack_34
+      rect:
+        serializedVersion: 2
+        x: 2056
+        y: 80
+        width: 768
+        height: 863
+      alignment: 9
+      pivot: {x: 0.27, y: 0.065}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 31617379ed52c6e489f249e9a747b929
+      internalID: 111072723
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: LafuAttack_35
+      rect:
+        serializedVersion: 2
+        x: 3023
+        y: 80
+        width: 765
+        height: 863
+      alignment: 9
+      pivot: {x: 0.27, y: 0.065}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 9225182fe1616fa4cb0c267c2276bafa
+      internalID: -1635011019
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: LafuAttack_36
+      rect:
+        serializedVersion: 2
+        x: 904
+        y: 476
+        width: 28
+        height: 95
+      alignment: 9
+      pivot: {x: 0.27, y: 0.065}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e87d0bfc94689cc48b1f238f8921f2da
+      internalID: 1328793303
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: afb618dc4d89882449a858b4d47c55b6
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      LafuAttack_0: 5030231327983325968
+      LafuAttack_1: 3935152530819102616
+      LafuAttack_10: 4488798614830654968
+      LafuAttack_11: -7728392594854692991
+      LafuAttack_12: 489170166493697595
+      LafuAttack_13: 7319933036163511339
+      LafuAttack_14: 963699155345836806
+      LafuAttack_15: 1969427471003649732
+      LafuAttack_16: 186408491249162345
+      LafuAttack_17: 8699528639668674761
+      LafuAttack_18: 8662386529941326125
+      LafuAttack_19: 6832403781335715201
+      LafuAttack_2: 4095938141709583462
+      LafuAttack_20: -3708401691391145184
+      LafuAttack_21: -4567016961652805971
+      LafuAttack_22: 3644421969652213962
+      LafuAttack_23: 4231666182785574741
+      LafuAttack_24: 4881076244269694837
+      LafuAttack_25: -5935257588675027722
+      LafuAttack_26: -608965831723048538
+      LafuAttack_27: 2005198775777255048
+      LafuAttack_28: -5032451382693475057
+      LafuAttack_29: 7824056824802686920
+      LafuAttack_3: 1862941156192325723
+      LafuAttack_30: -720903084
+      LafuAttack_31: -696013886
+      LafuAttack_32: -368877967
+      LafuAttack_33: 2008406674
+      LafuAttack_34: 111072723
+      LafuAttack_35: -1635011019
+      LafuAttack_36: 1328793303
+      LafuAttack_4: -3157948530973698128
+      LafuAttack_5: 7713411003655468495
+      LafuAttack_6: -7781115447421494776
+      LafuAttack_7: 3969734225930362869
+      LafuAttack_8: -2521890250077292348
+      LafuAttack_9: -4604524573233601727
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

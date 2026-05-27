@@ -1,23 +1,27 @@
-using UnityEngine;
+锘縰sing UnityEngine;
 
-public class GridCell
+namespace TGame.Data
 {
-    // 六边形网格的立方体坐标 (Cube Coordinates): x, y, z
-    public Vector3Int Position { get; private set; }
-
-    public bool IsWalkable { get; set; }
-    public int MoveCost { get; set; }
-    public int OccupantUnitID { get; set; } = -1;
-
-    public GridCell(Vector3Int position, bool isWalkable = true, int moveCost = 1)
+    public class GridCell
     {
-        Position = position;
-        IsWalkable = isWalkable;
-        MoveCost = moveCost;
-    }
+        public Vector3Int Position { get; private set; }
+        public bool IsWalkable { get; set; }
+        public int OccupantUnitID { get; set; } = -1;
 
-    public bool CanEnter()
-    {
-        return IsWalkable && OccupantUnitID == -1;
+        // 銆愷煍ユ牳蹇冦�戦�昏緫灞備篃瑕佽褰曞湴闈㈢殑涓や釜 ID
+        public int GroundVariantID { get; set; } = 0;
+        public int ObstacleVariantID { get; set; } = -1;
+
+        public GridCell(Vector3Int position)
+        {
+            Position = position;
+            IsWalkable = true;
+        }
+
+        public GridCell(Vector3Int position, bool isWalkable, int cost = 1)
+        {
+            Position = position;
+            IsWalkable = isWalkable;
+        }
     }
 }

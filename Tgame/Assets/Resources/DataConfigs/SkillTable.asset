@@ -1,0 +1,60 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7cec2e4645f5a71498dd820a6198c58a, type: 3}
+  m_Name: SkillTable
+  m_EditorClassIdentifier: 
+  skills:
+  - skillID: 3001
+    skillName: "\u5C71\u706B"
+    slogan: "\u706B\u7EBF\u5DF2\u6210\u3002"
+    description: "\u534A\u5F84\u4E00\u683C\u7206\u53D1\u4F24\u5BB3"
+    category: 0
+    tags: 2
+    targetMask: 7
+    castRange: 3
+    aoeRadius: 1
+    effectType: 0
+    baseEffectValue: 0
+    effectMultiplier: 2
+    mpCost: 20
+    tuCost: 7
+    vfxID: LafuSlash
+  - skillID: 3002
+    skillName: "\u72C2\u98CE\u7A81\u523A"
+    slogan: "\u968F\u98CE\u800C\u884C\uFF01"
+    description: "\u98CE\u5C5E\u6027\u51FB\u98DE\u6253\u51FB"
+    category: 1
+    tags: 48
+    targetMask: 2
+    castRange: 1
+    aoeRadius: 0
+    effectType: 0
+    baseEffectValue: 50
+    effectMultiplier: 1.5
+    mpCost: 10
+    tuCost: 5
+    vfxID: Hit_Wind
+  - skillID: 3003
+    skillName: "\u6CBB\u6108\u4E4B\u96E8"
+    slogan: "\u4E07\u7269\u590D\u82CF\u3002"
+    description: "\u5927\u8303\u56F4\u6062\u590D\u751F\u547D"
+    category: 0
+    tags: 4
+    targetMask: 1
+    castRange: 4
+    aoeRadius: 2
+    effectType: 1
+    baseEffectValue: 100
+    effectMultiplier: 0.8
+    mpCost: 30
+    tuCost: 6
+    vfxID: Heal_Aura

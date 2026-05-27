@@ -17,6 +17,7 @@ public class UI_TUBarItem : MonoBehaviour
         _boundUnitID = unitID;
 
         if (txtName) txtName.text = characterName;
+        // 玩家颜色为青色，敌人颜色为红色
         if (fillImage != null) fillImage.color = isPlayer ? Color.cyan : new Color(1f, 0.3f, 0.3f);
 
         if (imgPortrait != null)
@@ -37,10 +38,14 @@ public class UI_TUBarItem : MonoBehaviour
     {
         if (tuSlider)
         {
-            float remainRatio = 1f - Mathf.Clamp01((float)plannedTU / maxTU);
+            // ==========================================
+            // 【🔥核心修改】时间轴机制 (Timeline)
+            // 一开始是 0，消耗时间会让进度条“涨”起来
+            // ==========================================
+            float timeRatio = Mathf.Clamp01((float)plannedTU / maxTU);
 
-            // 【🔥核心修复】防止 Slider 值完全归零导致 Fill 宽度为 0，从而引发 Unity 底层射线检测的 NaN 报错
-            tuSlider.value = Mathf.Max(0.001f, remainRatio);
+            // 依然保留 0.001f 的保底，防止 Slider 的 Fill 完全归零导致 Unity 底层射线检测报错
+            tuSlider.value = Mathf.Max(0.001f, timeRatio);
         }
 
         if (txtName) txtName.color = isSelected ? Color.yellow : Color.white;

@@ -1,31 +1,29 @@
 ﻿using UnityEngine;
 using TGame.Data;
-using TGame.Battle;
 
 namespace TGame.Battle
 {
     public class RuntimeUnit
     {
         public int InstanceID { get; private set; }
-        public int Side { get; private set; } // 1001 是玩家，其他是敌人
+        public int Side { get; private set; } // 1001 是玩家，2001是敌人
 
-        // 【🔥核心修改】这里把 CharacterDataSO 改成了 CharacterData
         public CharacterData ConfigData { get; private set; }
+        public EnemyData EnemyConfig { get; private set; }
 
         public Vector3Int GridPosition { get; private set; }
 
         public int CurrentHP { get; private set; }
         public int CurrentMP { get; private set; }
 
-        // 【🔥核心修改】构造函数里的传参也改成了 CharacterData
-        public RuntimeUnit(int instanceID, int side, CharacterData configData, Vector3Int spawnPos)
+        public RuntimeUnit(int instanceID, int side, CharacterData configData, EnemyData enemyData, Vector3Int spawnPos)
         {
             this.InstanceID = instanceID;
             this.Side = side;
             this.ConfigData = configData;
+            this.EnemyConfig = enemyData;
             this.GridPosition = spawnPos;
 
-            // 初始化属性
             this.CurrentHP = configData.maxHP;
             this.CurrentMP = configData.maxMP;
         }
@@ -35,7 +33,25 @@ namespace TGame.Battle
             GridPosition = newPos;
         }
 
-        // ... 如果你的文件下面还有受击、扣血等其他方法，请保留它们，
-        // 只要确保上面这两处把 SO 后缀去掉就行了！
+        public void TakeDamage(int damage)
+        {
+            CurrentHP -= damage;
+            if (CurrentHP < 0) CurrentHP = 0;
+        }
+
+        public void Heal(int amount)
+        {
+            CurrentHP += amount;
+            if (CurrentHP > ConfigData.maxHP) CurrentHP = ConfigData.maxHP;
+        }
+
+        // ==========================================
+        // 【🔥核心修复】新增合理合法的扣蓝方法
+        // ==========================================
+        public void ConsumeMP(int amount)
+        {
+            CurrentMP -= amount;
+            if (CurrentMP < 0) CurrentMP = 0;
+        }
     }
 }

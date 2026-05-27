@@ -1,0 +1,767 @@
+fileFormatVersion: 2
+guid: b8f2383c2ffc0d14ea82e6ed986549be
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: 6730670653118300414
+    second: 5d0471177ba1a5e2fb11a7977809369f_0
+  - first:
+      213: 3780787025170048985
+    second: 5d0471177ba1a5e2fb11a7977809369f_1
+  - first:
+      213: -5286307834917007911
+    second: 5d0471177ba1a5e2fb11a7977809369f_2
+  - first:
+      213: -2744907118438538993
+    second: 5d0471177ba1a5e2fb11a7977809369f_3
+  - first:
+      213: 7053846890549897067
+    second: 5d0471177ba1a5e2fb11a7977809369f_4
+  - first:
+      213: -4259105616801875730
+    second: 5d0471177ba1a5e2fb11a7977809369f_5
+  - first:
+      213: -4107000822719600498
+    second: 5d0471177ba1a5e2fb11a7977809369f_6
+  - first:
+      213: -6398170541202718764
+    second: 5d0471177ba1a5e2fb11a7977809369f_7
+  - first:
+      213: -5973768579191351380
+    second: 5d0471177ba1a5e2fb11a7977809369f_8
+  - first:
+      213: -9078648059776914452
+    second: 5d0471177ba1a5e2fb11a7977809369f_9
+  - first:
+      213: 6900509137561066886
+    second: 5d0471177ba1a5e2fb11a7977809369f_10
+  - first:
+      213: 9066265815400623140
+    second: 5d0471177ba1a5e2fb11a7977809369f_11
+  - first:
+      213: -5294915785714162703
+    second: 5d0471177ba1a5e2fb11a7977809369f_12
+  - first:
+      213: -3775159849326101292
+    second: 5d0471177ba1a5e2fb11a7977809369f_13
+  - first:
+      213: 6351716649113460313
+    second: 5d0471177ba1a5e2fb11a7977809369f_14
+  - first:
+      213: 6876484397163621322
+    second: 5d0471177ba1a5e2fb11a7977809369f_15
+  - first:
+      213: 1762072311019767061
+    second: 5d0471177ba1a5e2fb11a7977809369f_16
+  - first:
+      213: 1352944039645582040
+    second: 5d0471177ba1a5e2fb11a7977809369f_17
+  - first:
+      213: 4355090127192294421
+    second: 5d0471177ba1a5e2fb11a7977809369f_18
+  - first:
+      213: 5320873826569718559
+    second: 5d0471177ba1a5e2fb11a7977809369f_19
+  - first:
+      213: -5053584002362115508
+    second: 5d0471177ba1a5e2fb11a7977809369f_20
+  - first:
+      213: -3862183832285631676
+    second: 5d0471177ba1a5e2fb11a7977809369f_21
+  - first:
+      213: 4265356452506229384
+    second: 5d0471177ba1a5e2fb11a7977809369f_22
+  - first:
+      213: -4968085011921875255
+    second: 5d0471177ba1a5e2fb11a7977809369f_23
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 700
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Android
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: WindowsStoreApps
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: LafuMove_0
+      rect:
+        serializedVersion: 2
+        x: 138
+        y: 4942
+        width: 762
+        height: 694
+      alignment: 9
+      pivot: {x: 0.35, y: 0.06}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: dc7c7dc59b9da5c4db2bfdd9acbff178
+      internalID: -737283965
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: LafuMove_1
+      rect:
+        serializedVersion: 2
+        x: 1092
+        y: 4942
+        width: 737
+        height: 686
+      alignment: 9
+      pivot: {x: 0.35, y: 0.06}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 4827da92e7c528749a259cbc019e8425
+      internalID: 2028529791
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: LafuMove_2
+      rect:
+        serializedVersion: 2
+        x: 2048
+        y: 4942
+        width: 709
+        height: 694
+      alignment: 9
+      pivot: {x: 0.35, y: 0.06}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 7b7fb7b2c0d9a2e48b0527c45bed10e3
+      internalID: 1940284402
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: LafuMove_3
+      rect:
+        serializedVersion: 2
+        x: 3004
+        y: 4942
+        width: 670
+        height: 731
+      alignment: 9
+      pivot: {x: 0.35, y: 0.06}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 3b5a60ff3ded79642929ef963c9c6d2c
+      internalID: 254583405
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: LafuMove_4
+      rect:
+        serializedVersion: 2
+        x: 144
+        y: 4016
+        width: 784
+        height: 672
+      alignment: 9
+      pivot: {x: 0.35, y: 0.06}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 4cb9d57b420543045a18b655fd7cf7b1
+      internalID: -1773305618
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: LafuMove_5
+      rect:
+        serializedVersion: 2
+        x: 1106
+        y: 4013
+        width: 784
+        height: 675
+      alignment: 9
+      pivot: {x: 0.35, y: 0.06}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 305e09586b97063439ff125f50153919
+      internalID: 343864691
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: LafuMove_6
+      rect:
+        serializedVersion: 2
+        x: 2071
+        y: 4010
+        width: 782
+        height: 678
+      alignment: 9
+      pivot: {x: 0.35, y: 0.06}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 0ee86618e0fecf04c9e33331850a383c
+      internalID: 210814426
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: LafuMove_7
+      rect:
+        serializedVersion: 2
+        x: 3030
+        y: 3993
+        width: 779
+        height: 695
+      alignment: 9
+      pivot: {x: 0.35, y: 0.06}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 647aff2e28071de46a046360f2759f19
+      internalID: 426370525
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: LafuMove_8
+      rect:
+        serializedVersion: 2
+        x: 127
+        y: 3021
+        width: 824
+        height: 680
+      alignment: 9
+      pivot: {x: 0.35, y: 0.06}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: cd56d2470c6996e4b8828aaf596a0dda
+      internalID: 1628110622
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: LafuMove_9
+      rect:
+        serializedVersion: 2
+        x: 1093
+        y: 3026
+        width: 806
+        height: 681
+      alignment: 9
+      pivot: {x: 0.35, y: 0.06}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 600a92fc827a6854992d91b15dd176d9
+      internalID: 1983083550
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: LafuMove_10
+      rect:
+        serializedVersion: 2
+        x: 2054
+        y: 3043
+        width: 796
+        height: 667
+      alignment: 9
+      pivot: {x: 0.35, y: 0.06}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 2b357be030694a64e8011c5b7cc260de
+      internalID: 533540984
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: LafuMove_11
+      rect:
+        serializedVersion: 2
+        x: 3010
+        y: 3054
+        width: 799
+        height: 664
+      alignment: 9
+      pivot: {x: 0.35, y: 0.06}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 108f831b84bc97c4796f83fec1f97ff9
+      internalID: -1930759166
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: LafuMove_12
+      rect:
+        serializedVersion: 2
+        x: 158
+        y: 2067
+        width: 613
+        height: 817
+      alignment: 9
+      pivot: {x: 0.35, y: 0.06}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 31783bac6bba43f489cfd39a5dc4a6c3
+      internalID: 331422852
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: LafuMove_13
+      rect:
+        serializedVersion: 2
+        x: 1110
+        y: 2064
+        width: 696
+        height: 782
+      alignment: 9
+      pivot: {x: 0.35, y: 0.06}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 049bec735655b82419b93b5d679dfdeb
+      internalID: 30953542
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: LafuMove_14
+      rect:
+        serializedVersion: 2
+        x: 2056
+        y: 2062
+        width: 766
+        height: 719
+      alignment: 9
+      pivot: {x: 0.35, y: 0.06}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 94a9c22499dfce1488cf56e89a7d29f7
+      internalID: -1947993331
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: LafuMove_15
+      rect:
+        serializedVersion: 2
+        x: 3010
+        y: 2062
+        width: 816
+        height: 675
+      alignment: 9
+      pivot: {x: 0.35, y: 0.06}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 4716c3eb463755740a9da34fb23f99e8
+      internalID: 2112255627
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: LafuMove_16
+      rect:
+        serializedVersion: 2
+        x: 132
+        y: 1136
+        width: 587
+        height: 786
+      alignment: 9
+      pivot: {x: 0.35, y: 0.06}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 4df0c240eaa4d5a418fafb41f4b5a4ba
+      internalID: 191659336
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: LafuMove_17
+      rect:
+        serializedVersion: 2
+        x: 1103
+        y: 1142
+        width: 572
+        height: 789
+      alignment: 9
+      pivot: {x: 0.35, y: 0.06}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a21ffb62ed8fbe34cbc805e9895554d5
+      internalID: 1987276840
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: LafuMove_18
+      rect:
+        serializedVersion: 2
+        x: 2071
+        y: 1122
+        width: 559
+        height: 817
+      alignment: 9
+      pivot: {x: 0.35, y: 0.06}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 137636cd5d67bd348a6d4839f4a40fc3
+      internalID: -1690264977
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: LafuMove_19
+      rect:
+        serializedVersion: 2
+        x: 3041
+        y: 1111
+        width: 543
+        height: 828
+      alignment: 9
+      pivot: {x: 0.35, y: 0.06}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 1198bf9e3ba33cc45ba60ba2935cfa49
+      internalID: 141386238
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: LafuMove_20
+      rect:
+        serializedVersion: 2
+        x: 118
+        y: 141
+        width: 636
+        height: 773
+      alignment: 9
+      pivot: {x: 0.35, y: 0.06}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 9be01b70a92c7c3429c110b382b335f3
+      internalID: 387336005
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: LafuMove_21
+      rect:
+        serializedVersion: 2
+        x: 1075
+        y: 143
+        width: 588
+        height: 791
+      alignment: 9
+      pivot: {x: 0.35, y: 0.06}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 78a0c6b74aef027448f17ded9ef7c804
+      internalID: -1655819806
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: LafuMove_22
+      rect:
+        serializedVersion: 2
+        x: 2037
+        y: 143
+        width: 594
+        height: 802
+      alignment: 9
+      pivot: {x: 0.35, y: 0.06}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f8666d8fd362ee740ba932f7dd35f8cf
+      internalID: 245431939
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: LafuMove_23
+      rect:
+        serializedVersion: 2
+        x: 3002
+        y: 177
+        width: 599
+        height: 786
+      alignment: 9
+      pivot: {x: 0.35, y: 0.06}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d80cf887b8ec5274db880dd9407e1ee0
+      internalID: 440917471
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 541932e8e570a7f46a0d45ba9f30640d
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      LafuMove_0: -737283965
+      LafuMove_1: 2028529791
+      LafuMove_10: 533540984
+      LafuMove_11: -1930759166
+      LafuMove_12: 331422852
+      LafuMove_13: 30953542
+      LafuMove_14: -1947993331
+      LafuMove_15: 2112255627
+      LafuMove_16: 191659336
+      LafuMove_17: 1987276840
+      LafuMove_18: -1690264977
+      LafuMove_19: 141386238
+      LafuMove_2: 1940284402
+      LafuMove_20: 387336005
+      LafuMove_21: -1655819806
+      LafuMove_22: 245431939
+      LafuMove_23: 440917471
+      LafuMove_3: 254583405
+      LafuMove_4: -1773305618
+      LafuMove_5: 343864691
+      LafuMove_6: 210814426
+      LafuMove_7: 426370525
+      LafuMove_8: 1628110622
+      LafuMove_9: 1983083550
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

@@ -1,6 +1,8 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Linq;
+using TGame.Core;
 
 namespace TGame.Battle
 {
@@ -16,8 +18,6 @@ namespace TGame.Battle
         private Dictionary<int, int> _unitCurrentTU = new Dictionary<int, int>();
         private Dictionary<int, int> _unitPlannedTU = new Dictionary<int, int>();
         private List<ICommand> _commandQueue = new List<ICommand>();
-
-        // 【🔥新增】历史记忆栈
         private Stack<ICommand> _commandHistory = new Stack<ICommand>();
 
         public void OnInit() { Instance = this; }
@@ -37,6 +37,9 @@ namespace TGame.Battle
 
         public bool CanScheduleAction(int unitID, int cost)
         {
+            var unit = UnitManager.Instance.GetUnit(unitID);
+            if (unit != null && unit.Side != 1001) return true;
+
             if (!_unitPlannedTU.ContainsKey(unitID)) RegisterUnit(unitID);
             return _unitPlannedTU[unitID] + cost <= MaxTUPerTurn;
         }
@@ -45,19 +48,15 @@ namespace TGame.Battle
         {
             if (cmd != null && cmd.Validate())
             {
-                // 【修改】录入时立即触发预演(Execute)，展现虚影和逻辑位移
                 cmd.Execute();
-
                 _commandQueue.Add(cmd);
-                _commandHistory.Push(cmd); // 压入记忆栈
+                _commandHistory.Push(cmd);
 
                 int uid = cmd.GetUnitID();
                 _unitPlannedTU[uid] += cmd.GetCost();
-                Debug.Log($"<color=green>[决策] 指令录入。角色 {uid} 已规划 TU: {_unitPlannedTU[uid]}/{MaxTUPerTurn}</color>");
             }
         }
 
-        // 【🔥新增】供 UI 调用的撤回系统
         public void UndoLastCommand()
         {
             if (CurrentState != BattleState.Planning) return;
@@ -67,16 +66,10 @@ namespace TGame.Battle
                 ICommand lastCmd = _commandHistory.Pop();
                 _commandQueue.Remove(lastCmd);
 
-                // 退还 TU 规划值
                 int uid = lastCmd.GetUnitID();
                 _unitPlannedTU[uid] -= lastCmd.GetCost();
 
-                // 触发指令本身的撤回逻辑
                 lastCmd.Undo();
-            }
-            else
-            {
-                Debug.LogWarning("[撤销] 已经是初始状态，没有可撤回的操作了！");
             }
         }
 
@@ -97,18 +90,40 @@ namespace TGame.Battle
             CurrentState = BattleState.Settling;
             List<ICommand> snapshot = new List<ICommand>(_commandQueue);
 
-            // 结算开始，清空所有规划和记忆
             _commandQueue.Clear();
             _commandHistory.Clear();
 
+            // 【🔥完美同步】不再写死时间，而是用 yield return 挂起等待该指令自己的协程完成！
             foreach (var cmd in snapshot)
             {
-                cmd.Settle(); // 【修改】这里改为调用真实结算 Settle
-                yield return new WaitForSeconds(1.1f);
+                yield return BattleManager.Instance.StartSettleRoutine(cmd.SettleRoutine());
             }
 
             CurrentState = BattleState.EnemyTurn;
-            yield return new WaitForSeconds(1.0f);
+
+            List<RuntimeUnit> enemies = UnitManager.Instance.GetAllUnits()
+                .Where(u => u.Side != 1001 && u.CurrentHP > 0)
+                .ToList();
+
+            EnemyAIController aiBrain = new EnemyAIController();
+
+            foreach (var enemy in enemies)
+            {
+                if (enemy.CurrentHP <= 0) continue;
+
+                if (CameraController.Instance != null) CameraController.Instance.FocusOnExecution(enemy.InstanceID);
+
+                ICommand enemyCmd = aiBrain.DecideNextAction(enemy);
+
+                if (enemyCmd != null && enemyCmd.Validate())
+                {
+                    enemyCmd.Execute();
+                    // 同样完美同步敌方的动作！
+                    yield return BattleManager.Instance.StartSettleRoutine(enemyCmd.SettleRoutine());
+                }
+            }
+
+            yield return new WaitForSeconds(0.5f);
             StartNewRound();
         }
 
@@ -122,7 +137,6 @@ namespace TGame.Battle
                 _unitPlannedTU[k] = 0;
             }
             CurrentState = BattleState.Planning;
-            Debug.Log($"<color=green>======= 第 {CurrentRound} 轮 =======</color>");
         }
     }
 }
