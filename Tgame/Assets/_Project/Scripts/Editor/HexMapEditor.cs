@@ -19,7 +19,6 @@ public class HexMapEditor : Editor
         _data = (HexMapEditorData)target;
         Undo.undoRedoPerformed += OnUndoRedo;
 
-        // 【🔥核心】监听运行游戏的按钮，点下运行前销毁预览
         EditorApplication.playModeStateChanged += OnPlayModeStateChanged;
         RebuildPreview();
     }
@@ -29,8 +28,6 @@ public class HexMapEditor : Editor
         Undo.undoRedoPerformed -= OnUndoRedo;
         EditorApplication.playModeStateChanged -= OnPlayModeStateChanged;
 
-        // 【🔥核心】如果 target == null，说明玩家把 MapPainter 删除了，此时才销毁预览图。
-        // 如果 target != null，说明只是点到了其他物体(取消选中)，此时【保留预览图】，实现常驻显示！
         if (target == null)
         {
             ClearPreview();
@@ -39,7 +36,6 @@ public class HexMapEditor : Editor
 
     private void OnPlayModeStateChanged(PlayModeStateChange state)
     {
-        // 退出编辑模式或进入运行模式的一瞬间，清理掉预览图，把舞台交给游戏系统
         if (state == PlayModeStateChange.ExitingEditMode || state == PlayModeStateChange.EnteredEditMode)
         {
             ClearPreview();
@@ -161,7 +157,6 @@ public class HexMapEditor : Editor
         ClearPreview();
 
         _previewRoot = new GameObject("[HexMap_LivePreview]");
-        // 【🔥核心修复】绝对不能挂载到 _data.transform 下面！保持在根节点，利用 HideAndDontSave 防止被保存
         _previewRoot.hideFlags = HideFlags.HideAndDontSave;
 
         foreach (var cell in _data.cells)
@@ -172,7 +167,6 @@ public class HexMapEditor : Editor
 
     private void ClearPreview()
     {
-        // 【🔥核心修复】由于物体是隐藏且不保存的，普通的 GameObject.Find 找不到它，必须用底层搜索
         var allGOs = Resources.FindObjectsOfTypeAll<GameObject>();
         foreach (var g in allGOs)
         {
@@ -209,9 +203,13 @@ public class HexMapEditor : Editor
         int baseOrder = -cell.position.y * 10;
 
         SpriteRenderer groundSr = go.GetComponent<SpriteRenderer>();
-        if (_data.groundSprites != null && cell.groundVariantID >= 0 && cell.groundVariantID < _data.groundSprites.Length)
+
+        // ==========================================
+        // 【🔥核心修复】改为读取 visualConfig 里的 groundSprites
+        // ==========================================
+        if (_data.visualConfig != null && _data.visualConfig.groundSprites != null && cell.groundVariantID >= 0 && cell.groundVariantID < _data.visualConfig.groundSprites.Length)
         {
-            groundSr.sprite = _data.groundSprites[cell.groundVariantID];
+            groundSr.sprite = _data.visualConfig.groundSprites[cell.groundVariantID];
             groundSr.sortingOrder = baseOrder;
         }
         else
@@ -220,9 +218,13 @@ public class HexMapEditor : Editor
         }
 
         SpriteRenderer obsSr = go.transform.Find("ObstaclePreview").GetComponent<SpriteRenderer>();
-        if (cell.obstacleVariantID != -1 && _data.obstacleSprites != null && cell.obstacleVariantID >= 0 && cell.obstacleVariantID < _data.obstacleSprites.Length)
+
+        // ==========================================
+        // 【🔥核心修复】改为读取 visualConfig 里的 obstacleSprites
+        // ==========================================
+        if (_data.visualConfig != null && cell.obstacleVariantID != -1 && _data.visualConfig.obstacleSprites != null && cell.obstacleVariantID >= 0 && cell.obstacleVariantID < _data.visualConfig.obstacleSprites.Length)
         {
-            obsSr.sprite = _data.obstacleSprites[cell.obstacleVariantID];
+            obsSr.sprite = _data.visualConfig.obstacleSprites[cell.obstacleVariantID];
             obsSr.sortingOrder = baseOrder + 2;
         }
         else

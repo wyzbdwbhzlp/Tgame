@@ -4,7 +4,6 @@ using UnityEngine;
 using TGame.Battle;
 using DG.Tweening;
 using TGame.Data;
-using TGame.UI; // 引入 UI 命名空间
 
 public class UnitView : MonoBehaviour
 {
@@ -17,9 +16,6 @@ public class UnitView : MonoBehaviour
     private Material[] _originalMaterials;
     private Material _whiteFlashMat;
     private Coroutine _flashCoroutine;
-
-    // 【🔥新增】头顶血条的引用
-    private UnitHUD _hud;
 
     private void Awake()
     {
@@ -47,27 +43,6 @@ public class UnitView : MonoBehaviour
             _lastPos = transform.position;
         }
         if (_unitAnimator != null) _unitAnimator.PlayIdle();
-
-        // ==========================================
-        // 【🔥核心新增】自动加载并生成头顶血条
-        // ==========================================
-        if (_hud == null)
-        {
-            GameObject hudPrefab = Resources.Load<GameObject>("UI/UnitHUD");
-            if (hudPrefab != null)
-            {
-                GameObject hudObj = Instantiate(hudPrefab, this.transform);
-                // 默认抬高 1.5 个单位，刚好在角色头顶 (如果觉得太高/太低，改这里的 Y 值)
-                hudObj.transform.localPosition = new Vector3(0, 1.5f, 0);
-                _hud = hudObj.GetComponent<UnitHUD>();
-            }
-            else
-            {
-                Debug.LogWarning("[UnitView] 找不到头顶血条预制体！请确保制作了 Assets/Resources/UI/UnitHUD.prefab");
-            }
-        }
-
-        if (_hud != null) _hud.Init(unit);
     }
 
     private void Update()

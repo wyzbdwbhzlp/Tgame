@@ -4,6 +4,7 @@ using UnityEngine;
 
 namespace TGame.Data
 {
+
     // ==========================================
     // 玩家生成点
     // ==========================================
@@ -46,7 +47,7 @@ namespace TGame.Data
         [Header("基础配置")]
         public int levelID;
         public string levelName = "未命名关卡";
-
+        public List<HexEditorCell> mapCells = new List<HexEditorCell>();
         [Header("地图可视化结构 (由画笔工具自动生成)")]
         public List<HexEditorCell> cells = new List<HexEditorCell>();
 

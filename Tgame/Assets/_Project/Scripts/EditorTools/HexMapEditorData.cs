@@ -16,9 +16,11 @@ public class HexMapEditorData : MonoBehaviour
     public string[] groundVariantNames = { "0: 默认草地", "1: 泥土", "2: 沙地", "3: 石板路" };
     public string[] obstacleVariantNames = { "0: 普通岩石", "1: 大树", "2: 废墟墙壁", "3: 水坑" };
 
-    [Header("美术资产预览 (拖入真实贴图即可在场景中预览)")]
-    public Sprite[] groundSprites;
-    public Sprite[] obstacleSprites;
+    // ==========================================
+    // 【🔥核心修改】不再独立存放图片，而是引用统一的美术配置表
+    // ==========================================
+    [Header("统一地图美术配置")]
+    public MapVisualConfigSO visualConfig;
 
     [Header("当前编辑器缓存的地图数据")]
     public List<HexEditorCell> cells = new List<HexEditorCell>();

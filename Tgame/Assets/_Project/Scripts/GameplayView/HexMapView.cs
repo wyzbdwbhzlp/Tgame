@@ -11,16 +11,18 @@ public class HexMapView : MonoBehaviour
 {
     public static HexMapView Instance { get; private set; }
 
+    // ==========================================
+    // 【🔥核心修改】改为引用统一的美术配置表
+    // ==========================================
     [Header("真实美术资产配置")]
-    public Sprite[] groundSprites;
-    public Sprite[] obstacleSprites;
+    public MapVisualConfigSO visualConfig;
 
     public enum InteractionMode
     {
         SelectUnit,
         SelectMoveTarget,
         SelectAttackTarget,
-        SelectSkillTarget // 【🔥新增】技能瞄准模式
+        SelectSkillTarget
     }
 
     public InteractionMode CurrentMode { get; private set; } = InteractionMode.SelectUnit;
@@ -34,7 +36,6 @@ public class HexMapView : MonoBehaviour
     private RuntimeUnit _selectedUnit = null;
     public RuntimeUnit SelectedUnit => _selectedUnit;
 
-    // 【🔥新增】记录当前正在准备释放的技能 ID
     private int _currentSkillID = -1;
 
     private Dictionary<Vector3Int, GameObject> _cellVisuals = new Dictionary<Vector3Int, GameObject>();
@@ -59,8 +60,17 @@ public class HexMapView : MonoBehaviour
 
     public void CreateGridVisuals()
     {
-        if (GridSystem.Instance == null) return;
+        if (GridSystem.Instance == null || visualConfig == null)
+        {
+            Debug.LogWarning("[HexMapView] 未挂载 MapVisualConfigSO 或 GridSystem 为空！");
+            return;
+        }
+
         Sprite solidHexSprite = CreateSolidHexSprite();
+
+        // 提取引用，让下面的代码可以无缝使用
+        Sprite[] groundSprites = visualConfig.groundSprites;
+        Sprite[] obstacleSprites = visualConfig.obstacleSprites;
 
         foreach (var kvp in GridSystem.Instance.GetAllCells())
         {
@@ -159,9 +169,6 @@ public class HexMapView : MonoBehaviour
             {
                 UpdatePreviewPath();
             }
-            // ==========================================
-            // 【🔥新增】鼠标移动时，动态渲染技能AOE范围
-            // ==========================================
             else if (CurrentMode == InteractionMode.SelectSkillTarget && _selectedUnit != null)
             {
                 RefreshSkillHighlights(_hoveredCellPos);
@@ -211,14 +218,10 @@ public class HexMapView : MonoBehaviour
                 }
                 break;
 
-            // ==========================================
-            // 【🔥新增】处理技能释放的目标选取逻辑
-            // ==========================================
             case InteractionMode.SelectSkillTarget:
                 SkillData skillData = DataManager.Instance.GetSkillData(_currentSkillID);
                 if (skillData == null) return;
 
-                // 1. 距离校验 (不能超越施法距离，也不能点自己脚下)
                 int dist = GetHexDistance(_selectedUnit.GridPosition, _hoveredCellPos);
                 if (dist <= 0 || dist > skillData.castRange)
                 {
@@ -226,7 +229,6 @@ public class HexMapView : MonoBehaviour
                     return;
                 }
 
-                // 2. 目标合法性校验 (根据 targetMask)
                 RuntimeUnit targetUnit = clickedCell.OccupantUnitID != -1 ? UnitManager.Instance.GetUnit(clickedCell.OccupantUnitID) : null;
                 bool isValidTarget = false;
 
@@ -249,7 +251,6 @@ public class HexMapView : MonoBehaviour
                     return;
                 }
 
-                // 3. 生成并下达指令
                 SkillCommand skillCmd = new SkillCommand(_selectedUnit.InstanceID, _hoveredCellPos, _currentSkillID);
                 if (skillCmd.Validate())
                 {
@@ -286,9 +287,6 @@ public class HexMapView : MonoBehaviour
         if (_selectedUnit != null) ShowHighlightRange(_selectedUnit.GridPosition, _selectedUnit.ConfigData.attackRange, new Color(1f, 0.2f, 0.2f, 0.5f));
     }
 
-    // ==========================================
-    // 【🔥新增】进入技能模式并高亮最大施法范围
-    // ==========================================
     public void EnterSkillMode(int skillID)
     {
         CurrentMode = InteractionMode.SelectSkillTarget;
@@ -296,9 +294,6 @@ public class HexMapView : MonoBehaviour
         RefreshSkillHighlights(_lastHoveredPos);
     }
 
-    // ==========================================
-    // 【🔥新增】双层高亮系统：底色施法范围(蓝) + 随鼠标移动的AOE范围(红)
-    // ==========================================
     private void RefreshSkillHighlights(Vector3Int hoverPos)
     {
         if (_selectedUnit == null) return;
@@ -318,12 +313,10 @@ public class HexMapView : MonoBehaviour
             bool inCastRange = distToCaster > 0 && distToCaster <= skillData.castRange;
             bool inAoe = distToHover <= skillData.aoeRadius;
 
-            // 优先显示 AOE 爆炸区 (橙红色)
             if (isHoverValid && inAoe)
             {
                 if (kvp.Value != null) kvp.Value.color = new Color(1f, 0.4f, 0f, 0.65f);
             }
-            // 其次显示可施法范围 (淡蓝色)
             else if (inCastRange)
             {
                 if (kvp.Value != null) kvp.Value.color = new Color(0.2f, 0.6f, 1f, 0.35f);
@@ -446,20 +439,16 @@ public class HexMapView : MonoBehaviour
 
         return lr;
     }
-    // ==========================================
-    // 【🔥新增】允许从 UI 面板直接强行选中地图上的角色
-    // ==========================================
+
     public void ForceSelectUnit(RuntimeUnit unit)
     {
         if (unit == null) return;
 
-        CancelSelection(); // 先清理之前的瞄准或高亮状态
+        CancelSelection();
 
         _selectedUnit = unit;
         CurrentMode = InteractionMode.SelectUnit;
 
-        // 触发选中事件
-        // 这将自动唤醒摄像机的 FocusOnUnit 平滑移过去，同时唤醒 UI 的 ActionPopup！
         OnUnitSelected?.Invoke(_selectedUnit);
     }
     public void ClearPhantom(int unitID)

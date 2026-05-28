@@ -27,7 +27,7 @@ public class GridSystem : IGameSystem
         {
             GridCell cell = new GridCell(cellData.position);
 
-            // 【🔥修改】如果障碍物ID为 -1，代表这里只有地板没有障碍，即可通行
+            // 如果障碍物ID为 -1，代表这里只有地板没有障碍，即可通行
             cell.IsWalkable = (cellData.obstacleVariantID == -1);
             cell.GroundVariantID = cellData.groundVariantID;
             cell.ObstacleVariantID = cellData.obstacleVariantID;
@@ -36,6 +36,17 @@ public class GridSystem : IGameSystem
         }
 
         Debug.Log($"<color=cyan>[底层] 关卡 {levelData.levelName} 加载完毕，网格数：{_grid.Count}。</color>");
+    }
+
+    // ==========================================
+    // 【🔥新增】允许外部动态添加或覆盖格子数据
+    // ==========================================
+    public void AddCell(GridCell cell)
+    {
+        if (cell == null) return;
+
+        // C# 字典快捷语法：有则覆盖，无则添加
+        _grid[cell.Position] = cell;
     }
 
     public void OnUpdate(float deltaTime) { }

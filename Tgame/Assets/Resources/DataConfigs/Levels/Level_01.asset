@@ -14,6 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   levelID: 0
   levelName: "\u7B2C\u4E00\u5173"
+  mapCells: []
   cells:
   - position: {x: -2, y: 0, z: 2}
     groundVariantID: 0
