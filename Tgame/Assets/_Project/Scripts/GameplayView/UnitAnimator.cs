@@ -11,6 +11,8 @@ public class UnitAnimator : MonoBehaviour
     private readonly int _hashMove = Animator.StringToHash("Move");
     private readonly int _hashAttack = Animator.StringToHash("Attack");
     private readonly int _hashSkill = Animator.StringToHash("Skill");
+    // 【🔥新增】死亡动画的 Hash
+    private readonly int _hashDie = Animator.StringToHash("Die");
 
     private void Awake()
     {
@@ -52,6 +54,16 @@ public class UnitAnimator : MonoBehaviour
         StopAllCoroutines();
         _animator.Play(_hashSkill, -1, 0f);
         StartCoroutine(WaitAndReturnToIdle(GetHoldDuration()));
+    }
+
+    // ==========================================
+    // 【🔥新增】死亡动画
+    // ==========================================
+    public void PlayDie()
+    {
+        StopAllCoroutines(); // 必须停止所有协程，防止攻击到一半被打断死亡后又切回 Idle
+        _animator.Play(_hashDie);
+        // 注意：死亡后不需要返回 Idle 状态，就一直躺在地上即可。
     }
 
     // 【🔥新增】智能获取全局参数的方法

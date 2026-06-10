@@ -84,7 +84,7 @@ TextureImporter:
   spriteMeshType: 1
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
-  spritePixelsToUnits: 100
+  spritePixelsToUnits: 200
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
   spriteGenerateFallbackPhysicsShape: 1
   alphaUsage: 1
@@ -162,12 +162,12 @@ TextureImporter:
       name: IMG_4933_0
       rect:
         serializedVersion: 2
-        x: 229
-        y: 920
-        width: 462
-        height: 702
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 228
+        y: 919
+        width: 482
+        height: 704
+      alignment: 9
+      pivot: {x: 0.5, y: 0.05}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -184,12 +184,12 @@ TextureImporter:
       name: IMG_4933_1
       rect:
         serializedVersion: 2
-        x: 596
-        y: 1331
-        width: 114
-        height: 157
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 965
+        y: 909
+        width: 496
+        height: 717
+      alignment: 9
+      pivot: {x: 0.5, y: 0.05}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -206,12 +206,12 @@ TextureImporter:
       name: IMG_4933_2
       rect:
         serializedVersion: 2
-        x: 966
-        y: 909
-        width: 494
-        height: 716
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 1758
+        y: 915
+        width: 522
+        height: 721
+      alignment: 9
+      pivot: {x: 0.5, y: 0.05}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -228,12 +228,12 @@ TextureImporter:
       name: IMG_4933_3
       rect:
         serializedVersion: 2
-        x: 1759
-        y: 916
-        width: 520
-        height: 719
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 2493
+        y: 919
+        width: 532
+        height: 721
+      alignment: 9
+      pivot: {x: 0.5, y: 0.05}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -250,12 +250,12 @@ TextureImporter:
       name: IMG_4933_4
       rect:
         serializedVersion: 2
-        x: 2494
-        y: 920
-        width: 530
-        height: 719
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 163
+        y: 102
+        width: 547
+        height: 711
+      alignment: 9
+      pivot: {x: 0.5, y: 0.05}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -272,12 +272,12 @@ TextureImporter:
       name: IMG_4933_5
       rect:
         serializedVersion: 2
-        x: 163
-        y: 103
-        width: 546
-        height: 709
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 906
+        y: 89
+        width: 547
+        height: 664
+      alignment: 9
+      pivot: {x: 0.5, y: 0.05}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -294,12 +294,12 @@ TextureImporter:
       name: IMG_4933_6
       rect:
         serializedVersion: 2
-        x: 906
-        y: 90
-        width: 547
-        height: 662
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 1719
+        y: 95
+        width: 503
+        height: 654
+      alignment: 9
+      pivot: {x: 0.5, y: 0.05}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -316,12 +316,12 @@ TextureImporter:
       name: IMG_4933_7
       rect:
         serializedVersion: 2
-        x: 1720
-        y: 96
-        width: 501
-        height: 652
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 2456
+        y: 113
+        width: 565
+        height: 632
+      alignment: 9
+      pivot: {x: 0.5, y: 0.05}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -338,12 +338,12 @@ TextureImporter:
       name: IMG_4933_8
       rect:
         serializedVersion: 2
-        x: 2457
-        y: 114
-        width: 563
-        height: 631
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 3021
+        y: 299
+        width: 8
+        height: 9
+      alignment: 9
+      pivot: {x: 0.5, y: 0.05}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -360,12 +360,12 @@ TextureImporter:
       name: IMG_4933_9
       rect:
         serializedVersion: 2
-        x: 3023
-        y: 300
-        width: 6
-        height: 7
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 3045
+        y: 215
+        width: 28
+        height: 28
+      alignment: 9
+      pivot: {x: 0.5, y: 0.05}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -382,12 +382,12 @@ TextureImporter:
       name: IMG_4933_10
       rect:
         serializedVersion: 2
-        x: 3046
-        y: 216
-        width: 25
-        height: 25
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 3020
+        y: 183
+        width: 22
+        height: 19
+      alignment: 9
+      pivot: {x: 0.5, y: 0.05}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -400,33 +400,11 @@ TextureImporter:
       indices: 
       edges: []
       weights: []
-    - serializedVersion: 2
-      name: IMG_4933_11
-      rect:
-        serializedVersion: 2
-        x: 3021
-        y: 185
-        width: 20
-        height: 16
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: d60894983fa565ca0800000000000000
-      internalID: -6028531049161981843
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
     outline: []
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 
+    spriteID: aba7fbc9543423a4d8a19838a1eaef45
     internalID: 0
     vertices: []
     indices: 
@@ -439,7 +417,6 @@ TextureImporter:
       IMG_4933_0: 2575158539391504983
       IMG_4933_1: -2522949196935175605
       IMG_4933_10: 5401557802075724616
-      IMG_4933_11: -6028531049161981843
       IMG_4933_2: 2629798814777838177
       IMG_4933_3: -7024211002360009089
       IMG_4933_4: 1233305695520143845
