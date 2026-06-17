@@ -1,0 +1,4 @@
+﻿ID,技能名,喊话,描述,分类,词条,目标掩码,施法距离,AOE半径,效果类型,基础数值,效果倍率,耗蓝,耗时,特效ID,基础命中率,穿透力
+3001,山火,火线已成。,半径一格爆发伤害,Spell,Fire,Anywhere,3,1,Damage,0,2,20,7,LafuSlash,1,0
+3002,狂风突刺,随风而行！,风属性击飞打击,Weapon,Wind|KnockUp,Enemy,1,0,Damage,50,1.5,10,5,Hit_Wind,1,0
+3003,治愈之雨,万物复苏。,大范围恢复生命,Spell,Water,Ally,4,2,Heal,100,0.8,30,6,Heal_Aura,1,0

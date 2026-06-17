@@ -1,41 +1,34 @@
-using System;
+ï»¿using System;
 using UnityEngine;
 
 namespace TGame.Data
 {
-    // ==========================================
-    // AI ×¨Êô¶¨Î»±êÇ©
-    // ==========================================
     public enum EnemyRole
     {
-        Assassin,   // ´Ì¿Í (×·Çó»÷É±)
-        AOE,        // ·¶Î§Êä³ö (×·Çó×î´óÉËº¦¸²¸Ç)
-        Tank,       // Èâ¶Ü (×·Çó³ĞÉËÓë¿¨Î»)
-        Support     // ¸¨Öú (×·ÇóÇ¿»¯´Ì¿ÍÓëAOE)
+        Assassin,   // åˆºå®¢ (è¿½æ±‚å‡»æ€)
+        AOE,        // èŒƒå›´è¾“å‡º (è¿½æ±‚æœ€å¤§ä¼¤å®³è¦†ç›–)
+        Tank,       // è‚‰ç›¾ (è¿½æ±‚æ‰¿ä¼¤ä¸å¡ä½)
+        Support     // è¾…åŠ© (è¿½æ±‚å¼ºåŒ–åˆºå®¢ä¸AOE)
     }
 
-    // ==========================================
-    // µĞÈËµ¥ÌåÊı¾İ½á¹¹
-    // ==========================================
     [Serializable]
     public class EnemyData
     {
-        [Header("»ù´¡ĞÅÏ¢")]
+        [Header("åŸºç¡€ä¿¡æ¯")]
         public int enemyID;
         public string enemyName;
-
-        [Tooltip("AI ´óÄÔ¶¨Î»£º¾ö¶¨ËüµÄĞĞ¶¯Æ«ºÃ¹«Ê½")]
         public EnemyRole aiRole;
 
-        [Header("ÃÀÊõ×ÊÔ´")]
-        public Sprite portraitSprite;
+        [Header("ç¾æœ¯èµ„æº")]
+        public Sprite portraitSprite; // åŠèº«å¤§ç«‹ç»˜
+        public Sprite headIcon;       // ã€ğŸ”¥æ–°å¢ã€‘UIçŠ¶æ€æ ä¸“ç”¨å°åœ†å¤´åƒ
         public GameObject prefab;
 
         public string attackVFXID = "Hit_Default";
         public float attackHitDelay = 0.35f;
         public float damagePopupDelay = 0.15f;
 
-        [Header("Õ½¶·ÊôĞÔ")]
+        [Header("æˆ˜æ–—å±æ€§")]
         public int maxHP;
         public int attack;
         public int defense;
@@ -43,15 +36,17 @@ namespace TGame.Data
         public float critRate;
         public int postureValue;
 
-        [Header("AI×¨Êô»úÖÆ")]
+        [Header("AIä¸“å±æœºåˆ¶")]
         public int maxMoveDistance = 4;
         public int speed;
+
+        [Header("å…ƒç´ å…‹è´¨å±æ€§ (å¯¹åº”SkillTagä¸­çš„å…ƒç´ )")]
+        public TGame.Data.SkillTag weakness;   // å¼±ç‚¹å±æ€§
+        public TGame.Data.SkillTag resistance; // æŠ—æ€§å±æ€§
+        public float evasionRate = 0.05f;      // åŸºç¡€é—ªé¿ç‡
     }
 
-    // ==========================================
-    // µĞÈË×Ü±í
-    // ==========================================
-    [CreateAssetMenu(fileName = "EnemyTable", menuName = "TGame/µĞÈË×Ü±í (Enemy Table)")]
+    [CreateAssetMenu(fileName = "EnemyTable", menuName = "TGame/æ•Œäººæ€»è¡¨ (Enemy Table)")]
     public class EnemyTableSO : ScriptableObject
     {
         public EnemyData[] enemies;

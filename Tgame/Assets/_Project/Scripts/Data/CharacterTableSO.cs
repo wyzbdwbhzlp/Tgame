@@ -24,19 +24,13 @@ namespace TGame.Data
         public int attackRange;
 
         [Header("美术资源 (直接拖拽赋值)")]
-        public Sprite portraitSprite;
+        public Sprite portraitSprite; // 半身大立绘
+        public Sprite headIcon;       // 【🔥新增】UI状态栏专用小圆头像
         public GameObject characterPrefab;
 
-        // ==========================================
-        // 【🔥核心修改】增加攻击时序配置
-        // ==========================================
         [Header("战斗表现")]
         public string attackVFXID = "Hit_Default";
-
-        [Tooltip("从发起攻击到特效产生的延迟(秒)")]
         public float attackHitDelay = 0.35f;
-
-        [Tooltip("从特效产生到伤害跳字的延迟(秒)")]
         public float damagePopupDelay = 0.15f;
 
         [Header("战斗属性")]
@@ -50,9 +44,15 @@ namespace TGame.Data
         public int postureValue;
         public float dodgeRate;
         public float critRate;
+
         [Header("技能配置")]
         [Tooltip("填入 SkillTable 中的技能 ID")]
         public List<int> skillIDs = new List<int>();
+
+        [Header("元素克质属性 (对应SkillTag中的元素)")]
+        public TGame.Data.SkillTag weakness;   // 弱点属性
+        public TGame.Data.SkillTag resistance; // 抗性属性
+        public float evasionRate = 0.05f;      // 基础闪避率 (0.05 = 5%)
     }
 
     [CreateAssetMenu(fileName = "CharacterTable", menuName = "TGame/Character Table")]

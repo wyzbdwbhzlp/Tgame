@@ -133,8 +133,8 @@ TextureImporter:
         y: 315
         width: 232
         height: 278
-      alignment: 0
-      pivot: {x: 0, y: 0}
+      alignment: 9
+      pivot: {x: 0.5, y: 0.05}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -147,11 +147,33 @@ TextureImporter:
       indices: 
       edges: []
       weights: []
+    - serializedVersion: 2
+      name: IMG_5072_1
+      rect:
+        serializedVersion: 2
+        x: 1033
+        y: 470
+        width: 168
+        height: 117
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a0329f8000a64aa4dac006c30499013c
+      internalID: -28294389
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
     outline: []
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 
+    spriteID: f9aa7333700c5b140bc5a321a6c9ba11
     internalID: 0
     vertices: []
     indices: 
@@ -162,6 +184,7 @@ TextureImporter:
       entries: []
     nameFileIdTable:
       IMG_5072_0: 4040736896670408807
+      IMG_5072_1: -28294389
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

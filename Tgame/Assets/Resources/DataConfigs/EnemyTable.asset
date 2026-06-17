@@ -17,6 +17,7 @@ MonoBehaviour:
     enemyName: "\u5200\u76FE"
     aiRole: 2
     portraitSprite: {fileID: 5904431790531605932, guid: 1834e88ab2453c641ad467339961d2bb, type: 3}
+    headIcon: {fileID: 1809732108, guid: 7f1adca7e3d3c5447bdcb07030deb5bb, type: 3}
     prefab: {fileID: 6135362800246235739, guid: 17127f194ba1ddf42a1f2d86dc790bf4, type: 3}
     attackVFXID: Hit_Default
     attackHitDelay: 0.5
@@ -29,3 +30,46 @@ MonoBehaviour:
     postureValue: 150
     maxMoveDistance: 2
     speed: 6
+    weakness: 0
+    resistance: 0
+    evasionRate: 0.05
+  - enemyID: 2002
+    enemyName: "\u5361\u5E03\u5361\u5E03\u5361\u5E03\u5947\u8BFA"
+    aiRole: 2
+    portraitSprite: {fileID: 4040736896670408807, guid: 18317569963b426478ab545469466126, type: 3}
+    headIcon: {fileID: -28294389, guid: 18317569963b426478ab545469466126, type: 3}
+    prefab: {fileID: 6135362800246235739, guid: 1c1542d1d0ffa5046af9abe98e01deb7, type: 3}
+    attackVFXID: Hit_Default
+    attackHitDelay: 0.5
+    damagePopupDelay: 0.2
+    maxHP: 500
+    attack: 50
+    defense: 80
+    attackRange: 2
+    critRate: 0.05
+    postureValue: 150
+    maxMoveDistance: 2
+    speed: 6
+    weakness: 0
+    resistance: 0
+    evasionRate: 1.05
+  - enemyID: 2003
+    enemyName: "\u4E2D\u534E\u5927\u52A0\u519C"
+    aiRole: 2
+    portraitSprite: {fileID: 2939259248676367065, guid: a084d150c993a6847bb4ba77430a985f, type: 3}
+    headIcon: {fileID: -1336733929, guid: a084d150c993a6847bb4ba77430a985f, type: 3}
+    prefab: {fileID: 6135362800246235739, guid: dbbfc3ad0ca278940a5a6cc668d55722, type: 3}
+    attackVFXID: Hit_Default
+    attackHitDelay: 0.5
+    damagePopupDelay: 0.2
+    maxHP: 500
+    attack: 50
+    defense: 80
+    attackRange: 3
+    critRate: 0.05
+    postureValue: 150
+    maxMoveDistance: 2
+    speed: 6
+    weakness: 0
+    resistance: 0
+    evasionRate: 2.05

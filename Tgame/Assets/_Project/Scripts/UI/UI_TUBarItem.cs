@@ -1,24 +1,28 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using System.Collections.Generic;
+using TGame.Battle;
 
 public class UI_TUBarItem : MonoBehaviour
 {
     [Header("美术组件引用")]
     public TextMeshProUGUI txtName;
-    public Slider tuSlider;
-    public Image fillImage;
     public Image imgPortrait;
 
+    [Header("时间轴容器")]
+    [Tooltip("此底框需要挂载 Horizontal Layout Group 组件")]
+    public RectTransform barBackground;
+
     private int _boundUnitID;
+    private float _maxBarWidth;
+
+    private List<GameObject> _segmentPool = new List<GameObject>();
 
     public void Init(int unitID, string characterName, bool isPlayer, Sprite portrait)
     {
         _boundUnitID = unitID;
-
         if (txtName) txtName.text = characterName;
-        // 玩家颜色为青色，敌人颜色为红色
-        if (fillImage != null) fillImage.color = isPlayer ? Color.cyan : new Color(1f, 0.3f, 0.3f);
 
         if (imgPortrait != null)
         {
@@ -27,28 +31,104 @@ public class UI_TUBarItem : MonoBehaviour
                 imgPortrait.sprite = portrait;
                 imgPortrait.gameObject.SetActive(true);
             }
-            else
+            else imgPortrait.gameObject.SetActive(false);
+        }
+
+        // 初始化时获取背景条的物理宽度
+        if (barBackground)
+        {
+            LayoutRebuilder.ForceRebuildLayoutImmediate(barBackground);
+            _maxBarWidth = barBackground.rect.width;
+        }
+    }
+
+    public void UpdateTimeline(List<TurnManager.ScheduledAction> actions, int maxTU, bool isSelected)
+    {
+        if (txtName) txtName.color = isSelected ? Color.yellow : Color.white;
+        if (barBackground == null || _maxBarWidth <= 0) return;
+
+        // 隐藏所有旧的色块
+        foreach (var seg in _segmentPool) seg.SetActive(false);
+
+        int totalCost = 0;
+
+        for (int i = 0; i < actions.Count; i++)
+        {
+            int cost = actions[i].cost;
+            string aName = actions[i].name;
+            totalCost += cost;
+
+            // 越界保护
+            if (totalCost > maxTU) cost = cost - (totalCost - maxTU);
+            if (cost <= 0) break;
+
+            // 【🔥修改】如果是 LayoutGroup 控制，如果设置了 Spacing (间距)，
+            // 严谨的做法是需要减去间距的损耗，但这里为了简单直观，我们依然按比例分配基础宽度
+            float ratio = (float)cost / maxTU;
+            float segmentWidth = ratio * _maxBarWidth;
+
+            GameObject segmentObj = GetOrCreateSegment(i);
+            segmentObj.SetActive(true);
+            segmentObj.transform.SetAsLastSibling(); // 确保它在 LayoutGroup 中的顺序排在最后
+
+            // 【🔥核心】现在我们只设置宽度，X坐标和高度完全交给 Horizontal Layout Group 管理！
+            RectTransform rt = segmentObj.GetComponent<RectTransform>();
+            rt.sizeDelta = new Vector2(segmentWidth, rt.sizeDelta.y);
+
+            Image img = segmentObj.GetComponent<Image>();
+            img.color = GetColorForAction(aName);
+
+            TextMeshProUGUI txt = segmentObj.GetComponentInChildren<TextMeshProUGUI>();
+            if (txt != null)
             {
-                imgPortrait.gameObject.SetActive(false);
+                if (segmentWidth > 45f) txt.text = $"{aName}\n-{cost}";
+                else txt.text = $"-{cost}";
             }
         }
     }
 
-    public void UpdateState(int plannedTU, int maxTU, bool isSelected)
+    private Color GetColorForAction(string actionName)
     {
-        if (tuSlider)
+        switch (actionName)
         {
-            // ==========================================
-            // 【🔥核心修改】时间轴机制 (Timeline)
-            // 一开始是 0，消耗时间会让进度条“涨”起来
-            // ==========================================
-            float timeRatio = Mathf.Clamp01((float)plannedTU / maxTU);
-
-            // 依然保留 0.001f 的保底，防止 Slider 的 Fill 完全归零导致 Unity 底层射线检测报错
-            tuSlider.value = Mathf.Max(0.001f, timeRatio);
+            case "移动": return new Color(0.2f, 0.8f, 0.4f, 0.9f); // 绿色
+            case "攻击": return new Color(0.9f, 0.3f, 0.2f, 0.9f); // 红色
+            case "技能": return new Color(0.7f, 0.2f, 0.9f, 0.9f); // 紫色
+            case "道具": return new Color(0.2f, 0.6f, 1.0f, 0.9f); // 蓝色
+            default: return new Color(0.5f, 0.5f, 0.5f, 0.9f);     // 灰色
         }
+    }
 
-        if (txtName) txtName.color = isSelected ? Color.yellow : Color.white;
+    private GameObject GetOrCreateSegment(int index)
+    {
+        if (index < _segmentPool.Count) return _segmentPool[index];
+
+        GameObject segObj = new GameObject($"Segment_{index}");
+        segObj.transform.SetParent(barBackground, false);
+
+        RectTransform rt = segObj.AddComponent<RectTransform>();
+        segObj.AddComponent<Image>();
+
+        GameObject txtObj = new GameObject("Text");
+        txtObj.transform.SetParent(rt, false);
+        RectTransform txtRt = txtObj.AddComponent<RectTransform>();
+
+        // 文字铺满整个色块
+        txtRt.anchorMin = Vector2.zero;
+        txtRt.anchorMax = Vector2.one;
+        txtRt.offsetMin = Vector2.zero;
+        txtRt.offsetMax = Vector2.zero;
+
+        TextMeshProUGUI txt = txtObj.AddComponent<TextMeshProUGUI>();
+        txt.alignment = TextAlignmentOptions.Center;
+        txt.fontSize = 12;
+        txt.color = Color.white;
+        txt.fontStyle = FontStyles.Bold;
+        txt.enableWordWrapping = false;
+        txt.overflowMode = TextOverflowModes.Truncate;
+
+        _segmentPool.Add(segObj);
+        return segObj;
     }
 
     public int GetBoundUnitID() => _boundUnitID;

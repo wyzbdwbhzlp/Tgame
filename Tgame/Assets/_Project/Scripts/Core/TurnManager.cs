@@ -35,6 +35,37 @@ namespace TGame.Battle
 
         public int GetUnitPlannedTU(int unitID) => _unitPlannedTU.ContainsKey(unitID) ? _unitPlannedTU[unitID] : 0;
 
+        // ==========================================
+        // 【🔥新增】供 UI 读取的动作队列数据结构 (用于切割时素条)
+        // ==========================================
+        public struct ScheduledAction
+        {
+            public string name;
+            public int cost;
+        }
+
+        public List<ScheduledAction> GetUnitScheduledActions(int unitID)
+        {
+            List<ScheduledAction> list = new List<ScheduledAction>();
+            foreach (var cmd in _commandQueue)
+            {
+                if (cmd.GetUnitID() == unitID)
+                {
+                    string actionName = "行动";
+                    string typeName = cmd.GetType().Name;
+
+                    // 根据指令类的名字智能翻译为中文
+                    if (typeName.Contains("Move")) actionName = "移动";
+                    else if (typeName.Contains("Attack")) actionName = "攻击";
+                    else if (typeName.Contains("Skill")) actionName = "技能";
+                    else if (typeName.Contains("Mock")) actionName = "道具";
+
+                    list.Add(new ScheduledAction { name = actionName, cost = cmd.GetCost() });
+                }
+            }
+            return list;
+        }
+
         public bool CanScheduleAction(int unitID, int cost)
         {
             var unit = UnitManager.Instance.GetUnit(unitID);
@@ -93,7 +124,7 @@ namespace TGame.Battle
             _commandQueue.Clear();
             _commandHistory.Clear();
 
-            // 【🔥完美同步】不再写死时间，而是用 yield return 挂起等待该指令自己的协程完成！
+            // 完美同步玩家协程
             foreach (var cmd in snapshot)
             {
                 yield return BattleManager.Instance.StartSettleRoutine(cmd.SettleRoutine());
@@ -118,7 +149,7 @@ namespace TGame.Battle
                 if (enemyCmd != null && enemyCmd.Validate())
                 {
                     enemyCmd.Execute();
-                    // 同样完美同步敌方的动作！
+                    // 同步敌方动作
                     yield return BattleManager.Instance.StartSettleRoutine(enemyCmd.SettleRoutine());
                 }
             }
@@ -136,7 +167,17 @@ namespace TGame.Battle
                 _unitCurrentTU[k] = 0;
                 _unitPlannedTU[k] = 0;
             }
+
+            // ==========================================
+            // 【🔥核心集成】触发所有存活单位的躯干值恢复和状态解除
+            // ==========================================
+            foreach (var unit in UnitManager.Instance.GetAllUnits())
+            {
+                unit.OnRoundTurnStart();
+            }
+
             CurrentState = BattleState.Planning;
+            Debug.Log($"<color=green>======= 第 {CurrentRound} 轮 (状态已刷新) =======</color>");
         }
     }
 }

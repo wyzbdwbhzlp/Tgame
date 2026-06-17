@@ -5,6 +5,7 @@ using TGame.Data;
 using System.IO;
 using System.Collections.Generic;
 using System;
+using System.Text;
 
 namespace TGame.EditorTools
 {
@@ -12,11 +13,11 @@ namespace TGame.EditorTools
     {
         private Vector2 _scrollPos;
 
-        [MenuItem("TGame/TGame Data Center (单表定制版)", false, 1)]
+        [MenuItem("TGame/TGame Data Center (双向同步版)", false, 1)]
         public static void ShowWindow()
         {
             var window = GetWindow<TGameDataCenter>("Data Center");
-            window.minSize = new Vector2(400, 700);
+            window.minSize = new Vector2(450, 750);
             window.Show();
         }
 
@@ -38,11 +39,12 @@ namespace TGame.EditorTools
                 CreateOrSelectAssetInResources<CharacterTableSO>("DataConfigs", "CharacterTable");
             }
 
-            GUI.backgroundColor = new Color(0.6f, 1f, 0.6f); // 玩家为绿色
-            if (GUILayout.Button("📥 从 CSV 导入【玩家】数据", GUILayout.Height(40)))
-            {
-                ImportCharactersFromCSV();
-            }
+            GUILayout.BeginHorizontal();
+            GUI.backgroundColor = new Color(0.6f, 1f, 0.6f);
+            if (GUILayout.Button("📥 导入 (CSV -> SO)", GUILayout.Height(40))) ImportCharactersFromCSV();
+            GUI.backgroundColor = new Color(1f, 0.9f, 0.6f);
+            if (GUILayout.Button("📤 反写 (SO -> CSV)", GUILayout.Height(40))) ExportCharactersToCSV();
+            GUILayout.EndHorizontal();
             GUI.backgroundColor = Color.white;
             GUILayout.EndVertical();
             EditorGUILayout.Space();
@@ -59,17 +61,18 @@ namespace TGame.EditorTools
                 CreateOrSelectAssetInResources<EnemyTableSO>("DataConfigs", "EnemyTable");
             }
 
-            GUI.backgroundColor = new Color(1f, 0.6f, 0.6f); // 敌人为红色
-            if (GUILayout.Button("📥 从 CSV 导入【敌人】数据", GUILayout.Height(40)))
-            {
-                ImportEnemiesFromCSV();
-            }
+            GUILayout.BeginHorizontal();
+            GUI.backgroundColor = new Color(1f, 0.6f, 0.6f);
+            if (GUILayout.Button("📥 导入 (CSV -> SO)", GUILayout.Height(40))) ImportEnemiesFromCSV();
+            GUI.backgroundColor = new Color(1f, 0.9f, 0.6f);
+            if (GUILayout.Button("📤 反写 (SO -> CSV)", GUILayout.Height(40))) ExportEnemiesToCSV();
+            GUILayout.EndHorizontal();
             GUI.backgroundColor = Color.white;
             GUILayout.EndVertical();
             EditorGUILayout.Space();
 
             // ==========================================
-            // 【🔥新增】模块 3：技能数据管理
+            // 模块 3：技能数据管理
             // ==========================================
             GUILayout.BeginVertical("box");
             GUILayout.Label("🔥 技能与魔法数据", EditorStyles.boldLabel);
@@ -80,11 +83,12 @@ namespace TGame.EditorTools
                 CreateOrSelectAssetInResources<SkillTableSO>("DataConfigs", "SkillTable");
             }
 
-            GUI.backgroundColor = new Color(0.6f, 0.8f, 1f); // 技能用蓝色按钮
-            if (GUILayout.Button("📥 从 CSV 导入【技能】数据", GUILayout.Height(40)))
-            {
-                ImportSkillsFromCSV();
-            }
+            GUILayout.BeginHorizontal();
+            GUI.backgroundColor = new Color(0.6f, 0.8f, 1f);
+            if (GUILayout.Button("📥 导入 (CSV -> SO)", GUILayout.Height(40))) ImportSkillsFromCSV();
+            GUI.backgroundColor = new Color(1f, 0.9f, 0.6f);
+            if (GUILayout.Button("📤 反写 (SO -> CSV)", GUILayout.Height(40))) ExportSkillsToCSV();
+            GUILayout.EndHorizontal();
             GUI.backgroundColor = Color.white;
             GUILayout.EndVertical();
             EditorGUILayout.Space();
@@ -132,16 +136,9 @@ namespace TGame.EditorTools
         {
             string csvPath = EditorUtility.OpenFilePanel("选择玩家配置 CSV", Application.dataPath, "csv");
             if (string.IsNullOrEmpty(csvPath)) return;
-
             string tablePath = "Assets/Resources/DataConfigs/CharacterTable.asset";
             CharacterTableSO table = AssetDatabase.LoadAssetAtPath<CharacterTableSO>(tablePath);
-
-            if (table == null)
-            {
-                Debug.LogError($"[数据中心] 找不到角色总表！请先点击上面的【定位 / 生成玩家总表】按钮。");
-                return;
-            }
-
+            if (table == null) { Debug.LogError("找不到总表！"); return; }
             string[] lines = ReadCSVLinesSafely(csvPath);
             if (lines == null) return;
 
@@ -156,12 +153,8 @@ namespace TGame.EditorTools
                 CharacterData data = new CharacterData();
                 data.characterID = int.Parse(cols[0]);
                 data.characterName = cols[1];
-
                 if (Enum.TryParse(cols[2], true, out CharacterJob parsedJob)) data.job = parsedJob;
-
                 data.attackRange = int.Parse(cols[3]);
-
-                // cols[4] 是立绘，cols[5] 是预制体，代码跳过读取，走下面的智能保留逻辑
 
                 data.maxHP = int.Parse(cols[6]);
                 data.maxMP = int.Parse(cols[7]);
@@ -169,27 +162,25 @@ namespace TGame.EditorTools
                 data.defense = int.Parse(cols[9]);
                 data.speed = int.Parse(cols[10]);
                 data.postureValue = int.Parse(cols[11]);
-                data.dodgeRate = float.Parse(cols[12]);
+                data.evasionRate = float.Parse(cols[12]);
                 data.critRate = float.Parse(cols[13]);
 
                 data.attackVFXID = (cols.Length > 14 && !string.IsNullOrWhiteSpace(cols[14])) ? cols[14].Trim() : "Hit_Default";
                 data.attackHitDelay = (cols.Length > 15 && float.TryParse(cols[15], out float hitDelay)) ? hitDelay : 0.35f;
                 data.damagePopupDelay = (cols.Length > 16 && float.TryParse(cols[16], out float popDelay)) ? popDelay : 0.15f;
 
-                // ==========================================
-                // 【🔥新增】读取角色拥有的技能 ID 列表 (竖线分隔)
-                // ==========================================
                 data.skillIDs = new List<int>();
                 if (cols.Length > 17 && !string.IsNullOrWhiteSpace(cols[17]))
                 {
                     string[] skillStrings = cols[17].Split('|');
-                    foreach (var s in skillStrings)
-                    {
-                        if (int.TryParse(s, out int sID)) data.skillIDs.Add(sID);
-                    }
+                    foreach (var s in skillStrings) if (int.TryParse(s, out int sID)) data.skillIDs.Add(sID);
                 }
 
-                // 智能保留面板拖拽的美术资产
+                if (cols.Length > 18 && !string.IsNullOrWhiteSpace(cols[18]))
+                    if (Enum.TryParse(cols[18].Replace("|", ","), true, out SkillTag parsedW)) data.weakness = parsedW;
+                if (cols.Length > 19 && !string.IsNullOrWhiteSpace(cols[19]))
+                    if (Enum.TryParse(cols[19].Replace("|", ","), true, out SkillTag parsedR)) data.resistance = parsedR;
+
                 if (table.characters != null)
                 {
                     CharacterData existingData = Array.Find(table.characters, c => c.characterID == data.characterID);
@@ -199,17 +190,41 @@ namespace TGame.EditorTools
                         data.characterPrefab = existingData.characterPrefab;
                     }
                 }
-
                 newCharList.Add(data);
             }
-
             table.characters = newCharList.ToArray();
             EditorUtility.SetDirty(table);
             AssetDatabase.SaveAssets();
-
             Debug.Log($"<color=green>🎉 成功从 CSV 导入了 {newCharList.Count} 名英雄！</color>");
-            Selection.activeObject = table;
-            EditorGUIUtility.PingObject(table);
+        }
+
+        // ==========================================
+        // 【🔥新增】反写 玩家数据 到 CSV
+        // ==========================================
+        private void ExportCharactersToCSV()
+        {
+            string tablePath = "Assets/Resources/DataConfigs/CharacterTable.asset";
+            CharacterTableSO table = AssetDatabase.LoadAssetAtPath<CharacterTableSO>(tablePath);
+            if (table == null || table.characters == null) { Debug.LogError("找不到玩家表或数据为空！"); return; }
+
+            string savePath = EditorUtility.SaveFilePanel("反写玩家数据到 CSV", Application.dataPath, "CharacterTable_Export", "csv");
+            if (string.IsNullOrEmpty(savePath)) return;
+
+            StringBuilder sb = new StringBuilder();
+            sb.AppendLine("ID,名字,职业,攻击距离,立绘(无),预制体(无),最大HP,最大MP,攻击力,防御力,速度,躯干值,闪避率,暴击率,攻击特效,命中延迟,飘字延迟,技能列表,弱点,抗性");
+
+            foreach (var c in table.characters)
+            {
+                string skills = c.skillIDs != null ? string.Join("|", c.skillIDs) : "";
+                string weaknessStr = c.weakness.ToString().Replace(", ", "|");
+                string resStr = c.resistance.ToString().Replace(", ", "|");
+
+                sb.AppendLine($"{c.characterID},{EscapeCSV(c.characterName)},{c.job},{c.attackRange},-,," +
+                              $"{c.maxHP},{c.maxMP},{c.attack},{c.defense},{c.speed},{c.postureValue},{c.evasionRate},{c.critRate}," +
+                              $"{EscapeCSV(c.attackVFXID)},{c.attackHitDelay},{c.damagePopupDelay},{skills},{weaknessStr},{resStr}");
+            }
+            File.WriteAllText(savePath, sb.ToString(), Encoding.UTF8);
+            Debug.Log($"<color=orange>📤 玩家数据已成功反写至：{savePath}</color>");
         }
 
         // ==========================================
@@ -219,16 +234,9 @@ namespace TGame.EditorTools
         {
             string csvPath = EditorUtility.OpenFilePanel("选择敌人配置 CSV", Application.dataPath, "csv");
             if (string.IsNullOrEmpty(csvPath)) return;
-
             string tablePath = "Assets/Resources/DataConfigs/EnemyTable.asset";
             EnemyTableSO table = AssetDatabase.LoadAssetAtPath<EnemyTableSO>(tablePath);
-
-            if (table == null)
-            {
-                Debug.LogError($"[数据中心] 找不到敌人总表！请先点击上面的【定位 / 生成敌人总表】按钮。");
-                return;
-            }
-
+            if (table == null) { Debug.LogError("找不到敌人总表！"); return; }
             string[] lines = ReadCSVLinesSafely(csvPath);
             if (lines == null) return;
 
@@ -243,9 +251,7 @@ namespace TGame.EditorTools
                 EnemyData data = new EnemyData();
                 data.enemyID = int.Parse(cols[0]);
                 data.enemyName = cols[1];
-
                 if (Enum.TryParse(cols[2], true, out EnemyRole parsedRole)) data.aiRole = parsedRole;
-
                 data.attackRange = int.Parse(cols[3]);
 
                 data.maxHP = int.Parse(cols[6]);
@@ -260,6 +266,13 @@ namespace TGame.EditorTools
                 data.attackHitDelay = (cols.Length > 14 && float.TryParse(cols[14], out float hitDelay)) ? hitDelay : 0.35f;
                 data.damagePopupDelay = (cols.Length > 15 && float.TryParse(cols[15], out float popDelay)) ? popDelay : 0.15f;
 
+                if (cols.Length > 16 && !string.IsNullOrWhiteSpace(cols[16]))
+                    if (Enum.TryParse(cols[16].Replace("|", ","), true, out SkillTag parsedW)) data.weakness = parsedW;
+                if (cols.Length > 17 && !string.IsNullOrWhiteSpace(cols[17]))
+                    if (Enum.TryParse(cols[17].Replace("|", ","), true, out SkillTag parsedR)) data.resistance = parsedR;
+
+                data.evasionRate = (cols.Length > 18 && float.TryParse(cols[18], out float eva)) ? eva : 0.05f;
+
                 if (table.enemies != null)
                 {
                     EnemyData existingData = Array.Find(table.enemies, e => e.enemyID == data.enemyID);
@@ -269,36 +282,52 @@ namespace TGame.EditorTools
                         data.prefab = existingData.prefab;
                     }
                 }
-
                 newEnemyList.Add(data);
             }
-
             table.enemies = newEnemyList.ToArray();
             EditorUtility.SetDirty(table);
             AssetDatabase.SaveAssets();
-
             Debug.Log($"<color=red>👿 成功从 CSV 导入了 {newEnemyList.Count} 名敌人怪物！</color>");
-            Selection.activeObject = table;
-            EditorGUIUtility.PingObject(table);
         }
 
         // ==========================================
-        // 【🔥新增】解析 CSV 导入 技能数据 (处理竖线黑科技)
+        // 【🔥新增】反写 敌人数据 到 CSV
+        // ==========================================
+        private void ExportEnemiesToCSV()
+        {
+            string tablePath = "Assets/Resources/DataConfigs/EnemyTable.asset";
+            EnemyTableSO table = AssetDatabase.LoadAssetAtPath<EnemyTableSO>(tablePath);
+            if (table == null || table.enemies == null) { Debug.LogError("找不到敌人表或数据为空！"); return; }
+
+            string savePath = EditorUtility.SaveFilePanel("反写敌人数据到 CSV", Application.dataPath, "EnemyTable_Export", "csv");
+            if (string.IsNullOrEmpty(savePath)) return;
+
+            StringBuilder sb = new StringBuilder();
+            sb.AppendLine("ID,名字,AI定位,攻击距离,立绘(无),预制体(无),最大HP,攻击力,防御力,速度,躯干值,暴击率,最大移动,攻击特效,命中延迟,飘字延迟,弱点,抗性,闪避率");
+
+            foreach (var e in table.enemies)
+            {
+                string weaknessStr = e.weakness.ToString().Replace(", ", "|");
+                string resStr = e.resistance.ToString().Replace(", ", "|");
+
+                sb.AppendLine($"{e.enemyID},{EscapeCSV(e.enemyName)},{e.aiRole},{e.attackRange},-,," +
+                              $"{e.maxHP},{e.attack},{e.defense},{e.speed},{e.postureValue},{e.critRate},{e.maxMoveDistance}," +
+                              $"{EscapeCSV(e.attackVFXID)},{e.attackHitDelay},{e.damagePopupDelay},{weaknessStr},{resStr},{e.evasionRate}");
+            }
+            File.WriteAllText(savePath, sb.ToString(), Encoding.UTF8);
+            Debug.Log($"<color=orange>📤 敌人数据已成功反写至：{savePath}</color>");
+        }
+
+        // ==========================================
+        // 解析 CSV 导入 技能数据 
         // ==========================================
         private void ImportSkillsFromCSV()
         {
             string csvPath = EditorUtility.OpenFilePanel("选择技能配置 CSV", Application.dataPath, "csv");
             if (string.IsNullOrEmpty(csvPath)) return;
-
             string tablePath = "Assets/Resources/DataConfigs/SkillTable.asset";
             SkillTableSO table = AssetDatabase.LoadAssetAtPath<SkillTableSO>(tablePath);
-
-            if (table == null)
-            {
-                Debug.LogError($"[数据中心] 找不到技能总表！请先点击上面的【定位 / 生成技能总表】按钮。");
-                return;
-            }
-
+            if (table == null) { Debug.LogError("找不到技能总表！"); return; }
             string[] lines = ReadCSVLinesSafely(csvPath);
             if (lines == null) return;
 
@@ -308,7 +337,7 @@ namespace TGame.EditorTools
             for (int i = 1; i < lines.Length; i++)
             {
                 if (string.IsNullOrWhiteSpace(lines[i])) continue;
-                string[] cols = lines[i].Split(',');
+                string[] cols = ParseCSVLine(lines[i]); // 使用安全切割法
 
                 SkillData data = new SkillData();
                 data.skillID = int.Parse(cols[0]);
@@ -318,11 +347,9 @@ namespace TGame.EditorTools
 
                 if (Enum.TryParse(cols[4], true, out SkillCategory parsedCat)) data.category = parsedCat;
 
-                // 读取词条 (支持 | 分隔)
                 string tagString = cols[5].Replace("|", ",");
                 if (Enum.TryParse(tagString, true, out SkillTag parsedTag)) data.tags = parsedTag;
 
-                // 读取目标掩码 (支持 | 分隔)
                 string targetString = cols[6].Replace("|", ",");
                 if (Enum.TryParse(targetString, true, out SkillTargetMask parsedMask)) data.targetMask = parsedMask;
 
@@ -337,21 +364,93 @@ namespace TGame.EditorTools
                 data.tuCost = int.Parse(cols[13]);
                 data.vfxID = (cols.Length > 14 && !string.IsNullOrWhiteSpace(cols[14])) ? cols[14].Trim() : "Hit_Default";
 
+                data.hitRate = (cols.Length > 15 && float.TryParse(cols[15], out float hr)) ? hr : 1.0f;
+                data.penetration = (cols.Length > 16 && float.TryParse(cols[16], out float pen)) ? pen : 0f;
+
                 newSkillList.Add(data);
             }
-
             table.skills = newSkillList.ToArray();
             EditorUtility.SetDirty(table);
             AssetDatabase.SaveAssets();
-
             Debug.Log($"<color=cyan>✨ 成功从 CSV 导入了 {newSkillList.Count} 个技能！</color>");
-            Selection.activeObject = table;
-            EditorGUIUtility.PingObject(table);
         }
 
         // ==========================================
-        // 防崩溃的文件读取黑科技
+        // 【🔥新增】反写 技能数据 到 CSV
         // ==========================================
+        private void ExportSkillsToCSV()
+        {
+            string tablePath = "Assets/Resources/DataConfigs/SkillTable.asset";
+            SkillTableSO table = AssetDatabase.LoadAssetAtPath<SkillTableSO>(tablePath);
+            if (table == null || table.skills == null) { Debug.LogError("找不到技能表或数据为空！"); return; }
+
+            string savePath = EditorUtility.SaveFilePanel("反写技能数据到 CSV", Application.dataPath, "SkillTable_Export", "csv");
+            if (string.IsNullOrEmpty(savePath)) return;
+
+            StringBuilder sb = new StringBuilder();
+            sb.AppendLine("ID,技能名,喊话,描述,分类,词条,目标掩码,施法距离,AOE半径,效果类型,基础数值,效果倍率,耗蓝,耗时,特效ID,基础命中率,穿透力");
+
+            foreach (var s in table.skills)
+            {
+                string tagStr = s.tags.ToString().Replace(", ", "|");
+                string maskStr = s.targetMask.ToString().Replace(", ", "|");
+
+                sb.AppendLine($"{s.skillID},{EscapeCSV(s.skillName)},{EscapeCSV(s.slogan)},{EscapeCSV(s.description)},{s.category}," +
+                              $"{tagStr},{maskStr},{s.castRange},{s.aoeRadius},{s.effectType},{s.baseEffectValue},{s.effectMultiplier}," +
+                              $"{s.mpCost},{s.tuCost},{EscapeCSV(s.vfxID)},{s.hitRate},{s.penetration}");
+            }
+            File.WriteAllText(savePath, sb.ToString(), Encoding.UTF8);
+            Debug.Log($"<color=orange>📤 技能数据已成功反写至：{savePath}</color>");
+        }
+
+        // ==========================================
+        // 底层黑科技：CSV 安全处理 (防逗号断行截断)
+        // ==========================================
+        private string EscapeCSV(string str)
+        {
+            if (string.IsNullOrEmpty(str)) return "";
+            if (str.Contains(",") || str.Contains("\"") || str.Contains("\n") || str.Contains("\r"))
+            {
+                return "\"" + str.Replace("\"", "\"\"") + "\""; // 将双引号转义，并用双引号包裹整体
+            }
+            return str;
+        }
+
+        private string[] ParseCSVLine(string line)
+        {
+            List<string> result = new List<string>();
+            bool inQuotes = false;
+            StringBuilder currentVal = new StringBuilder();
+
+            for (int i = 0; i < line.Length; i++)
+            {
+                char c = line[i];
+                if (c == '\"')
+                {
+                    if (inQuotes && i + 1 < line.Length && line[i + 1] == '\"')
+                    {
+                        currentVal.Append('\"'); // 处理转义的双引号
+                        i++;
+                    }
+                    else
+                    {
+                        inQuotes = !inQuotes; // 切换引号状态
+                    }
+                }
+                else if (c == ',' && !inQuotes)
+                {
+                    result.Add(currentVal.ToString());
+                    currentVal.Clear();
+                }
+                else
+                {
+                    currentVal.Append(c);
+                }
+            }
+            result.Add(currentVal.ToString());
+            return result.ToArray();
+        }
+
         private string[] ReadCSVLinesSafely(string csvPath)
         {
             try
@@ -366,7 +465,7 @@ namespace TGame.EditorTools
             catch (Exception e)
             {
                 EditorUtility.DisplayDialog("读取失败", "无法读取 CSV 文件！\n可能是文件权限问题，请尝试关闭 Excel 后重试。", "确定");
-                Debug.LogError($"[数据中心] 读取 CSV 失败: {e.Message}");
+                Debug.LogError($"读取 CSV 失败: {e.Message}");
                 return null;
             }
         }

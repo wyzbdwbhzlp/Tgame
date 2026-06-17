@@ -172,6 +172,28 @@ TextureImporter:
       indices: 
       edges: []
       weights: []
+    - serializedVersion: 2
+      name: IMG_5074_2
+      rect:
+        serializedVersion: 2
+        x: 939
+        y: 752
+        width: 147
+        height: 127
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 69a3bc3264374674dba93adbd02c767d
+      internalID: 1809732108
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
     outline: []
     customData: 
     physicsShape: []
@@ -188,6 +210,7 @@ TextureImporter:
     nameFileIdTable:
       IMG_5074_0: -6747410089428039030
       IMG_5074_1: -4765704218464548227
+      IMG_5074_2: 1809732108
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

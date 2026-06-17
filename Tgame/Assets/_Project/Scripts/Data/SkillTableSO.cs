@@ -79,6 +79,13 @@ namespace TGame.Data
 
         [Header("表现层")]
         public string vfxID = "Hit_Fire";
+        [Header("数值系统大部头扩展")]
+        [Tooltip("技能的基础命中率，通常填 1.0 (代表100%)")]
+        public float hitRate = 1.0f;
+
+        [Range(0, 100)]
+        [Tooltip("技能的穿透力 (0~100)。数值越高，AOE连续打击敌人时的衰减就越少")]
+        public float penetration = 0f;
     }
 
     [CreateAssetMenu(fileName = "SkillTable", menuName = "TGame/技能总表 (Skill Table)")]
