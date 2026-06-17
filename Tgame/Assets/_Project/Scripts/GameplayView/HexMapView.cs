@@ -185,9 +185,6 @@ public class HexMapView : MonoBehaviour
         }
     }
 
-    // ==========================================
-    // 【🔥核心升级】接入 UI_BattleMain 的错误提示播报
-    // ==========================================
     private void HandleLeftClick()
     {
         GridCell clickedCell = GridSystem.Instance.GetCell(_hoveredCellPos);
@@ -205,6 +202,32 @@ public class HexMapView : MonoBehaviour
 
             case InteractionMode.SelectMoveTarget:
                 if (_hoveredCellPos == _selectedUnit.GridPosition) return;
+
+                // ==========================================
+                // 【🔥新增1】检查底层网格的真实占位（不能踩在别的实体头上）
+                // ==========================================
+                if (clickedCell.OccupantUnitID != -1 && clickedCell.OccupantUnitID != _selectedUnit.InstanceID)
+                {
+                    UI_BattleMain.Instance?.ShowBroadcastMessage("目标格子已有角色！");
+                    return;
+                }
+
+                // ==========================================
+                // 【🔥新增2】检查计划占位（别的角色的虚影是不是已经预定了这个格子）
+                // ==========================================
+                foreach (var kvp in _phantomDict)
+                {
+                    if (kvp.Key != _selectedUnit.InstanceID)
+                    {
+                        Vector3Int phantomCell = GridSystem.Instance.WorldToCell(kvp.Value.transform.position);
+                        if (phantomCell == _hoveredCellPos)
+                        {
+                            UI_BattleMain.Instance?.ShowBroadcastMessage("该位置已被其他角色的行动计划预定！");
+                            return;
+                        }
+                    }
+                }
+
                 MoveCommand moveCmd = new MoveCommand(_selectedUnit.InstanceID, _selectedUnit.GridPosition, _hoveredCellPos);
 
                 if (moveCmd.Validate())
@@ -214,7 +237,6 @@ public class HexMapView : MonoBehaviour
                 }
                 else
                 {
-                    // 【🔥提示】移动路径太长或被阻挡
                     UI_BattleMain.Instance?.ShowBroadcastMessage("无法到达！(时素TU不足或被阻挡)");
                 }
                 break;
@@ -231,7 +253,6 @@ public class HexMapView : MonoBehaviour
                     }
                     else
                     {
-                        // 【🔥提示】超过攻击距离
                         UI_BattleMain.Instance?.ShowBroadcastMessage("无法攻击！(超出攻击距离或TU不足)");
                     }
                 }
@@ -248,7 +269,6 @@ public class HexMapView : MonoBehaviour
                 int dist = GetHexDistance(_selectedUnit.GridPosition, _hoveredCellPos);
                 if (dist <= 0 || dist > skillData.castRange)
                 {
-                    // 【🔥提示】将 Debug.Log 转换为 UI 播报
                     UI_BattleMain.Instance?.ShowBroadcastMessage("超出施法距离！");
                     return;
                 }
@@ -271,7 +291,6 @@ public class HexMapView : MonoBehaviour
 
                 if (!isValidTarget)
                 {
-                    // 【🔥提示】技能无法对这种实体生效
                     UI_BattleMain.Instance?.ShowBroadcastMessage("当前技能无法指定该目标！");
                     return;
                 }
@@ -284,7 +303,6 @@ public class HexMapView : MonoBehaviour
                 }
                 else
                 {
-                    // 【🔥提示】MP或TU资源不足
                     UI_BattleMain.Instance?.ShowBroadcastMessage($"资源不足！需 {skillData.tuCost}TU / {skillData.mpCost}MP");
                 }
                 break;

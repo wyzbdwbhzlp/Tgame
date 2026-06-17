@@ -1474,6 +1474,10 @@ PrefabInstance:
       propertyPath: m_HorizontalAlignment
       value: 2
       objectReference: {fileID: 0}
+    - target: {fileID: 8145403919900658694, guid: a14de1112f1fe9741945f11bbd07030a, type: 3}
+      propertyPath: txtBroadcast
+      value: 
+      objectReference: {fileID: 926358652}
     m_RemovedComponents: []
     m_RemovedGameObjects:
     - {fileID: 3248497369967041925, guid: a14de1112f1fe9741945f11bbd07030a, type: 3}

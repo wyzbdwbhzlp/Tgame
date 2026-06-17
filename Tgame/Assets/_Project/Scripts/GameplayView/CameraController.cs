@@ -19,9 +19,6 @@ public class CameraController : MonoBehaviour
     public float focusZoom = 3.5f;
     public float tweenDuration = 0.4f;
 
-    // ==========================================
-    // 【🔥新增】战斗特写与震屏系统参数
-    // ==========================================
     [Header("💥 战斗镜头表现")]
     [Tooltip("攻击时镜头拉近后的视野大小 (正交模式下越小越近)")]
     public float attackZoomSize = 3.5f;
@@ -45,6 +42,9 @@ public class CameraController : MonoBehaviour
     private Vector3 _dragOrigin;
     private Vector3 _rightClickDownPos;
     public bool IsDragging { get; private set; }
+
+    // 【🔥修复】记录本次右键点击是否合法（是不是点在了空白处而不是 UI 上）
+    private bool _isValidDragStart = false;
 
     private void Awake()
     {
@@ -117,17 +117,29 @@ public class CameraController : MonoBehaviour
         }
     }
 
+    // ==========================================
+    // 【🔥核心修复】绝对安全的拖拽逻辑，死锁 Z 轴并拦截 UI 透传
+    // ==========================================
     private void HandlePan()
     {
         if (Input.GetMouseButtonDown(1))
         {
-            if (EventSystem.current != null && EventSystem.current.IsPointerOverGameObject()) return;
+            // 如果点在 UI 上，标记本次拖拽不合法，直接返回
+            if (EventSystem.current != null && EventSystem.current.IsPointerOverGameObject())
+            {
+                _isValidDragStart = false;
+                return;
+            }
+
+            _isValidDragStart = true;
             _dragOrigin = cam.ScreenToWorldPoint(Input.mousePosition);
+            _dragOrigin.z = 0f; // 强行把基准点的 Z 轴拍扁到 0
             _rightClickDownPos = Input.mousePosition;
             IsDragging = false;
         }
 
-        if (Input.GetMouseButton(1))
+        // 只有在合法起点的情况下，才允许持续拖拽
+        if (Input.GetMouseButton(1) && _isValidDragStart)
         {
             if (!IsDragging && Vector3.Distance(Input.mousePosition, _rightClickDownPos) > 5f)
             {
@@ -137,7 +149,12 @@ public class CameraController : MonoBehaviour
 
             if (IsDragging)
             {
-                Vector3 difference = _dragOrigin - cam.ScreenToWorldPoint(Input.mousePosition);
+                Vector3 currentWorldPos = cam.ScreenToWorldPoint(Input.mousePosition);
+                currentWorldPos.z = 0f; // 强行把当前鼠标的 Z 轴拍扁到 0
+
+                Vector3 difference = _dragOrigin - currentWorldPos;
+                difference.z = 0f; // 绝对锁定，不让差值里带有一丁点 Z 轴偏移！
+
                 transform.position += difference;
                 _manualPosition = transform.position;
             }
@@ -145,6 +162,7 @@ public class CameraController : MonoBehaviour
 
         if (Input.GetMouseButtonUp(1))
         {
+            _isValidDragStart = false; // 抬起鼠标时重置标记
             Invoke(nameof(ResetDragState), 0.05f);
         }
     }
@@ -159,7 +177,7 @@ public class CameraController : MonoBehaviour
             _trackingTarget = null;
             cam.DOKill();
             transform.DOKill();
-            KillCameraTween(); // 清理特写动画
+            KillCameraTween();
 
             _manualZoom = cam.orthographicSize;
         }
@@ -235,16 +253,11 @@ public class CameraController : MonoBehaviour
         cam.DOOrthoSize(executeZoom, tweenDuration).SetEase(Ease.OutCubic);
     }
 
-    // ==========================================
-    // 【🔥核心新增】镜头战斗演出 API
-    // ==========================================
-
     public void ActionZoomIn(Vector3 targetPos)
     {
         if (cam == null) return;
 
         KillCameraTween();
-        // 暂时打断普通的跟随，完全接管镜头
         _isFocusing = false;
         _trackingTarget = null;
 
@@ -258,14 +271,12 @@ public class CameraController : MonoBehaviour
         if (cam == null) return;
         KillCameraTween();
 
-        // 恢复到玩家上一次设定的镜头缩放大小
         cam.DOOrthoSize(_manualZoom, actionZoomDuration).SetEase(Ease.InOutSine);
     }
 
     public void TriggerHitShake()
     {
         if (cam == null) return;
-        // 震动位置，由于我们用 Z 轴，可以限制只在 X,Y 平面震动防止穿帮
         cam.transform.DOShakePosition(shakeDuration, new Vector3(shakeStrength, shakeStrength, 0), 20);
     }
 
