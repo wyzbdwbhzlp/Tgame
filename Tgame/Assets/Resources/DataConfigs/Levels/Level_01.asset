@@ -105,9 +105,13 @@ MonoBehaviour:
     obstacleVariantID: -1
   playerSpawns:
   - characterID: 1001
-    spawnPos: {x: 0, y: -2, z: 2}
+    spawnPos: {x: -1, y: -1, z: 2}
   - characterID: 1002
-    spawnPos: {x: 1, y: -2, z: 1}
+    spawnPos: {x: 0, y: -2, z: 2}
   enemySpawns:
+  - enemyID: 2002
+    spawnPos: {x: 3, y: 1, z: -4}
+  - enemyID: 2003
+    spawnPos: {x: 1, y: 2, z: -3}
   - enemyID: 2001
     spawnPos: {x: 2, y: 2, z: -4}

@@ -29,7 +29,7 @@ MonoBehaviour:
     defense: 60
     speed: 10
     postureValue: 100
-    dodgeRate: 0.05
+    dodgeRate: 0
     critRate: 0.1
     skillIDs: 
     weakness: 0
@@ -51,7 +51,7 @@ MonoBehaviour:
     defense: 60
     speed: 8
     postureValue: 80
-    dodgeRate: 0.1
+    dodgeRate: 0
     critRate: 0.05
     skillIDs: b90b0000
     weakness: 0
@@ -73,7 +73,7 @@ MonoBehaviour:
     defense: 60
     speed: 6
     postureValue: 60
-    dodgeRate: 0.15
+    dodgeRate: 0
     critRate: 0
     skillIDs: 
     weakness: 0
@@ -95,7 +95,7 @@ MonoBehaviour:
     defense: 60
     speed: 4
     postureValue: 40
-    dodgeRate: 0.2
+    dodgeRate: 0
     critRate: 1
     skillIDs: 
     weakness: 0

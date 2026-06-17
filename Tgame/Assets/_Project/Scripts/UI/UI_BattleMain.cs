@@ -61,16 +61,24 @@ public class UI_BattleMain : UIBase
     public RectTransform selectionEffectImage;
     public float selectionEffectOffsetY = 1f;
 
+    [Header("屏幕中央播报")]
+    public TextMeshProUGUI txtBroadcast;
+    // 【🔥修改】将 DOTween 序列改为协程引用
+    private Coroutine _broadcastCoroutine;
+
     private Tweener _selectionScaleTween;
-    // 【🔥修改】改为 Tween 基类，以兼容 Sequence 动画序列
     private Tween _selectionRotateTween;
 
     private bool _isInitialized = false;
     private bool _hasBoundMapEvents = false;
     private RuntimeUnit _currentFocusedUnit = null;
 
-    private void Start() { InitUIBindings(); }
-    public override void OnInit() { base.OnInit(); InitUIBindings(); }
+    public static UI_BattleMain Instance { get; private set; }
+
+    private void Awake() { Instance = this; }
+    private void Start() { Instance = this; InitUIBindings(); }
+    private void OnEnable() { Instance = this; }
+    public override void OnInit() { base.OnInit(); Instance = this; InitUIBindings(); }
 
     private void InitUIBindings()
     {
@@ -79,6 +87,7 @@ public class UI_BattleMain : UIBase
         this.uiLayer = UILayer.Normal;
 
         HideAllPopups();
+        if (txtBroadcast != null) txtBroadcast.gameObject.SetActive(false);
 
         if (btnEndTurn) btnEndTurn.onClick.AddListener(() => TurnManager.Instance.EndPlayerTurn());
         if (btnUndo) btnUndo.onClick.AddListener(() => TurnManager.Instance.UndoLastCommand());
@@ -123,6 +132,85 @@ public class UI_BattleMain : UIBase
 
         _selectionScaleTween?.Kill();
         _selectionRotateTween?.Kill();
+
+        if (_broadcastCoroutine != null) StopCoroutine(_broadcastCoroutine);
+
+        if (Instance == this) Instance = null;
+    }
+
+    // ==========================================
+    // 【🔥绝对防弹版】原生协程动画，无视任何插件异常！
+    // ==========================================
+    public void ShowBroadcastMessage(string message)
+    {
+        Debug.Log($"<color=orange>[UI播报触发]</color> {message}");
+
+        if (txtBroadcast == null) return;
+
+        // 如果当前正在播报，强制停止旧动画
+        if (_broadcastCoroutine != null) StopCoroutine(_broadcastCoroutine);
+
+        // 开启新一轮播报动画
+        _broadcastCoroutine = StartCoroutine(BroadcastRoutine(message));
+    }
+
+    private System.Collections.IEnumerator BroadcastRoutine(string message)
+    {
+        // 1. 强制激活并置顶
+        txtBroadcast.gameObject.SetActive(true);
+        txtBroadcast.transform.SetAsLastSibling();
+        txtBroadcast.text = message;
+
+        // 2. 获取并重置 CanvasGroup
+        CanvasGroup cg = txtBroadcast.GetComponent<CanvasGroup>();
+        if (cg == null) cg = txtBroadcast.gameObject.AddComponent<CanvasGroup>();
+
+        txtBroadcast.rectTransform.anchoredPosition = new Vector2(0, 50f);
+        txtBroadcast.transform.localScale = Vector3.one * 0.8f;
+        cg.alpha = 0f;
+
+        // 阶段一：放大 + 淡入 (0.2秒)
+        float t = 0;
+        while (t < 0.2f)
+        {
+            t += Time.deltaTime;
+            float p = t / 0.2f;
+            cg.alpha = Mathf.Lerp(0f, 1f, p);
+            // 简单的曲线模拟 OutBack 回弹效果
+            float scale = Mathf.Lerp(0.8f, 1.2f, Mathf.Sin(p * Mathf.PI / 2));
+            txtBroadcast.transform.localScale = Vector3.one * scale;
+            yield return null;
+        }
+
+        // 阶段二：稍微回缩 (0.1秒)
+        t = 0;
+        while (t < 0.1f)
+        {
+            t += Time.deltaTime;
+            float p = t / 0.1f;
+            txtBroadcast.transform.localScale = Vector3.Lerp(Vector3.one * 1.2f, Vector3.one, p);
+            yield return null;
+        }
+
+        // 阶段三：悬浮停留展示文字 (1.2秒)
+        yield return new WaitForSeconds(1.2f);
+
+        // 阶段四：向上飘逸 + 淡出 (0.3秒)
+        t = 0;
+        Vector2 startPos = txtBroadcast.rectTransform.anchoredPosition;
+        Vector2 targetPos = startPos + new Vector2(0, 100f);
+        while (t < 0.3f)
+        {
+            t += Time.deltaTime;
+            float p = t / 0.3f;
+            cg.alpha = Mathf.Lerp(1f, 0f, p);
+            txtBroadcast.rectTransform.anchoredPosition = Vector2.Lerp(startPos, targetPos, p);
+            yield return null;
+        }
+
+        // 最终清理
+        txtBroadcast.gameObject.SetActive(false);
+        _broadcastCoroutine = null;
     }
 
     private void BindHoverEffect(Button btn)
@@ -175,9 +263,6 @@ public class UI_BattleMain : UIBase
         }
     }
 
-    // ==========================================
-    // 【🔥黑科技优化】强制修复锚点，并支持无视层级深度查找按钮！
-    // ==========================================
     private void PlayMenuArcAnimation(Transform container)
     {
         List<RectTransform> activeButtons = new List<RectTransform>();
@@ -231,41 +316,26 @@ public class UI_BattleMain : UIBase
         }
     }
 
-    // ==========================================
-    // 【🔥黑科技修改】钟表机械秒针滴答动画 (Tick-Tock)
-    // ==========================================
     private void PlaySelectionEffect()
     {
         if (selectionEffectImage == null) return;
         UpdateSelectionEffectPosition();
         selectionEffectImage.gameObject.SetActive(true);
 
-        // 杀掉上一次的动画，防止连点导致乱跳
         _selectionScaleTween?.Kill();
         _selectionRotateTween?.Kill();
 
-        // 状态归零
         selectionEffectImage.localScale = Vector3.zero;
         selectionEffectImage.localEulerAngles = Vector3.zero;
 
-        // 1. 弹出动画 (果冻弹簧放大)
         _selectionScaleTween = selectionEffectImage.DOScale(Vector3.one, 0.4f).SetEase(Ease.OutBack);
 
-        // 2. 钟表旋转动画序列
         Sequence clockSeq = DOTween.Sequence();
-
-        // 动作A：花费 0.15 秒，以当前角度为基础，相对旋转 -30 度。
-        // Ease.OutBack(2f) 会让它转过去后往回“弹”一下，完美模拟真实钟表秒针的阻尼震颤！
         clockSeq.Append(selectionEffectImage.DORotate(new Vector3(0, 0, -30f), 0.15f, RotateMode.LocalAxisAdd)
                                             .SetEase(Ease.OutBack, 2f));
-
-        // 动作B：停顿 0.85 秒 (与动作A加起来刚好 1 秒一跳)
         clockSeq.AppendInterval(0.85f);
-
-        // 设置为无限循环
         clockSeq.SetLoops(-1);
 
-        // 赋值给全局引用以便关闭面板时销毁
         _selectionRotateTween = clockSeq;
     }
 
@@ -273,7 +343,12 @@ public class UI_BattleMain : UIBase
     {
         if (unitStatusListContainer == null || unitStatusItemPrefab == null || UnitManager.Instance == null) return;
 
-        foreach (Transform child in unitStatusListContainer) Destroy(child.gameObject);
+        foreach (Transform child in unitStatusListContainer)
+        {
+            child.DOKill();
+            Destroy(child.gameObject);
+        }
+        unitStatusListContainer.DetachChildren();
 
         var allUnits = UnitManager.Instance.GetAllUnits().ToList();
         foreach (var unit in allUnits)
@@ -379,7 +454,12 @@ public class UI_BattleMain : UIBase
         skillListPanel.SetActive(true);
         UpdatePopupPosition(skillListPanel.GetComponent<RectTransform>());
 
-        foreach (Transform child in skillListContainer) Destroy(child.gameObject);
+        foreach (Transform child in skillListContainer)
+        {
+            child.DOKill();
+            Destroy(child.gameObject);
+        }
+        skillListContainer.DetachChildren();
 
         foreach (int skillID in skillIDs)
         {
@@ -433,6 +513,13 @@ public class UI_BattleMain : UIBase
     private void RequestMockAction(string actionName, int cost)
     {
         if (HexMapView.Instance == null || HexMapView.Instance.SelectedUnit == null) return;
+
+        if (!TurnManager.Instance.CanScheduleAction(HexMapView.Instance.SelectedUnit.InstanceID, cost))
+        {
+            ShowBroadcastMessage($"时素(TU)不足！需要 {cost} 点");
+            return;
+        }
+
         MockActionCommand cmd = new MockActionCommand(HexMapView.Instance.SelectedUnit.InstanceID, actionName, cost);
         if (cmd.Validate()) { TurnManager.Instance.AddCommand(cmd); HexMapView.Instance.CancelSelection(); }
     }
@@ -440,7 +527,14 @@ public class UI_BattleMain : UIBase
     private void SpawnTUBars()
     {
         if (tuListContainer == null || tuBarPrefab == null || UnitManager.Instance == null) return;
-        foreach (Transform child in tuListContainer) Destroy(child.gameObject);
+
+        foreach (Transform child in tuListContainer)
+        {
+            child.DOKill();
+            Destroy(child.gameObject);
+        }
+        tuListContainer.DetachChildren();
+
         _tuBarItems.Clear();
 
         var allUnits = UnitManager.Instance.GetAllUnits().ToList();
@@ -476,9 +570,6 @@ public class UI_BattleMain : UIBase
 
         foreach (var item in _tuBarItems)
         {
-            // ==========================================
-            // 【🔥核心修改】拉取具体的动作队列数据，传给动态生成的时素条！
-            // ==========================================
             var actions = TurnManager.Instance.GetUnitScheduledActions(item.GetBoundUnitID());
             item.UpdateTimeline(actions, maxTU, item.GetBoundUnitID() == selectedUnitID);
         }

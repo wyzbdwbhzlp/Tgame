@@ -11,9 +11,6 @@ public class HexMapView : MonoBehaviour
 {
     public static HexMapView Instance { get; private set; }
 
-    // ==========================================
-    // 【🔥核心修改】改为引用统一的美术配置表
-    // ==========================================
     [Header("真实美术资产配置")]
     public MapVisualConfigSO visualConfig;
 
@@ -68,7 +65,6 @@ public class HexMapView : MonoBehaviour
 
         Sprite solidHexSprite = CreateSolidHexSprite();
 
-        // 提取引用，让下面的代码可以无缝使用
         Sprite[] groundSprites = visualConfig.groundSprites;
         Sprite[] obstacleSprites = visualConfig.obstacleSprites;
 
@@ -189,6 +185,9 @@ public class HexMapView : MonoBehaviour
         }
     }
 
+    // ==========================================
+    // 【🔥核心升级】接入 UI_BattleMain 的错误提示播报
+    // ==========================================
     private void HandleLeftClick()
     {
         GridCell clickedCell = GridSystem.Instance.GetCell(_hoveredCellPos);
@@ -207,14 +206,38 @@ public class HexMapView : MonoBehaviour
             case InteractionMode.SelectMoveTarget:
                 if (_hoveredCellPos == _selectedUnit.GridPosition) return;
                 MoveCommand moveCmd = new MoveCommand(_selectedUnit.InstanceID, _selectedUnit.GridPosition, _hoveredCellPos);
-                if (moveCmd.Validate()) { TurnManager.Instance.AddCommand(moveCmd); CancelSelection(); }
+
+                if (moveCmd.Validate())
+                {
+                    TurnManager.Instance.AddCommand(moveCmd);
+                    CancelSelection();
+                }
+                else
+                {
+                    // 【🔥提示】移动路径太长或被阻挡
+                    UI_BattleMain.Instance?.ShowBroadcastMessage("无法到达！(时素TU不足或被阻挡)");
+                }
                 break;
 
             case InteractionMode.SelectAttackTarget:
                 if (clickedCell.OccupantUnitID != -1 && clickedCell.OccupantUnitID != _selectedUnit.InstanceID)
                 {
                     AttackCommand atkCmd = new AttackCommand(_selectedUnit.InstanceID, clickedCell.OccupantUnitID);
-                    if (atkCmd.Validate()) { TurnManager.Instance.AddCommand(atkCmd); CancelSelection(); }
+
+                    if (atkCmd.Validate())
+                    {
+                        TurnManager.Instance.AddCommand(atkCmd);
+                        CancelSelection();
+                    }
+                    else
+                    {
+                        // 【🔥提示】超过攻击距离
+                        UI_BattleMain.Instance?.ShowBroadcastMessage("无法攻击！(超出攻击距离或TU不足)");
+                    }
+                }
+                else
+                {
+                    UI_BattleMain.Instance?.ShowBroadcastMessage("该位置没有可攻击的目标！");
                 }
                 break;
 
@@ -225,7 +248,8 @@ public class HexMapView : MonoBehaviour
                 int dist = GetHexDistance(_selectedUnit.GridPosition, _hoveredCellPos);
                 if (dist <= 0 || dist > skillData.castRange)
                 {
-                    Debug.LogWarning("[交互] 目标格子超出了施法距离！");
+                    // 【🔥提示】将 Debug.Log 转换为 UI 播报
+                    UI_BattleMain.Instance?.ShowBroadcastMessage("超出施法距离！");
                     return;
                 }
 
@@ -247,7 +271,8 @@ public class HexMapView : MonoBehaviour
 
                 if (!isValidTarget)
                 {
-                    Debug.LogWarning($"[交互] 目标不合法！当前技能仅允许瞄准: {skillData.targetMask}");
+                    // 【🔥提示】技能无法对这种实体生效
+                    UI_BattleMain.Instance?.ShowBroadcastMessage("当前技能无法指定该目标！");
                     return;
                 }
 
@@ -259,7 +284,8 @@ public class HexMapView : MonoBehaviour
                 }
                 else
                 {
-                    Debug.LogWarning("[交互] 时素(TU)或魔法值(MP)不足，无法释放该技能！");
+                    // 【🔥提示】MP或TU资源不足
+                    UI_BattleMain.Instance?.ShowBroadcastMessage($"资源不足！需 {skillData.tuCost}TU / {skillData.mpCost}MP");
                 }
                 break;
         }
@@ -451,6 +477,7 @@ public class HexMapView : MonoBehaviour
 
         OnUnitSelected?.Invoke(_selectedUnit);
     }
+
     public void ClearPhantom(int unitID)
     {
         if (_phantomDict.TryGetValue(unitID, out GameObject phantom))
