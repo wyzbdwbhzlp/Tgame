@@ -14,5 +14,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   groundSprites:
   - {fileID: 21300000, guid: 1beed62135bb05347a4112deea0bf4a9, type: 3}
+  - {fileID: 21300000, guid: 4d46836889b85674cb4a1653ad08fc73, type: 3}
+  - {fileID: 21300000, guid: 0adf4f81faad7f0449714059c9bf55b3, type: 3}
+  - {fileID: 21300000, guid: cdba52e6e81aa3f49a9e01ae135ac34d, type: 3}
+  - {fileID: 21300000, guid: aae0bd2015f24044c9aa8815e75c8bcf, type: 3}
+  - {fileID: 21300000, guid: b1019a4735674fb4293f2d5799e2e622, type: 3}
+  - {fileID: 21300000, guid: 4349d0dff84d31643b7a120db03843ba, type: 3}
+  - {fileID: 21300000, guid: 2cdfce7aef15e854bbb22563c05b0474, type: 3}
+  - {fileID: 21300000, guid: 7ed67a6a94a57e44185d2e44ee508be0, type: 3}
   obstacleSprites:
   - {fileID: -1089711693698482027, guid: c9065a0caeb606d4e807f90f3c4d5c06, type: 3}
+  - {fileID: 5584020341149594520, guid: f5090101ed6a1034abb2cb8b43f66639, type: 3}
+  - {fileID: 3182194123271858000, guid: df083016f0201d345a843f4b1ee101c7, type: 3}

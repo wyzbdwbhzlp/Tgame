@@ -1134,15 +1134,19 @@ MonoBehaviour:
   hexSize: 1
   visualConfig: {fileID: 11400000, guid: 2adf44b5e19f4b34683011747d86257b, type: 2}
   groundVariantNames:
-  - "0: \u9ED8\u8BA4\u8349\u5730"
-  - "1: \u6CE5\u571F"
-  - "2: \u6C99\u5730"
-  - "3: \u77F3\u677F\u8DEF"
+  - "0: \u9ED8\u8BA4"
+  - "1: \u5730\u5757"
+  - "2: \u5730\u5757"
+  - "3: \u5730\u5757"
+  - "4: \u5730\u5757"
+  - "5: \u5730\u5757"
+  - "6: \u5730\u5757"
+  - "7: \u5730\u5757"
+  - "8: \u5730\u5757"
   obstacleVariantNames:
-  - "0: \u666E\u901A\u5CA9\u77F3"
+  - "0: \u5C0F\u6811"
   - "1: \u5927\u6811"
-  - "2: \u5E9F\u589F\u5899\u58C1"
-  - "3: \u6C34\u5751"
+  - "3: \u77F3\u5934"
   playerVariantNames:
   - "\u7EC8\u88C1 (ID:1001)"
   - "\u591C\u70EC (ID:1002)"
@@ -1187,7 +1191,7 @@ MonoBehaviour:
     obstacleVariantID: -1
   - position: {x: -1, y: 0, z: 1}
     groundVariantID: 0
-    obstacleVariantID: -1
+    obstacleVariantID: 0
   - position: {x: -2, y: 0, z: 2}
     groundVariantID: 0
     obstacleVariantID: -1
@@ -1212,9 +1216,24 @@ MonoBehaviour:
   - position: {x: 7, y: 1, z: -8}
     groundVariantID: 0
     obstacleVariantID: -1
+  - position: {x: -3, y: 0, z: 3}
+    groundVariantID: 1
+    obstacleVariantID: -1
+  - position: {x: -2, y: 1, z: 1}
+    groundVariantID: 0
+    obstacleVariantID: 0
+  - position: {x: 0, y: 1, z: -1}
+    groundVariantID: 0
+    obstacleVariantID: 1
+  - position: {x: -1, y: 1, z: 0}
+    groundVariantID: 0
+    obstacleVariantID: -1
+  - position: {x: 0, y: 2, z: -2}
+    groundVariantID: 0
+    obstacleVariantID: -1
   playerSpawns:
   - position: {x: -3, y: -1, z: 4}
-    unitID: 1001
+    unitID: 1002
   enemySpawns:
   - position: {x: 7, y: 1, z: -8}
     unitID: 2001
