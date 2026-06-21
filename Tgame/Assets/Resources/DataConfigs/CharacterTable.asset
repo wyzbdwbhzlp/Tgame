@@ -41,7 +41,7 @@ MonoBehaviour:
     attackRange: 3
     portraitSprite: {fileID: -872674544449908609, guid: 410c6218e9218ea48a1ad5b71b4d397e, type: 3}
     headIcon: {fileID: -1043397917540602825, guid: 554a1fdb94d4da649bb05c22a73c95f3, type: 3}
-    characterPrefab: {fileID: 2002037306488048912, guid: 103c65e3986b40042ba466dfd3f25777, type: 3}
+    characterPrefab: {fileID: 2002037306488048912, guid: 82a70318c2729ce45a75ac84f161e4ee, type: 3}
     attackVFXID: LafuSlash
     attackHitDelay: 0.5
     damagePopupDelay: 0.2
@@ -85,7 +85,7 @@ MonoBehaviour:
     attackRange: 3
     portraitSprite: {fileID: -6965429848039762513, guid: 4292339b28e2cb7469fa663f1c0dc6da, type: 3}
     headIcon: {fileID: -3076417761255253669, guid: 43d03a269201ddc49bc13adbfe3e7b6d, type: 3}
-    characterPrefab: {fileID: 4297275628343576471, guid: edd95d5357fe82e45b278097611fe77b, type: 3}
+    characterPrefab: {fileID: 4297275628343576471, guid: 29927476de97f48448baaef6da724045, type: 3}
     attackVFXID: Hit_Default
     attackHitDelay: 0.5
     damagePopupDelay: 0.2

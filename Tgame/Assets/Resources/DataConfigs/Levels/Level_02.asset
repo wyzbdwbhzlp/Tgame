@@ -17,52 +17,52 @@ MonoBehaviour:
   mapCells: []
   cells:
   - position: {x: -3, y: -1, z: 4}
-    groundVariantID: 0
+    groundVariantID: 3
     obstacleVariantID: -1
   - position: {x: -2, y: -1, z: 3}
-    groundVariantID: 0
-    obstacleVariantID: -1
+    groundVariantID: 3
+    obstacleVariantID: 1
   - position: {x: -1, y: -1, z: 2}
-    groundVariantID: 0
+    groundVariantID: 5
     obstacleVariantID: -1
   - position: {x: 0, y: -1, z: 1}
-    groundVariantID: 0
+    groundVariantID: 5
     obstacleVariantID: -1
   - position: {x: 1, y: -1, z: 0}
-    groundVariantID: 0
+    groundVariantID: 5
     obstacleVariantID: -1
   - position: {x: 1, y: 0, z: -1}
-    groundVariantID: 0
+    groundVariantID: 7
     obstacleVariantID: -1
   - position: {x: 2, y: -1, z: -1}
-    groundVariantID: 0
+    groundVariantID: 5
     obstacleVariantID: -1
   - position: {x: 2, y: 0, z: -2}
-    groundVariantID: 0
+    groundVariantID: 7
     obstacleVariantID: -1
   - position: {x: 3, y: 0, z: -3}
-    groundVariantID: 0
+    groundVariantID: 7
     obstacleVariantID: -1
   - position: {x: 0, y: 0, z: 0}
-    groundVariantID: 0
+    groundVariantID: 5
     obstacleVariantID: -1
   - position: {x: -1, y: 0, z: 1}
-    groundVariantID: 0
+    groundVariantID: 5
     obstacleVariantID: -1
   - position: {x: -2, y: 0, z: 2}
-    groundVariantID: 0
-    obstacleVariantID: -1
+    groundVariantID: 5
+    obstacleVariantID: 1
   - position: {x: 1, y: 1, z: -2}
-    groundVariantID: 0
+    groundVariantID: 7
     obstacleVariantID: -1
   - position: {x: 2, y: 1, z: -3}
-    groundVariantID: 0
-    obstacleVariantID: -1
+    groundVariantID: 7
+    obstacleVariantID: 2
   - position: {x: 3, y: 1, z: -4}
-    groundVariantID: 0
+    groundVariantID: 7
     obstacleVariantID: -1
   - position: {x: 4, y: 1, z: -5}
-    groundVariantID: 0
+    groundVariantID: 7
     obstacleVariantID: -1
   - position: {x: 5, y: 1, z: -6}
     groundVariantID: 0
@@ -73,9 +73,91 @@ MonoBehaviour:
   - position: {x: 7, y: 1, z: -8}
     groundVariantID: 0
     obstacleVariantID: -1
+  - position: {x: -2, y: -2, z: 4}
+    groundVariantID: 3
+    obstacleVariantID: -1
+  - position: {x: -1, y: -2, z: 3}
+    groundVariantID: 3
+    obstacleVariantID: -1
+  - position: {x: 0, y: -2, z: 2}
+    groundVariantID: 3
+    obstacleVariantID: -1
+  - position: {x: 1, y: -2, z: 1}
+    groundVariantID: 3
+    obstacleVariantID: -1
+  - position: {x: 2, y: -2, z: 0}
+    groundVariantID: 3
+    obstacleVariantID: -1
+  - position: {x: 3, y: -2, z: -1}
+    groundVariantID: 5
+    obstacleVariantID: -1
+  - position: {x: 3, y: -1, z: -2}
+    groundVariantID: 7
+    obstacleVariantID: -1
+  - position: {x: 0, y: 1, z: -1}
+    groundVariantID: 7
+    obstacleVariantID: -1
+  - position: {x: 4, y: 0, z: -4}
+    groundVariantID: 7
+    obstacleVariantID: -1
+  - position: {x: 2, y: 2, z: -4}
+    groundVariantID: 7
+    obstacleVariantID: 2
+  - position: {x: 3, y: 2, z: -5}
+    groundVariantID: 8
+    obstacleVariantID: -1
+  - position: {x: 4, y: 2, z: -6}
+    groundVariantID: 8
+    obstacleVariantID: -1
+  - position: {x: 5, y: 2, z: -7}
+    groundVariantID: 8
+    obstacleVariantID: -1
+  - position: {x: 6, y: 2, z: -8}
+    groundVariantID: 8
+    obstacleVariantID: -1
+  - position: {x: 7, y: 0, z: -7}
+    groundVariantID: 8
+    obstacleVariantID: 1
+  - position: {x: -4, y: 2, z: 2}
+    groundVariantID: 2
+    obstacleVariantID: 1
+  - position: {x: -4, y: 3, z: 1}
+    groundVariantID: 8
+    obstacleVariantID: -1
+  - position: {x: -5, y: 3, z: 2}
+    groundVariantID: 1
+    obstacleVariantID: 0
+  - position: {x: -5, y: 2, z: 3}
+    groundVariantID: 2
+    obstacleVariantID: -1
+  - position: {x: 4, y: -4, z: 0}
+    groundVariantID: 2
+    obstacleVariantID: -1
+  - position: {x: 5, y: -4, z: -1}
+    groundVariantID: 4
+    obstacleVariantID: 1
+  - position: {x: 5, y: -3, z: -2}
+    groundVariantID: 6
+    obstacleVariantID: 0
+  - position: {x: 7, y: -2, z: -5}
+    groundVariantID: 6
+    obstacleVariantID: 2
+  - position: {x: 8, y: -3, z: -5}
+    groundVariantID: 6
+    obstacleVariantID: 0
+  - position: {x: 7, y: -3, z: -4}
+    groundVariantID: 6
+    obstacleVariantID: -1
+  - position: {x: 1, y: 4, z: -5}
+    groundVariantID: 6
+    obstacleVariantID: 0
   playerSpawns:
+  - characterID: 1001
+    spawnPos: {x: 3, y: -2, z: -1}
   - characterID: 1002
-    spawnPos: {x: -3, y: -1, z: 4}
+    spawnPos: {x: 1, y: -1, z: 0}
   enemySpawns:
   - enemyID: 2001
-    spawnPos: {x: 7, y: 1, z: -8}
+    spawnPos: {x: 6, y: 1, z: -7}
+  - enemyID: 2001
+    spawnPos: {x: 4, y: 2, z: -6}

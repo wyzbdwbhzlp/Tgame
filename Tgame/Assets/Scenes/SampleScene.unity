@@ -1160,83 +1160,234 @@ MonoBehaviour:
   enemyVariantIDs: d1070000d2070000d3070000
   cells:
   - position: {x: -3, y: -1, z: 4}
-    groundVariantID: 0
+    groundVariantID: 1
     obstacleVariantID: -1
   - position: {x: -2, y: -1, z: 3}
-    groundVariantID: 0
+    groundVariantID: 3
     obstacleVariantID: -1
   - position: {x: -1, y: -1, z: 2}
-    groundVariantID: 0
+    groundVariantID: 3
+    obstacleVariantID: -1
+  - position: {x: -2, y: -2, z: 4}
+    groundVariantID: 1
+    obstacleVariantID: 2
+  - position: {x: -1, y: -2, z: 3}
+    groundVariantID: 1
+    obstacleVariantID: -1
+  - position: {x: 0, y: -2, z: 2}
+    groundVariantID: 1
+    obstacleVariantID: -1
+  - position: {x: -2, y: 0, z: 2}
+    groundVariantID: 3
+    obstacleVariantID: -1
+  - position: {x: -3, y: 0, z: 3}
+    groundVariantID: 3
     obstacleVariantID: -1
   - position: {x: 0, y: -1, z: 1}
-    groundVariantID: 0
-    obstacleVariantID: -1
-  - position: {x: 1, y: -1, z: 0}
-    groundVariantID: 0
-    obstacleVariantID: -1
-  - position: {x: 1, y: 0, z: -1}
-    groundVariantID: 0
-    obstacleVariantID: -1
-  - position: {x: 2, y: -1, z: -1}
-    groundVariantID: 0
-    obstacleVariantID: -1
-  - position: {x: 2, y: 0, z: -2}
-    groundVariantID: 0
-    obstacleVariantID: -1
-  - position: {x: 3, y: 0, z: -3}
-    groundVariantID: 0
-    obstacleVariantID: -1
-  - position: {x: 0, y: 0, z: 0}
-    groundVariantID: 0
+    groundVariantID: 3
     obstacleVariantID: -1
   - position: {x: -1, y: 0, z: 1}
-    groundVariantID: 0
-    obstacleVariantID: 0
-  - position: {x: -2, y: 0, z: 2}
-    groundVariantID: 0
+    groundVariantID: 3
     obstacleVariantID: -1
-  - position: {x: 1, y: 1, z: -2}
-    groundVariantID: 0
+  - position: {x: -2, y: 1, z: 1}
+    groundVariantID: 4
     obstacleVariantID: -1
-  - position: {x: 2, y: 1, z: -3}
-    groundVariantID: 0
+  - position: {x: -1, y: 1, z: 0}
+    groundVariantID: 4
     obstacleVariantID: -1
-  - position: {x: 3, y: 1, z: -4}
-    groundVariantID: 0
+  - position: {x: 0, y: 0, z: 0}
+    groundVariantID: 4
     obstacleVariantID: -1
-  - position: {x: 4, y: 1, z: -5}
+  - position: {x: 0, y: 1, z: -1}
+    groundVariantID: 4
+    obstacleVariantID: 2
+  - position: {x: -1, y: 2, z: -1}
+    groundVariantID: 4
+    obstacleVariantID: -1
+  - position: {x: 0, y: 2, z: -2}
+    groundVariantID: 6
+    obstacleVariantID: -1
+  - position: {x: -1, y: 3, z: -2}
+    groundVariantID: 6
+    obstacleVariantID: -1
+  - position: {x: 0, y: 3, z: -3}
+    groundVariantID: 6
+    obstacleVariantID: -1
+  - position: {x: 2, y: 3, z: -5}
+    groundVariantID: 6
+    obstacleVariantID: -1
+  - position: {x: 0, y: 4, z: -4}
+    groundVariantID: 6
+    obstacleVariantID: -1
+  - position: {x: 1, y: 4, z: -5}
+    groundVariantID: 6
+    obstacleVariantID: -1
+  - position: {x: 2, y: 2, z: -4}
+    groundVariantID: 6
+    obstacleVariantID: -1
+  - position: {x: 1, y: -2, z: 1}
+    groundVariantID: 8
+    obstacleVariantID: -1
+  - position: {x: 2, y: -2, z: 0}
+    groundVariantID: 8
+    obstacleVariantID: -1
+  - position: {x: 3, y: -2, z: -1}
+    groundVariantID: 8
+    obstacleVariantID: -1
+  - position: {x: 4, y: -3, z: -1}
+    groundVariantID: 8
+    obstacleVariantID: -1
+  - position: {x: 5, y: -3, z: -2}
+    groundVariantID: 7
+    obstacleVariantID: -1
+  - position: {x: 5, y: 0, z: -5}
     groundVariantID: 0
     obstacleVariantID: -1
   - position: {x: 5, y: 1, z: -6}
     groundVariantID: 0
     obstacleVariantID: -1
-  - position: {x: 6, y: 1, z: -7}
+  - position: {x: 4, y: 1, z: -5}
     groundVariantID: 0
     obstacleVariantID: -1
-  - position: {x: 7, y: 1, z: -8}
+  - position: {x: -3, y: 1, z: 2}
+    groundVariantID: 3
+    obstacleVariantID: -1
+  - position: {x: -4, y: 0, z: 4}
+    groundVariantID: 3
+    obstacleVariantID: 0
+  - position: {x: -2, y: 2, z: 0}
+    groundVariantID: 4
+    obstacleVariantID: -1
+  - position: {x: -3, y: 2, z: 1}
+    groundVariantID: 4
+    obstacleVariantID: -1
+  - position: {x: -2, y: 3, z: -1}
+    groundVariantID: 6
+    obstacleVariantID: -1
+  - position: {x: -1, y: 4, z: -3}
+    groundVariantID: 6
+    obstacleVariantID: -1
+  - position: {x: -2, y: 4, z: -2}
+    groundVariantID: 6
+    obstacleVariantID: 2
+  - position: {x: -2, y: 5, z: -3}
+    groundVariantID: 6
+    obstacleVariantID: -1
+  - position: {x: -1, y: 5, z: -4}
+    groundVariantID: 6
+    obstacleVariantID: 2
+  - position: {x: 0, y: 5, z: -5}
+    groundVariantID: 6
+    obstacleVariantID: 0
+  - position: {x: -3, y: 4, z: -1}
+    groundVariantID: 7
+    obstacleVariantID: -1
+  - position: {x: -4, y: 4, z: 0}
+    groundVariantID: 7
+    obstacleVariantID: 0
+  - position: {x: -5, y: 4, z: 1}
+    groundVariantID: 7
+    obstacleVariantID: 1
+  - position: {x: 7, y: -4, z: -3}
+    groundVariantID: 7
+    obstacleVariantID: -1
+  - position: {x: 6, y: -4, z: -2}
+    groundVariantID: 7
+    obstacleVariantID: -1
+  - position: {x: 7, y: -3, z: -4}
+    groundVariantID: 7
+    obstacleVariantID: -1
+  - position: {x: 8, y: -2, z: -6}
+    groundVariantID: 7
+    obstacleVariantID: -1
+  - position: {x: 7, y: -1, z: -6}
+    groundVariantID: 7
+    obstacleVariantID: -1
+  - position: {x: 6, y: 0, z: -6}
+    groundVariantID: 7
+    obstacleVariantID: -1
+  - position: {x: 8, y: -3, z: -5}
+    groundVariantID: 7
+    obstacleVariantID: -1
+  - position: {x: 3, y: 0, z: -3}
+    groundVariantID: 7
+    obstacleVariantID: 1
+  - position: {x: 5, y: -4, z: -1}
     groundVariantID: 0
-    obstacleVariantID: -1
-  - position: {x: -3, y: 0, z: 3}
-    groundVariantID: 1
-    obstacleVariantID: -1
-  - position: {x: -2, y: 1, z: 1}
+    obstacleVariantID: 2
+  - position: {x: 9, y: -4, z: -5}
     groundVariantID: 0
     obstacleVariantID: 0
-  - position: {x: 0, y: 1, z: -1}
+  - position: {x: -7, y: 3, z: 4}
+    groundVariantID: 0
+    obstacleVariantID: 0
+  - position: {x: -7, y: 2, z: 5}
+    groundVariantID: 0
+    obstacleVariantID: 2
+  - position: {x: -6, y: 3, z: 3}
+    groundVariantID: 0
+    obstacleVariantID: -1
+  - position: {x: -8, y: 3, z: 5}
+    groundVariantID: 0
+    obstacleVariantID: -1
+  - position: {x: 4, y: -1, z: -3}
+    groundVariantID: 0
+    obstacleVariantID: 2
+  - position: {x: 5, y: 2, z: -7}
+    groundVariantID: 0
+    obstacleVariantID: -1
+  - position: {x: 5, y: 3, z: -8}
+    groundVariantID: 0
+    obstacleVariantID: -1
+  - position: {x: 4, y: 4, z: -8}
+    groundVariantID: 0
+    obstacleVariantID: -1
+  - position: {x: 3, y: 5, z: -8}
+    groundVariantID: 0
+    obstacleVariantID: -1
+  - position: {x: 2, y: 5, z: -7}
+    groundVariantID: 0
+    obstacleVariantID: -1
+  - position: {x: 1, y: 5, z: -6}
+    groundVariantID: 0
+    obstacleVariantID: -1
+  - position: {x: 5, y: 5, z: -10}
+    groundVariantID: 0
+    obstacleVariantID: 2
+  - position: {x: 6, y: 5, z: -11}
     groundVariantID: 0
     obstacleVariantID: 1
-  - position: {x: -1, y: 1, z: 0}
+  - position: {x: 6, y: 4, z: -10}
     groundVariantID: 0
-    obstacleVariantID: -1
-  - position: {x: 0, y: 2, z: -2}
+    obstacleVariantID: 2
+  - position: {x: 9, y: 0, z: -9}
     groundVariantID: 0
-    obstacleVariantID: -1
+    obstacleVariantID: 2
+  - position: {x: 2, y: 7, z: -9}
+    groundVariantID: 0
+    obstacleVariantID: 2
+  - position: {x: -1, y: 8, z: -7}
+    groundVariantID: 0
+    obstacleVariantID: 2
+  - position: {x: 1, y: 7, z: -8}
+    groundVariantID: 0
+    obstacleVariantID: 0
   playerSpawns:
-  - position: {x: -3, y: -1, z: 4}
+  - position: {x: -1, y: 1, z: 0}
+    unitID: 1001
+  - position: {x: 0, y: -1, z: 1}
     unitID: 1002
+  - position: {x: -3, y: 1, z: 2}
+    unitID: 1003
   enemySpawns:
-  - position: {x: 7, y: 1, z: -8}
+  - position: {x: -1, y: 3, z: -2}
     unitID: 2001
+  - position: {x: 0, y: 2, z: -2}
+    unitID: 2001
+  - position: {x: -2, y: 3, z: -1}
+    unitID: 2001
+  - position: {x: 0, y: 3, z: -3}
+    unitID: 2003
 --- !u!4 &1355006662
 Transform:
   m_ObjectHideFlags: 0
