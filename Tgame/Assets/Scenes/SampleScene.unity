@@ -846,7 +846,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f9f5da79355ac32459f049d6d33bf022, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  masterLevelTable: {fileID: 11400000, guid: 0efae57a1b94da94798d9dc0737fb98c, type: 2}
+  masterLevelTable: {fileID: 11400000, guid: cf88db677f838184c89fe39c519a326b, type: 2}
   currentLevelIndex: 0
 --- !u!114 &1070768715
 MonoBehaviour:
@@ -1130,7 +1130,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 59c5c55b27edde64bbdda7819317efe4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  targetLevel: {fileID: 11400000, guid: 03d4a70092e466b41816792a11d27b81, type: 2}
+  targetLevel: {fileID: 11400000, guid: 518fe38830191044ca12015d2835c9b4, type: 2}
   hexSize: 1
   visualConfig: {fileID: 11400000, guid: 2adf44b5e19f4b34683011747d86257b, type: 2}
   groundVariantNames:
@@ -1155,104 +1155,68 @@ MonoBehaviour:
   - "\u673A\u5668\u4EBA(ID:2003)"
   enemyVariantIDs: d1070000d2070000d3070000
   cells:
-  - position: {x: -2, y: 0, z: 2}
-    groundVariantID: 0
-    obstacleVariantID: -1
-  - position: {x: -2, y: 1, z: 1}
-    groundVariantID: 0
-    obstacleVariantID: -1
-  - position: {x: -1, y: 0, z: 1}
-    groundVariantID: 0
-    obstacleVariantID: 0
-  - position: {x: -1, y: 1, z: 0}
-    groundVariantID: 0
-    obstacleVariantID: -1
-  - position: {x: 0, y: 0, z: 0}
-    groundVariantID: 0
-    obstacleVariantID: 0
-  - position: {x: 0, y: 1, z: -1}
-    groundVariantID: 0
-    obstacleVariantID: -1
-  - position: {x: 1, y: 0, z: -1}
-    groundVariantID: 0
-    obstacleVariantID: -1
-  - position: {x: 1, y: 1, z: -2}
-    groundVariantID: 0
-    obstacleVariantID: 0
-  - position: {x: 2, y: 0, z: -2}
-    groundVariantID: 0
-    obstacleVariantID: -1
-  - position: {x: 2, y: 1, z: -3}
-    groundVariantID: 0
-    obstacleVariantID: 0
-  - position: {x: 1, y: 2, z: -3}
-    groundVariantID: 0
-    obstacleVariantID: -1
-  - position: {x: 0, y: 2, z: -2}
-    groundVariantID: 0
-    obstacleVariantID: -1
-  - position: {x: -1, y: 2, z: -1}
-    groundVariantID: 0
-    obstacleVariantID: -1
-  - position: {x: -2, y: 2, z: 0}
-    groundVariantID: 0
-    obstacleVariantID: -1
-  - position: {x: -1, y: -1, z: 2}
-    groundVariantID: 0
-    obstacleVariantID: -1
-  - position: {x: 0, y: -2, z: 2}
-    groundVariantID: 0
-    obstacleVariantID: -1
-  - position: {x: 0, y: -1, z: 1}
-    groundVariantID: 0
-    obstacleVariantID: -1
-  - position: {x: 1, y: -2, z: 1}
-    groundVariantID: 0
-    obstacleVariantID: -1
-  - position: {x: 1, y: -1, z: 0}
-    groundVariantID: 0
-    obstacleVariantID: -1
-  - position: {x: 2, y: -1, z: -1}
-    groundVariantID: 0
-    obstacleVariantID: -1
-  - position: {x: 3, y: -1, z: -2}
-    groundVariantID: 0
-    obstacleVariantID: -1
-  - position: {x: 3, y: 0, z: -3}
-    groundVariantID: 0
-    obstacleVariantID: -1
-  - position: {x: 4, y: 0, z: -4}
-    groundVariantID: 0
-    obstacleVariantID: -1
-  - position: {x: 3, y: 1, z: -4}
-    groundVariantID: 0
-    obstacleVariantID: -1
-  - position: {x: 2, y: 2, z: -4}
+  - position: {x: -3, y: -1, z: 4}
     groundVariantID: 0
     obstacleVariantID: -1
   - position: {x: -2, y: -1, z: 3}
     groundVariantID: 0
     obstacleVariantID: -1
-  - position: {x: -3, y: 0, z: 3}
+  - position: {x: -1, y: -1, z: 2}
     groundVariantID: 0
     obstacleVariantID: -1
-  - position: {x: -3, y: 1, z: 2}
+  - position: {x: 0, y: -1, z: 1}
     groundVariantID: 0
     obstacleVariantID: -1
-  - position: {x: -3, y: 2, z: 1}
+  - position: {x: 1, y: -1, z: 0}
+    groundVariantID: 0
+    obstacleVariantID: -1
+  - position: {x: 1, y: 0, z: -1}
+    groundVariantID: 0
+    obstacleVariantID: -1
+  - position: {x: 2, y: -1, z: -1}
+    groundVariantID: 0
+    obstacleVariantID: -1
+  - position: {x: 2, y: 0, z: -2}
+    groundVariantID: 0
+    obstacleVariantID: -1
+  - position: {x: 3, y: 0, z: -3}
+    groundVariantID: 0
+    obstacleVariantID: -1
+  - position: {x: 0, y: 0, z: 0}
+    groundVariantID: 0
+    obstacleVariantID: -1
+  - position: {x: -1, y: 0, z: 1}
+    groundVariantID: 0
+    obstacleVariantID: -1
+  - position: {x: -2, y: 0, z: 2}
+    groundVariantID: 0
+    obstacleVariantID: -1
+  - position: {x: 1, y: 1, z: -2}
+    groundVariantID: 0
+    obstacleVariantID: -1
+  - position: {x: 2, y: 1, z: -3}
+    groundVariantID: 0
+    obstacleVariantID: -1
+  - position: {x: 3, y: 1, z: -4}
+    groundVariantID: 0
+    obstacleVariantID: -1
+  - position: {x: 4, y: 1, z: -5}
+    groundVariantID: 0
+    obstacleVariantID: -1
+  - position: {x: 5, y: 1, z: -6}
+    groundVariantID: 0
+    obstacleVariantID: -1
+  - position: {x: 6, y: 1, z: -7}
+    groundVariantID: 0
+    obstacleVariantID: -1
+  - position: {x: 7, y: 1, z: -8}
     groundVariantID: 0
     obstacleVariantID: -1
   playerSpawns:
-  - position: {x: -1, y: -1, z: 2}
+  - position: {x: -3, y: -1, z: 4}
     unitID: 1001
-  - position: {x: 0, y: -2, z: 2}
-    unitID: 1002
   enemySpawns:
-  - position: {x: 3, y: 1, z: -4}
-    unitID: 2002
-  - position: {x: 1, y: 2, z: -3}
-    unitID: 2003
-  - position: {x: 2, y: 2, z: -4}
+  - position: {x: 7, y: 1, z: -8}
     unitID: 2001
 --- !u!4 &1355006662
 Transform:

@@ -9,8 +9,8 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 0}
-  m_Name: MianLevelTable
-  m_EditorClassIdentifier: Assembly-CSharp:TGame.Data:LevelTable
+  m_Script: {fileID: 11500000, guid: 4cbbaaec908757c45942c2b80f948505, type: 3}
+  m_Name: LevelTable
+  m_EditorClassIdentifier: 
   levels:
-  - {fileID: 11400000, guid: 03d4a70092e466b41816792a11d27b81, type: 2}
+  - {fileID: 11400000, guid: 518fe38830191044ca12015d2835c9b4, type: 2}

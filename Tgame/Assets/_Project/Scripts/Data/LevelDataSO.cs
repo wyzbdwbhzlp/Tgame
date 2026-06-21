@@ -4,7 +4,6 @@ using UnityEngine;
 
 namespace TGame.Data
 {
-
     // ==========================================
     // 玩家生成点
     // ==========================================
@@ -48,21 +47,12 @@ namespace TGame.Data
         public int levelID;
         public string levelName = "未命名关卡";
         public List<HexEditorCell> mapCells = new List<HexEditorCell>();
+
         [Header("地图可视化结构 (由画笔工具自动生成)")]
         public List<HexEditorCell> cells = new List<HexEditorCell>();
 
         [Header("单位部署")]
         public List<UnitSpawnInfo> playerSpawns = new List<UnitSpawnInfo>();
         public List<EnemySpawnInfo> enemySpawns = new List<EnemySpawnInfo>();
-    }
-
-    // ==========================================
-    // 关卡排期表
-    // ==========================================
-    [CreateAssetMenu(fileName = "LevelTable", menuName = "TGame/关卡排期表 (Level Table)")]
-    public class LevelTable : ScriptableObject
-    {
-        [Header("将关卡资产拖拽到这里排列顺序")]
-        public List<LevelDataSO> levels = new List<LevelDataSO>();
     }
 }

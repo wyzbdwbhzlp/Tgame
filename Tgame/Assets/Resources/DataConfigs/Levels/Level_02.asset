@@ -1,0 +1,81 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 96919e1973aea104ca363693d8f9e47d, type: 3}
+  m_Name: Level_02
+  m_EditorClassIdentifier: 
+  levelID: 0
+  levelName: "\u7B2C\u4E00\u5173"
+  mapCells: []
+  cells:
+  - position: {x: -3, y: -1, z: 4}
+    groundVariantID: 0
+    obstacleVariantID: -1
+  - position: {x: -2, y: -1, z: 3}
+    groundVariantID: 0
+    obstacleVariantID: -1
+  - position: {x: -1, y: -1, z: 2}
+    groundVariantID: 0
+    obstacleVariantID: -1
+  - position: {x: 0, y: -1, z: 1}
+    groundVariantID: 0
+    obstacleVariantID: -1
+  - position: {x: 1, y: -1, z: 0}
+    groundVariantID: 0
+    obstacleVariantID: -1
+  - position: {x: 1, y: 0, z: -1}
+    groundVariantID: 0
+    obstacleVariantID: -1
+  - position: {x: 2, y: -1, z: -1}
+    groundVariantID: 0
+    obstacleVariantID: -1
+  - position: {x: 2, y: 0, z: -2}
+    groundVariantID: 0
+    obstacleVariantID: -1
+  - position: {x: 3, y: 0, z: -3}
+    groundVariantID: 0
+    obstacleVariantID: -1
+  - position: {x: 0, y: 0, z: 0}
+    groundVariantID: 0
+    obstacleVariantID: -1
+  - position: {x: -1, y: 0, z: 1}
+    groundVariantID: 0
+    obstacleVariantID: -1
+  - position: {x: -2, y: 0, z: 2}
+    groundVariantID: 0
+    obstacleVariantID: -1
+  - position: {x: 1, y: 1, z: -2}
+    groundVariantID: 0
+    obstacleVariantID: -1
+  - position: {x: 2, y: 1, z: -3}
+    groundVariantID: 0
+    obstacleVariantID: -1
+  - position: {x: 3, y: 1, z: -4}
+    groundVariantID: 0
+    obstacleVariantID: -1
+  - position: {x: 4, y: 1, z: -5}
+    groundVariantID: 0
+    obstacleVariantID: -1
+  - position: {x: 5, y: 1, z: -6}
+    groundVariantID: 0
+    obstacleVariantID: -1
+  - position: {x: 6, y: 1, z: -7}
+    groundVariantID: 0
+    obstacleVariantID: -1
+  - position: {x: 7, y: 1, z: -8}
+    groundVariantID: 0
+    obstacleVariantID: -1
+  playerSpawns:
+  - characterID: 1001
+    spawnPos: {x: -3, y: -1, z: 4}
+  enemySpawns:
+  - enemyID: 2001
+    spawnPos: {x: 7, y: 1, z: -8}

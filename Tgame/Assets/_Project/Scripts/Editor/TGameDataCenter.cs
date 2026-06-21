@@ -105,7 +105,8 @@ namespace TGame.EditorTools
             }
             if (GUILayout.Button("定位 / 生成关卡排期总表", GUILayout.Height(30)))
             {
-                CreateOrSelectAssetInResources<LevelTable>("DataConfigs", "MainLevelTable");
+                // 【🔥修改】将 MainLevelTable 改成了 LevelTable
+                CreateOrSelectAssetInResources<LevelTable>("DataConfigs", "LevelTable");
             }
             GUILayout.EndVertical();
             EditorGUILayout.Space();
